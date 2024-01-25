@@ -28,14 +28,15 @@ const LoginPage = () => {
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
       style={styles.loginContainer}
     >
       {/* <View style={styles.openComponent}></View> */}
       <View style={styles.loginForm}>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>Đăng nhập</Text>
-          <Text style={styles.des}>Chao mung moi nguoi da den voi shop</Text>
+          <Text style={styles.des}>Chào mừng trở lại!</Text>
+          <Text style={styles.des}>Hãy bắt đầu mua sắm nào.</Text>
         </View>
         <View style={styles.inputCo}>
           <CustomInput
@@ -58,6 +59,13 @@ const LoginPage = () => {
             style={{ width: "100%" }}
             onPress={() => console.log("first")}
           />
+          <SpaceBet height={20} />
+          <CustomButton
+            buttonText="Đăng nhập w GG"
+            buttonColor="secondary"
+            style={{ width: "100%" }}
+            onPress={() => console.log("first")}
+          />
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -76,9 +84,10 @@ const styles = StyleSheet.create({
   },
   loginForm: {
     width: "95%",
-    backgroundColor: "aqua",
+    backgroundColor: "transparent",
     gap: 20,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 40,
   },
   //   openComponent: {
   //     height: 400,
@@ -101,8 +110,9 @@ const styles = StyleSheet.create({
 
   input: {
     width: "100%",
-    backgroundColor: "gray",
+    backgroundColor: COLORS.inputBackgroundColor,
     borderColor: COLORS.inputBackgroundColor,
+    elevation: 2,
   },
   inputCo: {
     backgroundColor: "transparent",
