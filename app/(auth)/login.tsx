@@ -1,50 +1,58 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
-import CustomInput from '../../components/Input'
+import React, { useState } from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../assets';
-import SpaceBet from '../../components/SpaceBet';
 import CustomButton from '../../components/Button';
+import CustomInput from '../../components/Input';
+import SpaceBet from '../../components/SpaceBet';
 const { height, width } = Dimensions.get('window')
 
 const LoginPage = () => {
 
-    const [inputValue, setInputValue] = useState<string>('');
+    const [inputUsername, setInputUsername] = useState<string>('');
+    const [inputPassword, setInputPassword] = useState<string>('');
 
-    const handleInputChange = (text: string) => {
-        setInputValue(text);
+    const handleInputUsername = (text: string) => {
+        setInputUsername(text);
+    };
+    const handleInputPassword = (text: string) => {
+        setInputPassword(text);
     };
 
     return (
-        <View style={styles.loginComponent}>
+        <SafeAreaView style={styles.loginComponent}>
             <View style={styles.openComponent}></View>
             <View style={styles.titleWrapper}>
                 <Text style={styles.title}>Đăng nhập</Text>
-                <Text style={styles.des}>Chào mừng bạn đã trở lại</Text>
+                <Text style={styles.des}>Chao mung moi nguoi da den voi shop</Text>
             </View>
-            <View>
-                <CustomInput
-                    placeholder="Tên đăng nhập..."
-                    onChangeText={handleInputChange}
-                    value={inputValue}
-                    style={styles.input} />
+            <View style={styles.inputCo}>
+                <View>
+                    <CustomInput
+                        placeholder="Tên đăng nhập..."
+                        onChangeText={handleInputUsername}
+                        value={inputUsername}
+                        style={styles.input} />
+                </View>
+                <View>
+                    <SpaceBet height={20} />
+                </View>
+                <View>
+                    <CustomInput
+                        placeholder="Mật khẩu"
+                        onChangeText={handleInputPassword}
+                        secureTextEntry={true}
+                        value={inputPassword}
+                        style={styles.input} />
+                </View>
+                <View>
+                    <SpaceBet height={20} />
+                </View>
+                <View>
+                    <CustomButton buttonText='Đăng nhập' onPress={() => console.log('first')} />
+                </View>
             </View>
-            <View>
-                <SpaceBet height={20} />
-            </View>
-            <View>
-                <CustomInput
-                    placeholder="Mật khẩu"
-                    onChangeText={handleInputChange}
-                    value={inputValue}
-                    style={styles.input} />
-            </View>
-            <View>
-                <SpaceBet height={20} />
-            </View>
-            <View>
-                <CustomButton buttonText='Đăng nhập' onPress={() => console.log('first')} />
-            </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -54,7 +62,7 @@ const styles = StyleSheet.create({
     openComponent: {
         height: 400,
         width: width,
-        backgroundColor: 'blue'
+        backgroundColor: 'blue',
     },
     titleWrapper: {
         height: 100,
@@ -66,12 +74,12 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 52,
-        fontWeight: '700',
+        fontFamily: 'mon-b',
         textTransform: 'uppercase',
     },
     des: {
         fontSize: 19,
-        fontWeight: '300'
+        fontFamily: 'mon',
     },
     loginComponent: {
         height: height,
@@ -81,6 +89,11 @@ const styles = StyleSheet.create({
     },
     input: {
         borderColor: COLORS.inputBackgroundColor,
-        backgroundColor: COLORS.inputBackgroundColor
+    },
+    inputCo: {
+        width: width,
+        backgroundColor: 'gray',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })

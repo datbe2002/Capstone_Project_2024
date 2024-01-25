@@ -1,11 +1,10 @@
-import { Dimensions, StyleSheet, Text, View, Pressable } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import CustomButton from '../../components/Button'
+import { AntDesign } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import React from 'react'
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
+import { COLORS } from '../../assets'
+import CustomButton from '../../components/Button'
 const { height, width } = Dimensions.get('window')
-import { AntDesign } from '@expo/vector-icons';
-import { COLORS, SIZES } from '../../assets'
 const IntroducePage = () => {
     const router = useRouter()
     return (
