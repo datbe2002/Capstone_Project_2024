@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { Text, View } from '../../components/Themed';
+import { Text, View } from '../../../components/Themed';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 
