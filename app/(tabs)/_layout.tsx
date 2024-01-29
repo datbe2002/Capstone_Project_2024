@@ -96,27 +96,27 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(home)"
         options={{
           title: "Trang chủ",
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="home" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? "home" : "home-outline"} size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="favorite"
+        name="(favorite)"
         options={{
           title: "Yêu thích",
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="heart" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <AntDesign name={focused ? "heart" : "hearto"} size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="wardrove"
+        name="(tryonl)"
         options={{
           headerShown: false,
           tabBarLabel: '',
@@ -129,7 +129,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="order"
+        name="(order)"
         options={{
           title: "Đơn hàng",
           headerShown: false,
@@ -139,12 +139,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="menu"
+        name="(menu)"
         options={{
           title: "Menu",
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="grid-outline" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? "grid" : "grid-outline"} size={size} color={color} />
           ),
         }}
       />
