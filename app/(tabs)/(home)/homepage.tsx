@@ -11,7 +11,7 @@ export default function HomepageScreen() {
     <SafeAreaView>
       <Text>hello world</Text>
       <View>
-        <TouchableOpacity onPress={() => router.replace('/(auth)/introduce')}>
+        <TouchableOpacity onPress={() => router.replace('/introduce')}>
           <Text>hello homepage</Text>
         </TouchableOpacity>
       </View>

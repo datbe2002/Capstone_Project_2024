@@ -7,11 +7,11 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../assets";
 import CustomButton from "../../components/Button";
 import CustomInput from "../../components/Input";
 import SpaceBet from "../../components/SpaceBet";
+import { router } from "expo-router";
 const { height, width } = Dimensions.get("window");
 
 const LoginPage = () => {
@@ -57,7 +57,7 @@ const LoginPage = () => {
           <CustomButton
             buttonText="Đăng nhập"
             style={{ width: "100%" }}
-            onPress={() => console.log("first")}
+            onPress={() => router.replace('/(tabs)/(home)/homepage')}
           />
           <SpaceBet height={20} />
           <CustomButton

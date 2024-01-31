@@ -2,8 +2,8 @@ import { AntDesign } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import React from 'react'
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
-import { COLORS } from '../../assets'
-import CustomButton from '../../components/Button'
+import { COLORS } from '../assets'
+import CustomButton from '../components/Button'
 const { height, width } = Dimensions.get('window')
 const IntroducePage = () => {
     const router = useRouter()
