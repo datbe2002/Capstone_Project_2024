@@ -1,11 +1,48 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
+import BackButton from '../../../components/BackButton'
+import { COLORS } from '../../../assets'
+import UserProfileButton from '../../../components/UserProfileButton'
 
 const MenuLayout = () => {
     return (
         <Stack>
             <Stack.Screen name='menu' options={{ headerShown: false }} />
+            <Stack.Screen name='setting' options={{
+                headerShown: true,
+                title: 'Cài đặt',
+                headerTitleAlign: 'center',
+                headerLeft: BackButton,
+                headerRight: UserProfileButton,
+                headerTitleStyle: {
+                    fontFamily: 'mon-b',
+                    fontSize: 25
+                },
+                headerTintColor: COLORS.primary,
+            }} />
+            <Stack.Screen name='profile' options={{
+                headerShown: true,
+                title: 'Hồ sơ cá nhân',
+                headerTitleAlign: 'center',
+                headerLeft: BackButton,
+                headerTitleStyle: {
+                    fontFamily: 'mon-b',
+                    fontSize: 25
+                },
+                headerTintColor: COLORS.primary,
+            }} />
+            <Stack.Screen name='setpassword' options={{
+                headerShown: true,
+                title: 'Thay đổi mật khẩu',
+                headerTitleAlign: 'center',
+                headerLeft: BackButton,
+                headerTitleStyle: {
+                    fontFamily: 'mon-b',
+                    fontSize: 25
+                },
+                headerTintColor: COLORS.primary,
+            }} />
         </Stack>
     )
 }
