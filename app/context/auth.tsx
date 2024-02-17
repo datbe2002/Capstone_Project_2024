@@ -31,7 +31,7 @@ const AuthContext = React.createContext<AuthContextValue | undefined>(
 );
 
 export function Provider(props: ProviderProps) {
-    const [user, setAuth] = React.useState<any | null>(null); //cho nay ban dau la null
+    const [user, setAuth] = React.useState<any | null>(true); //cho nay ban dau la null
     const [authInitialized, setAuthInitialized] = React.useState<boolean>(false);
     const [isNavigationReady, setNavigationReady] = useState(false);
 
@@ -46,13 +46,12 @@ export function Provider(props: ProviderProps) {
             }
 
             const inAuthGroup = segments[0] === "(auth)";
-
             if (!authInitialized) return;
 
             if (!user && !inAuthGroup) {
-                router.push("/introduce");
+                router.replace("/introduce");
             } else if (user && inAuthGroup) {
-                router.push("/homepage");
+                router.replace("/homepage");
             }
         }, [user, segments, authInitialized, isNavigationReady]);
     };
