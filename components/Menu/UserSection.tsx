@@ -2,8 +2,8 @@ import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native'
-import { COLORS } from '../assets'
-import { ActiveProps } from '../app/(tabs)/(menu)/menu'
+import { COLORS } from '../../assets'
+import { ActiveProps } from '../../app/(tabs)/(menu)/menu'
 import { router } from 'expo-router'
 
 interface UserSectionProps {
@@ -22,7 +22,7 @@ const UserSection: React.FC<UserSectionProps> = ({
                 <TouchableOpacity onPress={() => router.push('/(tabs)/(menu)/profile')}>
                     <Image
                         style={styles.logo}
-                        source={require('../assets/images/avatar.jpg')}
+                        source={require('../../assets/images/avatar.jpg')}
                     />
                 </TouchableOpacity>
                 <View>
@@ -63,9 +63,9 @@ export default UserSection
 
 const styles = StyleSheet.create({
     userSection: {
-        height: 100,
+        height: 80,
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     leftSection: {
         width: '50%',

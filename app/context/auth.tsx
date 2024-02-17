@@ -46,13 +46,12 @@ export function Provider(props: ProviderProps) {
             }
 
             const inAuthGroup = segments[0] === "(auth)";
-
             if (!authInitialized) return;
 
             if (!user && !inAuthGroup) {
-                router.push("/introduce");
+                router.replace("/introduce");
             } else if (user && inAuthGroup) {
-                router.push("/homepage");
+                router.replace("/homepage");
             }
         }, [user, segments, authInitialized, isNavigationReady]);
     };
