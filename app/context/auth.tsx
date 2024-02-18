@@ -18,6 +18,7 @@ interface AuthContextValue {
     signOut: () => Promise<SignOutResponse>;
     user: any; // Update this based on the expected user object from your API
     authInitialized: boolean;
+    loginTest: any
 }
 
 // Define the Provider component
@@ -31,7 +32,7 @@ const AuthContext = React.createContext<AuthContextValue | undefined>(
 );
 
 export function Provider(props: ProviderProps) {
-    const [user, setAuth] = React.useState<any | null>(true); //cho nay ban dau la null
+    const [user, setAuth] = React.useState<any | null>(null); //cho nay ban dau la null
     const [authInitialized, setAuthInitialized] = React.useState<boolean>(false);
     const [isNavigationReady, setNavigationReady] = useState(false);
 
@@ -94,7 +95,7 @@ export function Provider(props: ProviderProps) {
         } catch (error) {
             return { error, data: undefined };
         } finally {
-            // setAuth(null);
+            setAuth(null);
         }
     };
 
@@ -108,6 +109,10 @@ export function Provider(props: ProviderProps) {
             // setAuth(null);
             return { error: error as Error, data: undefined };
         }
+    };
+
+    const loginTest = async (test: string): Promise<any> => {
+        setAuth(true)
     };
 
     const createAccount = async (email: string, password: string, username: string): Promise<SignInResponse> => {
@@ -127,6 +132,7 @@ export function Provider(props: ProviderProps) {
     return (
         <AuthContext.Provider
             value={{
+                loginTest: loginTest,
                 signIn: login,
                 signOut: logout,
                 signUp: createAccount,

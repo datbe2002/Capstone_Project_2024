@@ -1,37 +1,69 @@
-import React, { useState } from "react";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+import React from "react";
 import {
   Dimensions,
+  Keyboard,
   KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import { COLORS } from "../../assets";
 import CustomButton from "../../components/Button";
-import CustomInput from "../../components/Input";
+import InputV2 from "../../components/InputV2";
 import SpaceBet from "../../components/SpaceBet";
-import { router } from "expo-router";
+import { useAuth } from "../context/auth";
 const { height, width } = Dimensions.get("window");
+interface ErrorState {
+  user?: string,
+  password?: string
+}
 
 const LoginPage = () => {
-  const [inputUsername, setInputUsername] = useState<string>("");
-  const [inputPassword, setInputPassword] = useState<string>("");
+  const [inputs, setInputs] = React.useState({
+    user: '',
+    password: ''
+  });
+  const [errors, setErrors] = React.useState<ErrorState>({
 
-  const handleInputUsername = (text: string) => {
-    setInputUsername(text);
+  });
+  const { loginTest } = useAuth()
+
+  const validate = () => {
+    Keyboard.dismiss();
+    let isValid = true;
+    console.log(inputs?.user)
+    if (!inputs.user) {
+      handleError('Không được để trống ô này', 'user');
+      isValid = false;
+    } else if (inputs.user.length < 6) {
+      handleError('Tên người dùng phải 6 kí tự trở lên', 'user');
+      isValid = false;
+    }
+    if (!inputs.password) {
+      handleError('Không được để trống ô này', 'password');
+      isValid = false;
+    }
+
+    if (isValid) {
+      loginTest({ test: inputs?.user });
+    }
   };
-  const handleInputPassword = (text: string) => {
-    setInputPassword(text);
+
+
+  const handleOnchange = (text: string, input: string) => {
+    setInputs(prevState => ({ ...prevState, [input]: text }));
+  };
+  const handleError = (error: string | null, input: string) => {
+    setErrors(prevState => ({ ...prevState, [input]: error }));
   };
 
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+      keyboardVerticalOffset={-30}
       style={styles.loginContainer}
     >
-      {/* <View style={styles.openComponent}></View> */}
       <View style={styles.loginForm}>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>Đăng nhập</Text>
@@ -39,25 +71,24 @@ const LoginPage = () => {
           <Text style={styles.des}>Hãy bắt đầu mua sắm nào.</Text>
         </View>
         <View style={styles.inputCo}>
-          <CustomInput
-            placeholder="Tên đăng nhập..."
-            onChangeText={handleInputUsername}
-            value={inputUsername}
-            style={styles.input}
-          />
-          <SpaceBet height={20} />
-          <CustomInput
-            placeholder="Mật khẩu"
-            onChangeText={handleInputPassword}
-            secureTextEntry={true}
-            value={inputPassword}
-            style={styles.input}
-          />
+
+          <InputV2
+            onChangeText={text => handleOnchange(text, 'user')}
+            onFocus={() => handleError(null, 'user')}
+            error={errors.user}
+            placeholder="Tên đăng nhập..." label="Tên đăng nhập" iconPlace={<AntDesign name="user" size={24} color={COLORS.black} />} />
+          <SpaceBet height={10} />
+
+          <InputV2
+            onChangeText={text => handleOnchange(text, 'password')}
+            onFocus={() => handleError(null, 'password')}
+            error={errors.password}
+            placeholder="Mật khẩu" password label="Mật khẩu" iconPlace={<Ionicons name="lock-closed-outline" size={24} color={COLORS.black} />} />
           <SpaceBet height={20} />
           <CustomButton
             buttonText="Đăng nhập"
             style={{ width: "100%" }}
-            onPress={() => router.replace('/(tabs)/(home)/homepage')}
+            onPress={validate}
           />
           <SpaceBet height={20} />
           <CustomButton
@@ -89,11 +120,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
-  //   openComponent: {
-  //     height: 400,
-  //     width: width,
-  //     backgroundColor: "blue",
-  //   },
   titleWrapper: {
     height: 120,
     justifyContent: "center",
@@ -116,7 +142,7 @@ const styles = StyleSheet.create({
   },
   inputCo: {
     backgroundColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
   },
 });
