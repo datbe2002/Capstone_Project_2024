@@ -117,20 +117,6 @@ export function Provider(props: ProviderProps) {
       return { error: error as Error, data: undefined };
     }
   };
-  const login = async (
-    email: string,
-    password: string
-  ): Promise<SignInResponse> => {
-    try {
-      const response = await axios.post("/api/login", { email, password });
-      const userData = response.data;
-      // setAuth(userData);
-      return { data: userData, error: undefined };
-    } catch (error) {
-      // setAuth(null);
-      return { error: error as Error, data: undefined };
-    }
-  };
 
   const loginTest = async (test: string): Promise<any> => {
     setAuth(true);
