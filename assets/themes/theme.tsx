@@ -3,7 +3,9 @@ const COLORS = {
     secondary: '#444262',
     inputBackgroundColor: '#F8F8F8',
     gray: '#E5E5E5',
-    blue1: '#4e83ff'
+    blue1: '#4e83ff',
+    errorColor: 'red',
+    black: '#000000'
 }
 
 const SIZES = {
