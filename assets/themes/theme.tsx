@@ -6,6 +6,8 @@ const COLORS = {
   blue1: "#4e83ff",
   errorColor: "red",
   black: "#000000",
+  white: "#FFFFFF",
+  pink: "#FFEBEB",
 };
 
 const SIZES = {

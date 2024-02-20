@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import { Text, View } from "../../../components/Themed";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomInput from "../../../components/Input";
@@ -31,6 +30,7 @@ import RecommendationsSection from "../../../components/Home/Recommendations";
 
 export default function HomepageScreen() {
   const router = useRouter();
+  const homeCategories = categories.slice(0, 4);
 
   const [searchValue, setSearchValue] = useState<string>("");
 
@@ -58,7 +58,7 @@ export default function HomepageScreen() {
       {/* main */}
       <ScrollView style={styles.container}>
         {/* categories */}
-        <CategoriesSection categories={categories} />
+        <CategoriesSection categories={homeCategories} />
         {/* top product */}
         <TopProductsSection topProducts={topProducts} />
         {/* new items */}
@@ -73,7 +73,7 @@ export default function HomepageScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: COLORS.white,
   },
   horizWrapper: {
     display: "flex",
