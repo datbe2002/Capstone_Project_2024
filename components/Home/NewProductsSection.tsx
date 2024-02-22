@@ -55,7 +55,10 @@ const NewProductsSection: React.FC<NewProductsProps> = ({
           <Pressable
             key={index}
             onPress={() => {
-              console.log("new item " + index);
+              router.push({
+                pathname: "/(tabs)/(home)/product/[id]",
+                params: { id: item.id },
+              });
             }}
           >
             <View style={styles.itemCard}>

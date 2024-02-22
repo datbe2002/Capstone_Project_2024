@@ -38,7 +38,10 @@ const TopProductsSection: React.FC<TopProductsProps> = ({
           <Pressable
             key={index}
             onPress={() => {
-              console.log("popular " + index);
+              router.push({
+                pathname: "/(tabs)/(home)/product/[id]",
+                params: { id: item.id },
+              });
             }}
           >
             <View style={[styles.topProductItem, SHADOWS.small]}>
