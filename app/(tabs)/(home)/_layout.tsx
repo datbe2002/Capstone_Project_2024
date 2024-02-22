@@ -4,9 +4,13 @@ import { Stack } from "expo-router";
 
 const HomeLayout = () => {
   return (
-    <Stack>
-      <Stack.Screen name="homepage" options={{ headerShown: false }} />
-      <Stack.Screen name="categories" options={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="homepage" />
+      <Stack.Screen name="categories" />
+      <Stack.Screen
+        name="product/[id]"
+        // options={{ headerShown: true, headerTitle: "" }}
+      />
     </Stack>
   );
 };

@@ -38,7 +38,10 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
           <Pressable
             key={index}
             onPress={() => {
-              console.log("recommend " + index);
+              router.push({
+                pathname: "/(tabs)/(home)/product/[id]",
+                params: { id: item.id },
+              });
             }}
           >
             <View style={styles.recommendCard}>
