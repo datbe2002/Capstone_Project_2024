@@ -1,22 +1,68 @@
-import React, { useRef } from 'react'
-import { Alert, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { COLORS } from '../../../assets'
 import CustomButton from '../../../components/Button'
-import CustomInput from '../../../components/Input'
+import InputV2 from '../../../components/InputV2'
 import SpaceBet from '../../../components/SpaceBet'
 const SetPassword = () => {
-    const curPassword = useRef<string>("")
-    const newPassword = useRef<string>("")
-    const retypeNewPassword = useRef<string>("")
 
-    const handleSetNewPassword = async () => {
-        if (!curPassword.current || !newPassword.current || !retypeNewPassword.current) {
-            Alert.alert('Thông báo', 'Không được để trống các ô')
-        }
+    interface ErrorState {
+        curPassword?: string,
+        newPassword?: string,
+        retypeNewPassword?: string
     }
 
+    const [inputs, setInputs] = React.useState({
+        curPassword: '',
+        newPassword: '',
+        retypeNewPassword: '',
+    });
+    const [errors, setErrors] = React.useState<ErrorState>({});
+
+
+    const handleOnchange = (text: string, input: string) => {
+        setInputs(prevState => ({ ...prevState, [input]: text }));
+    };
+    const handleError = (error: string | null, input: string) => {
+        setErrors(prevState => ({ ...prevState, [input]: error }));
+    };
+
+    const validate = () => {
+        Keyboard.dismiss();
+        let isValid = true;
+
+        if (!inputs.curPassword) {
+            handleError('Không được để trống ô này', 'curPassword');
+            isValid = false;
+        }
+        if (!inputs.newPassword) {
+            handleError('Không được để trống ô này', 'newPassword');
+            isValid = false;
+        }
+        if (!inputs.retypeNewPassword) {
+            handleError('Không được để trống ô này', 'retypeNewPassword');
+            isValid = false;
+        }
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$!@%])[A-Za-z\d$!@%]{6,}$/;
+
+        if (!passwordRegex.test(inputs.newPassword)) {
+            handleError('Mật khẩu phải có ít nhất 6 ký tự, bao gồm cả chữ số, chữ cái và ký tự đặc biệt (!$@%)', 'newPassword');
+            isValid = false;
+        }
+
+        if (inputs.newPassword !== inputs.retypeNewPassword) {
+            handleError('Mật khẩu nhập lại không khớp', 'retypeNewPassword');
+            isValid = false;
+        }
+
+
+        if (isValid) {
+            //   loginTest({ test: inputs?.user });
+        }
+    };
+
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior='position' keyboardVerticalOffset={-80} >
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior='position' keyboardVerticalOffset={-50} >
             <ScrollView contentContainerStyle={styles.fullcomponent} >
                 <SpaceBet height={30} />
                 <View style={styles.introCo}>
@@ -28,35 +74,38 @@ const SetPassword = () => {
 
                     <Text style={styles.mainText}>Mật khẩu của bạn phải có ít nhất 6 ký tự, bao gồm cả chữ số, chữ cái và ký tự đặc biệt (!$@%)</Text>
                 </View>
-                <SpaceBet height={30} />
                 <View style={styles.inputCo}>
-                    <CustomInput
-                        placeholder="Mật khẩu hiện tại"
-                        onChangeText={value => curPassword.current = value}
-                        secureTextEntry={true}
-                        style={styles.input}
+                    <InputV2
+                        onChangeText={text => handleOnchange(text, 'curPassword')}
+                        onFocus={() => handleError(null, 'curPassword')}
+                        error={errors.curPassword}
+                        placeholder='Mật khẩu hiện tại'
+                        password
                     />
-                    <SpaceBet height={20} />
-                    <CustomInput
-                        placeholder="Mật khẩu"
-                        onChangeText={value => newPassword.current = value}
-                        secureTextEntry={true}
-                        style={styles.input}
+                    <InputV2
+                        onChangeText={text => handleOnchange(text, 'newPassword')}
+                        onFocus={() => handleError(null, 'newPassword')}
+                        error={errors.newPassword}
+                        placeholder='Mật khẩu mới'
+                        password
                     />
-                    <SpaceBet height={20} />
-                    <CustomInput
-                        placeholder="Nhập lại mật khẩu mới"
-                        onChangeText={value => retypeNewPassword.current = value}
-                        secureTextEntry={true}
-                        style={styles.input}
+                    <InputV2
+                        onChangeText={text => handleOnchange(text, 'retypeNewPassword')}
+                        onFocus={() => handleError(null, 'retypeNewPassword')}
+                        error={errors.retypeNewPassword}
+                        placeholder='Nhập lại mật khẩu mới'
+                        password
                     />
-                    <SpaceBet height={22} />
+                    <SpaceBet height={30} />
+
                     <CustomButton
                         buttonText="Đổi mật khẩu"
                         style={{ width: "100%" }}
-                        onPress={handleSetNewPassword}
+                        onPress={validate}
                     />
+
                 </View>
+
             </ScrollView>
         </KeyboardAvoidingView>
 
@@ -80,8 +129,8 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     inputCo: {
-        justifyContent: "center",
-        alignItems: "center",
+        // justifyContent: "center",
+        // alignItems: "center",
     },
     mainText: {
         fontSize: 18,
