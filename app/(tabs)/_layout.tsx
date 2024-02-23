@@ -1,50 +1,71 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
-import { GestureResponderEvent, TouchableOpacity, View, useColorScheme } from 'react-native';
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Tabs } from "expo-router";
+import {
+  GestureResponderEvent,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from "react-native";
 
-import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { COLORS } from '../../assets';
+import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { COLORS } from "../../assets";
+import { StackActions } from "@react-navigation/native";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+  name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
 }) {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-
 interface CustomTabBarButtonProps {
   children?: React.ReactNode;
   onPress?: (event: GestureResponderEvent) => void;
 }
+// const resetTabStacksOnBlur = ({ navigation }:any) => ({
+//     blur: () => {
+//       const state = navigation.getState();
 
-
-const CustomTabBarButton: React.FC<CustomTabBarButtonProps> = ({ children, onPress = () => { } }) => {
-  return <TouchableOpacity style={{
-    top: -30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }}
-    onPress={onPress}
-  >
-    <View style={{
-      paddingTop: 21,
-      width: 70,
-      height: 70,
-      borderRadius: 35,
-      backgroundColor: COLORS.primary
-    }}>
-      {children}
-    </View>
-  </TouchableOpacity>
-}
+//       state.routes.forEach((route:any, tabIndex:any) => {
+//         if (state?.index !== tabIndex && route.state?.index > 0) {
+//           navigation.dispatch(StackActions.popToTop());
+//         }
+//       });
+//     },
+//   });
+const CustomTabBarButton: React.FC<CustomTabBarButtonProps> = ({
+  children,
+  onPress = () => {},
+}) => {
+  return (
+    <TouchableOpacity
+      style={{
+        top: -25,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      onPress={onPress}
+    >
+      <View
+        style={{
+          paddingTop: 21,
+          width: 70,
+          height: 70,
+          borderRadius: 35,
+          backgroundColor: COLORS.primary,
+        }}
+      >
+        {children}
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 export default function TabLayout() {
-
   return (
     <Tabs
       screenOptions={{
@@ -55,20 +76,25 @@ export default function TabLayout() {
           borderTopColor: COLORS.primary,
         },
         tabBarLabelStyle: {
-          fontFamily: 'mon-b',
+          fontFamily: "mon-b",
           fontSize: 12,
           marginBottom: 10,
-          borderTopColor: COLORS.primary
+          borderTopColor: COLORS.primary,
         },
       }}
     >
       <Tabs.Screen
         name="(home)"
+        // listeners={resetTabStacksOnBlur}
         options={{
           title: "Trang chủ",
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? "home" : "home-outline"} size={size} color={color} />
+            <Ionicons
+              name={focused ? "home" : "home-outline"}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -78,7 +104,11 @@ export default function TabLayout() {
           title: "Yêu thích",
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
-            <AntDesign name={focused ? "heart" : "hearto"} size={size} color={color} />
+            <AntDesign
+              name={focused ? "heart" : "hearto"}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
@@ -86,13 +116,13 @@ export default function TabLayout() {
         name="(tryonl)"
         options={{
           headerShown: false,
-          tabBarLabel: '',
+          tabBarLabel: "",
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="skin" size={24} color="white" />
           ),
           tabBarButton: (props) => {
-            return <CustomTabBarButton {...props} />
-          }
+            return <CustomTabBarButton {...props} />;
+          },
         }}
       />
       <Tabs.Screen
@@ -111,7 +141,11 @@ export default function TabLayout() {
           title: "Menu",
           headerShown: false,
           tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons name={focused ? "grid" : "grid-outline"} size={size} color={color} />
+            <Ionicons
+              name={focused ? "grid" : "grid-outline"}
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
