@@ -4,7 +4,7 @@ import { COLORS } from '../assets'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 interface InputV2Props extends TextInputProps {
-    label: string,
+    label?: string,
     iconName?: string,
     error?: string,
     password?: boolean | undefined,
