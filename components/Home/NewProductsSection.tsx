@@ -66,8 +66,8 @@ const NewProductsSection: React.FC<NewProductsProps> = ({
                 <Image
                   style={styles.itemImg}
                   source={
-                    item.imgSrc
-                      ? { uri: item.imgSrc }
+                    item.defaultImg
+                      ? { uri: item.defaultImg }
                       : require("../../assets/images/default.png")
                   }
                 />
