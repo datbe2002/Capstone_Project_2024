@@ -97,6 +97,7 @@ const ProductDetail = () => {
                   name="tshirt-crew"
                   size={SIZES.large}
                   color={COLORS.white}
+                  onPress={() => route.push("/(tabs)/(tryonl)/wardrove")}
                 />
               </View>
 
