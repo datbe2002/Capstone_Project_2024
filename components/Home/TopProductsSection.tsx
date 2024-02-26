@@ -48,8 +48,8 @@ const TopProductsSection: React.FC<TopProductsProps> = ({
               <Image
                 style={styles.topProductImg}
                 source={
-                  item.imgSrc
-                    ? { uri: item.imgSrc }
+                  item.defaultImg
+                    ? { uri: item.defaultImg }
                     : require("../../assets/images/default.png")
                 }
               />

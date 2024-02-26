@@ -23,7 +23,8 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
-
+import Carousel from "../../../../components/Carousel";
+// import Carousel from "react-native-snap-carousel";
 const { height, width } = Dimensions.get("window");
 const ProductDetail = () => {
   const route = useRouter();
@@ -36,6 +37,7 @@ const ProductDetail = () => {
     description:
       "Áo quần đẹp vlz, còn chờ gì nữa mà không mua, mua đi để xài, mua không xài thì pass lại cho người nhà xài",
     price: 200000,
+    defaultImg: "",
     imgs: [
       { id: 1, imgSrc: "" },
       { id: 2, imgSrc: "" },
@@ -44,18 +46,19 @@ const ProductDetail = () => {
     ],
   };
 
-  const _renderItem = ({ item, index }: any) => {
+  const _renderItem = (item: any) => {
     return (
       <Image
         style={styles.img}
         source={
           item.imgSrc
-            ? { uri: item.Src }
+            ? { uri: item.imgSrc }
             : require("../../../../assets/images/default.png")
         }
       />
     );
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.heading}>
@@ -73,13 +76,10 @@ const ProductDetail = () => {
       <ScrollView>
         <View style={styles.main}>
           <View style={styles.imgWrapper}>
-            <Image
-              style={styles.img}
-              source={
-                item.imgs[0].imgSrc
-                  ? { uri: item.imgs[0].imgSrc }
-                  : require("../../../../assets/images/default.png")
-              }
+            <Carousel
+              items={item.imgs}
+              renderItem={_renderItem}
+              screenWidth={width}
             />
           </View>
 
