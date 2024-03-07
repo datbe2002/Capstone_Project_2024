@@ -126,9 +126,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(order)"
+        name="(cart)"
         options={{
-          title: "Đơn hàng",
+          title: "Giỏ hàng",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="profile" size={size} color={color} />

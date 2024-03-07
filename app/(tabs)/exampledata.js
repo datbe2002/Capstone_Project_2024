@@ -48,3 +48,51 @@ export const recommendations = [
   { id: 4, name: "Túi", description: "Áo quần đẹp vlz", price: 200 },
   { id: 5, name: "Túi 1", description: "Áo quần đẹp vlz", price: 200 },
 ];
+
+export const cartItems = [
+  {
+    id: 1,
+    name: "Áo",
+    defaultImg: "",
+    size: "X",
+    color: "#FF6347",
+    price: 200000,
+    quantity: 0,
+  },
+  {
+    id: 2,
+    name: "Quần",
+    defaultImg: "",
+    size: "XL",
+    color: "#40E0D0",
+    price: 200,
+    quantity: 1,
+  },
+  {
+    id: 3,
+    name: "Mũ",
+    defaultImg: "",
+    size: "XXL",
+    color: "#800080",
+    price: 200,
+    quantity: 1,
+  },
+  {
+    id: 4,
+    name: "Túi",
+    defaultImg: "",
+    size: "S",
+    color: "#FFD700",
+    price: 200,
+    quantity: 1,
+  },
+  {
+    id: 5,
+    name: "Túi 1",
+    defaultImg: "",
+    size: "L",
+    color: "#008000",
+    price: 200,
+    quantity: 1,
+  },
+];

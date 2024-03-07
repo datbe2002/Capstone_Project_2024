@@ -36,7 +36,7 @@ const AuthContext = React.createContext<AuthContextValue | undefined>(
 );
 
 export function Provider(props: ProviderProps) {
-  const [user, setAuth] = React.useState<any | null>(null); //cho nay ban dau la null
+  const [user, setAuth] = React.useState<any | null>(true); //cho nay ban dau la null
   const [authInitialized, setAuthInitialized] = React.useState<boolean>(false);
   const [isNavigationReady, setNavigationReady] = useState(false);
 

@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   searchBoxWrapper: {
     paddingHorizontal: 10,
-    height: "8%",
+    height: 55,
     gap: 30,
   },
   searchInput: {

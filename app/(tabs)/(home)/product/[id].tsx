@@ -120,6 +120,9 @@ const ProductDetail = () => {
             styles.button,
             { backgroundColor: COLORS.black, color: COLORS.white },
           ]}
+          onPress={() => {
+            console.log("add to cart");
+          }}
         >
           Thêm vào giỏ hàng
         </Text>
