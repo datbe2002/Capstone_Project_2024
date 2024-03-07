@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "130210382454",
+    "project_id": "fir-auth-gg-bcef7",
+    "storage_bucket": "fir-auth-gg-bcef7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:130210382454:android:d783d5d454c6d1a8c6d557",
+        "android_client_info": {
+          "package_name": "com.dattt.FTAIShop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "130210382454-ir9q1oegb92jeh29kcudc889qsvqoc2a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dattt.FTAIShop",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANBgm0yAdb9Q2zVnZf6RaobC9W_yH0G1E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

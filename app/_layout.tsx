@@ -2,6 +2,7 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { Provider, useAuth } from './context/auth';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -12,7 +13,7 @@ export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: 'index',
 };
-
+const queryClient = new QueryClient()
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -39,9 +40,11 @@ export default function RootLayout() {
   }
 
   return (
-    <Provider>
-      <RootLayoutNav />
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider>
+        <RootLayoutNav />
+      </Provider>
+    </QueryClientProvider>
   )
 }
 
