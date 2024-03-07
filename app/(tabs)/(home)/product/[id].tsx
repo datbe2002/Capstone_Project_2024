@@ -97,6 +97,7 @@ const ProductDetail = () => {
                   name="tshirt-crew"
                   size={SIZES.large}
                   color={COLORS.white}
+                  onPress={() => route.push("/(tabs)/(tryonl)/wardrove")}
                 />
               </View>
 
@@ -119,6 +120,9 @@ const ProductDetail = () => {
             styles.button,
             { backgroundColor: COLORS.black, color: COLORS.white },
           ]}
+          onPress={() => {
+            console.log("add to cart");
+          }}
         >
           Thêm vào giỏ hàng
         </Text>
