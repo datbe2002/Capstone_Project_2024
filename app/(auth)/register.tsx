@@ -13,6 +13,33 @@ import CustomButton from "../../components/Button";
 import InputV2 from "../../components/InputV2";
 import SpaceBet from "../../components/SpaceBet";
 import { useAuth } from "../context/auth";
+
+
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+} from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+
+GoogleSignin.configure({
+    webClientId: '130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com',
+});
+async function onGoogleButtonPress() {
+    // Check if your device supports Google Play
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    // Get the users ID token
+    const { idToken } = await GoogleSignin.signIn();
+
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(googleCredential);
+}
+
+
+
 const { height, width } = Dimensions.get("window");
 interface ErrorState {
     user?: string,
@@ -27,7 +54,7 @@ const RegisterPage = () => {
     const [errors, setErrors] = React.useState<ErrorState>({
 
     });
-    const { loginTest } = useAuth()
+    // const { loginTest } = useAuth()
 
     const validate = () => {
         Keyboard.dismiss();
@@ -46,7 +73,7 @@ const RegisterPage = () => {
         }
 
         if (isValid) {
-            loginTest({ test: inputs?.user });
+            // loginTest({ test: inputs?.user });
         }
     };
 
@@ -95,7 +122,13 @@ const RegisterPage = () => {
                         buttonText="Đăng nhập w GG"
                         buttonColor="secondary"
                         style={{ width: "100%" }}
-                        onPress={() => console.log("first")}
+                        onPress={() =>
+                            onGoogleButtonPress()
+                                .then(result => console.log(result))
+                                .catch(e => {
+                                    console.log(e);
+                                })
+                        }
                     />
                 </View>
             </View>

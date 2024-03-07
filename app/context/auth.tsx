@@ -1,7 +1,11 @@
 import axios from "axios";
 import { useRootNavigation, useRouter, useSegments } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
-
+import instance from './axiosConfig';
+import { Alert } from "react-native";
+import { setUserAuthToken } from './authService'
+import { Buffer } from 'buffer';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 interface SignInResponse {
   data: any; // Update this based on the expected response from your API
   error: Error | undefined;
@@ -22,7 +26,6 @@ interface AuthContextValue {
   signOut: () => Promise<SignOutResponse>;
   user: any; // Update this based on the expected user object from your API
   authInitialized: boolean;
-  loginTest: any;
 }
 
 // Define the Provider component
@@ -34,6 +37,16 @@ interface ProviderProps {
 const AuthContext = React.createContext<AuthContextValue | undefined>(
   undefined
 );
+
+const decodeJWT = (token: string) => {
+  const base64Url = token.split('.')[1]; // Get the payload part
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Convert to regular base64
+  const jsonPayload = decodeURIComponent(Buffer.from(base64, 'base64').toString('binary').split('').map(function (c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+};
 
 export function Provider(props: ProviderProps) {
   const [user, setAuth] = React.useState<any | null>(null); //cho nay ban dau la null
@@ -83,7 +96,7 @@ export function Provider(props: ProviderProps) {
         setAuthInitialized(true);
         console.log("initialize ", userData);
       } catch (error) {
-        console.log("error", error);
+        console.log("error fetchData", error);
         // setAuth(null);
         setAuthInitialized(true);
       }
@@ -108,18 +121,24 @@ export function Provider(props: ProviderProps) {
     password: string
   ): Promise<SignInResponse> => {
     try {
-      const response = await axios.post("/api/login", { email, password });
-      const userData = response.data;
+      console.log(email)
+      console.log(password)
+      const response = await instance.post("/api/auth/login", { email, password });
+      // const userData = response.data;
       // setAuth(userData);
-      return { data: userData, error: undefined };
+      console.log(response.data)
+      const token = response.data.data.accessToken
+      const decoded = decodeJWT(token);
+      await AsyncStorage.setItem('UserId', JSON.stringify(decoded.UserId));
+
+      setUserAuthToken(token)
+      return { data: null, error: undefined };
     } catch (error) {
-      // setAuth(null);
+      console.log(error)
+      setAuth(null);
+      Alert.alert('Đăng nhập', 'Sai mật khẩu hoặc tài khoản')
       return { error: error as Error, data: undefined };
     }
-  };
-
-  const loginTest = async (test: string): Promise<any> => {
-    setAuth(true);
   };
 
   const createAccount = async (
@@ -147,7 +166,6 @@ export function Provider(props: ProviderProps) {
   return (
     <AuthContext.Provider
       value={{
-        loginTest: loginTest,
         signIn: login,
         signOut: logout,
         signUp: createAccount,

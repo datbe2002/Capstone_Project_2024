@@ -1,4 +1,4 @@
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import {
   Dimensions,
@@ -15,29 +15,53 @@ import SpaceBet from "../../components/SpaceBet";
 import { useAuth } from "../context/auth";
 const { height, width } = Dimensions.get("window");
 interface ErrorState {
-  user?: string,
+  email?: string,
   password?: string
+}
+
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+import instance from "../context/axiosConfig";
+
+GoogleSignin.configure({
+  webClientId: '130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com',
+});
+async function onGoogleButtonPress() {
+  // Check if your device supports Google Play
+  await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+  // Get the users ID token
+  const { idToken } = await GoogleSignin.signIn();
+
+  // Create a Google credential with the token
+  const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+  // Sign-in the user with the credential
+  return auth().signInWithCredential(googleCredential);
 }
 
 const LoginPage = () => {
   const [inputs, setInputs] = React.useState({
-    user: '',
+    email: '',
     password: ''
   });
   const [errors, setErrors] = React.useState<ErrorState>({
 
   });
-  const { loginTest } = useAuth()
+  const { signIn } = useAuth()
 
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
-    console.log(inputs?.user)
-    if (!inputs.user) {
-      handleError('Không được để trống ô này', 'user');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!inputs.email) {
+      handleError('Không được để trống ô này', 'email');
       isValid = false;
-    } else if (inputs.user.length < 6) {
-      handleError('Tên người dùng phải 6 kí tự trở lên', 'user');
+    } else if (!emailRegex.test(inputs.email)) {
+      handleError('Địa chỉ email không hợp lệ', 'email');
       isValid = false;
     }
     if (!inputs.password) {
@@ -45,8 +69,11 @@ const LoginPage = () => {
       isValid = false;
     }
 
+    const email = inputs?.email
+    const password = inputs?.password
+
     if (isValid) {
-      loginTest({ test: inputs?.user });
+      signIn(email, password)
     }
   };
 
@@ -73,17 +100,17 @@ const LoginPage = () => {
         <View style={styles.inputCo}>
 
           <InputV2
-            onChangeText={text => handleOnchange(text, 'user')}
-            onFocus={() => handleError(null, 'user')}
-            error={errors.user}
-            placeholder="Tên đăng nhập..." label="Tên đăng nhập" iconPlace={<AntDesign name="user" size={24} color={COLORS.black} />} />
+            onChangeText={text => handleOnchange(text, 'email')}
+            onFocus={() => handleError(null, 'email')}
+            error={errors.email}
+            placeholder="Email" label="Email" iconPlace={<MaterialCommunityIcons name="email-outline" size={24} color={COLORS.black} />} />
           <SpaceBet height={10} />
 
           <InputV2
             onChangeText={text => handleOnchange(text, 'password')}
             onFocus={() => handleError(null, 'password')}
             error={errors.password}
-            placeholder="Mật khẩu" password label="Mật khẩu" iconPlace={<Ionicons name="lock-closed-outline" size={24} color={COLORS.black} />} />
+            placeholder="Mật khẩu" password label="Mật khẩu" iconPlace={<MaterialCommunityIcons name="lock-outline" size={24} color={COLORS.black} />} />
           <SpaceBet height={20} />
           <CustomButton
             buttonText="Đăng nhập"
@@ -95,7 +122,40 @@ const LoginPage = () => {
             buttonText="Đăng nhập w GG"
             buttonColor="secondary"
             style={{ width: "100%" }}
-            onPress={() => console.log("first")}
+            onPress={() =>
+              onGoogleButtonPress()
+                .then(result => console.log(result))
+                .catch(e => {
+                  console.log(e);
+                })
+            }
+          />
+          <GoogleSigninButton
+            onPress={() =>
+              onGoogleButtonPress()
+                .then(result => {
+                  console.log(result);
+                  const { uid, email, displayName, photoURL } = result.user;
+
+                  console.log(email)
+                  instance.post(`/api/auth/login-with-google?userId=${uid}`,
+                    {
+                      email: email,
+                      name: displayName,
+                      imageUrl: photoURL
+                    })
+                    .then((response) => {
+                      console.log('API call successful:', response.data);
+
+                    })
+                    .catch((apiError) => {
+                      console.error('API call failed:', apiError);
+                    });
+                })
+                .catch(e => {
+                  console.log(e);
+                })
+            }
           />
         </View>
       </View>
