@@ -11,7 +11,7 @@ interface ErrorState {
 
 const Setting = () => {
 
-    const { loginTest, signOut } = useAuth()
+    const { signOut } = useAuth()
 
     // const [inputs, setInputs] = React.useState({
     //     email: '',

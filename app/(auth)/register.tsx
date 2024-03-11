@@ -54,7 +54,6 @@ const RegisterPage = () => {
     const [errors, setErrors] = React.useState<ErrorState>({
 
     });
-    // const { loginTest } = useAuth()
 
     const validate = () => {
         Keyboard.dismiss();

@@ -49,10 +49,10 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { authInitialized, user } = useAuth();
+  const { authInitialized, userState } = useAuth();
 
 
-  if (!authInitialized && !user) return null;
+  if (!authInitialized && !userState) return null;
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />

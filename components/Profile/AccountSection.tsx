@@ -3,22 +3,28 @@ import React from 'react'
 import { COLORS } from '../../assets'
 import { AntDesign } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import { useUserStore } from '../../app/store/store'
+import moment from 'moment'
 
 const AccountSection = () => {
+    const { userState } = useUserStore()
 
-
-    const number = '0934462524'
     const maskPhoneNumber = (phoneNumber: string) => {
         const visibleDigits = 3;
-        const phoneNumberLength = phoneNumber.length;
+        const phoneNumberLength = phoneNumber?.length;
         if (phoneNumberLength <= visibleDigits * 2) {
             return phoneNumber;
         }
-        const visibleStart = phoneNumber.slice(0, visibleDigits);
-        const visibleEnd = phoneNumber.slice(-visibleDigits);
+        const visibleStart = phoneNumber?.slice(0, visibleDigits);
+        const visibleEnd = phoneNumber?.slice(-visibleDigits);
         const maskedPhoneNumber = `${visibleStart}...${visibleEnd}`;
         return maskedPhoneNumber;
     };
+
+    const dobValidate = (dob: string) => {
+        const dobTrans = moment(dob).format('DD/MM/YYYY');
+        return dobTrans
+    }
 
     return (
         <View style={styles.account}>
@@ -31,15 +37,7 @@ const AccountSection = () => {
                         Số tài khoản
                     </Text>
                     <Text style={styles.secondText}>
-                        id: 654513873
-                    </Text>
-                </View>
-                <View style={styles.twoLine}>
-                    <Text style={styles.mainText}>
-                        Tên đăng nhập
-                    </Text>
-                    <Text style={styles.secondText}>
-                        user123456
+                        id: {userState?.id.slice(0, 13)}
                     </Text>
                 </View>
                 <View style={styles.twoLine}>
@@ -47,7 +45,7 @@ const AccountSection = () => {
                         E-mail
                     </Text>
                     <Text style={styles.secondText}>
-                        user123456@gmail.com
+                        {userState?.email}
                     </Text>
                 </View>
                 <View style={styles.threeComp}>
@@ -72,7 +70,7 @@ const AccountSection = () => {
                             Số điện thoại
                         </Text>
                         <Text style={styles.secondText}>
-                            {maskPhoneNumber(number)}
+                            {userState?.phone ? maskPhoneNumber(userState?.phone) : "Chưa có số điện thoại"}
                         </Text>
                     </View>
                     <TouchableOpacity style={styles.changeComp} >
@@ -84,10 +82,10 @@ const AccountSection = () => {
                 </View>
                 <View style={styles.signUpDate}>
                     <Text style={styles.mainText}>
-                        Ngày đăng ký
+                        Ngày sinh
                     </Text>
                     <Text style={styles.secondText}>
-                        14/09/2023
+                        {userState?.dob ? dobValidate(userState?.dob) : "Chưa cập nhật ngày sinh"}
                     </Text>
                 </View>
             </View>
