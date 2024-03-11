@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from "react-native";
 import { COLORS } from "../../assets";
@@ -29,6 +30,7 @@ import instance from "../context/axiosConfig";
 import { setUserAuthToken } from "../context/authService";
 import { useLoadingStore, useUserStore } from "../store/store";
 import { ActivityIndicator } from "react-native";
+import { router } from "expo-router";
 
 GoogleSignin.configure({
   webClientId: '130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com',
@@ -130,7 +132,7 @@ const LoginPage = () => {
             />
             <SpaceBet height={20} />
             <CustomButton
-              buttonText="Đăng nhập w GG"
+              buttonText="Đăng nhập với Google"
               buttonColor="secondary"
               style={{ width: "100%" }}
               onPress={() =>
@@ -166,40 +168,10 @@ const LoginPage = () => {
                   })
               }
             />
-            {/* <GoogleSigninButton
-              onPress={() =>
-                onGoogleButtonPress()
-                  .then(result => {
-                    console.log(result);
-                    setLoadingState(true)
-                    const { uid, email, displayName, photoURL } = result.user;
-                    instance.post(`/api/auth/login-with-google?userId=${uid}`,
-                      {
-                        email: email,
-                        name: displayName,
-                        imageUrl: photoURL
-                      })
-                      .then((response) => {
-                        const token = response.data.data.accessToken
-                        const decoded = decodeJWT(token);
-                        const userID = decoded.UserId
-                        instance.get(`/api/user/profile/${userID}`)
-                          .then((res) => {
-                            const userData = res.data.data
-                            setLoadingState(false)
-                            setUserState(userData);
-                            setUserAuthToken(token)
-                          })
-                      })
-                      .catch((apiError) => {
-                        console.error('API call failed:', apiError);
-                      });
-                  })
-                  .catch(e => {
-                    console.log(e);
-                  })
-              }
-            /> */}
+            <SpaceBet height={20} />
+            <TouchableOpacity style={styles.bottomTextContainer} onPress={() => router.push('/(auth)/register')}>
+              <Text style={styles.bottomText}>Chưa có tài khoản ? Tạo mới</Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}
@@ -254,4 +226,13 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     // alignItems: "center",
   },
+  bottomTextContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 80
+  },
+  bottomText: {
+    fontFamily: 'mon-sb',
+    color: COLORS.secondary,
+  }
 });

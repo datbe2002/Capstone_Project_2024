@@ -82,7 +82,7 @@ const AccountSection = () => {
                 </View>
                 <View style={styles.signUpDate}>
                     <Text style={styles.mainText}>
-                        Ngày sinh
+                        Ngày đăng kí
                     </Text>
                     <Text style={styles.secondText}>
                         {userState?.dob ? dobValidate(userState?.dob) : "Chưa cập nhật ngày sinh"}

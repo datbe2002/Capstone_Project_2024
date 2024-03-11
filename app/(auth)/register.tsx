@@ -1,18 +1,20 @@
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
+    ActivityIndicator,
     Dimensions,
     Keyboard,
     KeyboardAvoidingView,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View
 } from "react-native";
 import { COLORS } from "../../assets";
 import CustomButton from "../../components/Button";
 import InputV2 from "../../components/InputV2";
 import SpaceBet from "../../components/SpaceBet";
-import { useAuth } from "../context/auth";
+import { decodeJWT, useAuth } from "../context/auth";
 
 
 import {
@@ -21,6 +23,10 @@ import {
     statusCodes,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import { router } from "expo-router";
+import instance from "../context/axiosConfig";
+import { setUserAuthToken } from "../context/authService";
+import { useLoadingStore, useUserStore } from "../store/store";
 
 GoogleSignin.configure({
     webClientId: '130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com',
@@ -84,13 +90,19 @@ const RegisterPage = () => {
         setErrors(prevState => ({ ...prevState, [input]: error }));
     };
 
+    const { loading, setLoadingState } = useLoadingStore()
+    const { setUserState } = useUserStore()
     return (
         <KeyboardAvoidingView
             behavior="padding"
             keyboardVerticalOffset={-30}
             style={styles.loginContainer}
         >
-            <View style={styles.loginForm}>
+            {loading ? (
+                <View style={styles.activityLoading}>
+                    <ActivityIndicator color={COLORS.primary} size={50}></ActivityIndicator>
+                </View>
+            ) : (<View style={styles.loginForm}>
                 <View style={styles.titleWrapper}>
                     <Text style={styles.title}>Đăng ký</Text>
                     <Text style={styles.des}>Chưa có tài khoản?</Text>
@@ -112,25 +124,55 @@ const RegisterPage = () => {
                         placeholder="Mật khẩu" password label="Mật khẩu" iconPlace={<Ionicons name="lock-closed-outline" size={24} color={COLORS.black} />} />
                     <SpaceBet height={20} />
                     <CustomButton
-                        buttonText="Đăng nhập"
+                        buttonText="Đăng kí"
                         style={{ width: "100%" }}
                         onPress={validate}
                     />
                     <SpaceBet height={20} />
                     <CustomButton
-                        buttonText="Đăng nhập w GG"
+                        buttonText="Đăng kí với Google"
                         buttonColor="secondary"
                         style={{ width: "100%" }}
                         onPress={() =>
                             onGoogleButtonPress()
-                                .then(result => console.log(result))
+                                .then(result => {
+                                    console.log(result);
+                                    setLoadingState(true)
+                                    const { uid, email, displayName, photoURL } = result.user;
+                                    instance.post(`/api/auth/login-with-google?userId=${uid}`,
+                                        {
+                                            email: email,
+                                            name: displayName,
+                                            imageUrl: photoURL
+                                        })
+                                        .then((response) => {
+                                            const token = response.data.data.accessToken
+                                            const decoded = decodeJWT(token);
+                                            const userID = decoded.UserId
+                                            instance.get(`/api/user/profile/${userID}`)
+                                                .then((res) => {
+                                                    const userData = res.data.data
+                                                    setLoadingState(false)
+                                                    setUserState(userData);
+                                                    setUserAuthToken(token)
+                                                })
+                                        })
+                                        .catch((apiError) => {
+                                            console.error('API call failed:', apiError);
+                                        });
+                                })
                                 .catch(e => {
                                     console.log(e);
                                 })
                         }
                     />
+                    <SpaceBet height={20} />
+                    <TouchableOpacity style={styles.bottomTextContainer} onPress={() => router.push('/(auth)/login')}>
+                        <Text style={styles.bottomText}>Đã có tài khoản ? Đăng nhập ngay</Text>
+                    </TouchableOpacity>
                 </View>
-            </View>
+            </View>)}
+
         </KeyboardAvoidingView>
     );
 };
@@ -144,6 +186,11 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
         backgroundColor: "white",
         alignItems: "center",
+    },
+    activityLoading: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: 'center'
     },
     loginForm: {
         width: "95%",
@@ -177,4 +224,13 @@ const styles = StyleSheet.create({
         // justifyContent: "center",
         // alignItems: "center",
     },
+    bottomTextContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 50
+    },
+    bottomText: {
+        fontFamily: 'mon-sb',
+        color: COLORS.secondary,
+    }
 });

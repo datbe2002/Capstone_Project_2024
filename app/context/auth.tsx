@@ -56,7 +56,7 @@ export const decodeJWT = (token: string) => {
 export function Provider(props: ProviderProps) {
   // const [user, setAuth] = React.useState<any | null>(null); //cho nay ban dau la null
   const { setUserState, userState } = useUserStore()
-  const { loading, setLoadingState } = useLoadingStore()
+  const { setLoadingState } = useLoadingStore()
   const [authInitialized, setAuthInitialized] = React.useState<boolean>(false);
   const [isNavigationReady, setNavigationReady] = useState(false);
 
