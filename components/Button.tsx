@@ -13,14 +13,14 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 interface CustomButtonProps {
   onPress?: () => void;
   buttonText: string;
-  buttonColor?: "primary" | "secondary";
+  buttonColor?: "primary" | "secondary" | "errorColor";
   style?: ViewStyle;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
   onPress,
   buttonText,
-  buttonColor = "primary",
+  buttonColor,
   style,
 }) => {
   return (
@@ -33,7 +33,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
           styles.buttonChild,
           {
             backgroundColor:
-              buttonColor === "primary" ? COLORS.primary : COLORS.secondary,
+              buttonColor === "primary" ? COLORS.primary : buttonColor === "secondary" ? COLORS.secondary : buttonColor === "errorColor" ? COLORS.errorColor : COLORS.primary,
           },
         ]}
         onPress={onPress}

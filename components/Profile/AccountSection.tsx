@@ -8,7 +8,7 @@ import moment from 'moment'
 
 const AccountSection = () => {
     const { userState } = useUserStore()
-
+    console.log(userState)
     const maskPhoneNumber = (phoneNumber: string) => {
         const visibleDigits = 3;
         const phoneNumberLength = phoneNumber?.length;
@@ -85,7 +85,7 @@ const AccountSection = () => {
                         Ngày đăng kí
                     </Text>
                     <Text style={styles.secondText}>
-                        {userState?.dob ? dobValidate(userState?.dob) : "Chưa cập nhật ngày sinh"}
+                        {userState?.dob ? dobValidate(userState?.dob) : "Chưa cập nhật"}
                     </Text>
                 </View>
             </View>
