@@ -11,30 +11,26 @@ import {
   View,
 } from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
+import { Products } from "../../constants/Type";
 // import { categories } from "../../app/(tabs)/exampledata";
 const { height, width } = Dimensions.get("window");
 
 interface TopProductsProps {
   props?: any;
-  topProducts: Array<TopProducts>;
+  topProducts: Array<Products>;
 }
-
-type TopProducts = {
-  id: number;
-  name: string;
-  props?: any;
-};
 
 const TopProductsSection: React.FC<TopProductsProps> = ({
   props,
   topProducts,
 }) => {
   const router = useRouter();
+
   return (
     <View style={styles.topProducts}>
       <Text style={styles.title}>Bán chạy nhất</Text>
       <View style={styles.topProductsList}>
-        {topProducts.map((item: any, index) => (
+        {topProducts.map((item: Products, index) => (
           <Pressable
             key={index}
             onPress={() => {
@@ -48,8 +44,8 @@ const TopProductsSection: React.FC<TopProductsProps> = ({
               <Image
                 style={styles.topProductImg}
                 source={
-                  item.defaultImg
-                    ? { uri: item.defaultImg }
+                  item.defaultImage
+                    ? { uri: item.defaultImage }
                     : require("../../assets/images/default.png")
                 }
               />

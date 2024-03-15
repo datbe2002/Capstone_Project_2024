@@ -2,6 +2,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../../assets";
 import {
+  ActivityIndicator,
   Button,
   Dimensions,
   Image,
@@ -24,35 +25,85 @@ import {
 } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import Carousel from "../../../../components/Carousel";
+import { useQuery } from "@tanstack/react-query";
+import { getProductById } from "../../../context/productsApi";
 // import Carousel from "react-native-snap-carousel";
 const { height, width } = Dimensions.get("window");
 const ProductDetail = () => {
   const route = useRouter();
   const { id } = useLocalSearchParams();
-  console.log("detail " + id);
 
-  const item: any = {
-    id: id,
-    name: "Áo",
-    description:
-      "Áo quần đẹp vlz, còn chờ gì nữa mà không mua, mua đi để xài, mua không xài thì pass lại cho người nhà xài",
-    price: 200000,
-    defaultImg: "",
-    imgs: [
-      { id: 1, imgSrc: "" },
-      { id: 2, imgSrc: "" },
-      { id: 3, imgSrc: "" },
-      { id: 4, imgSrc: "" },
-    ],
-  };
+  const productQuery = useQuery({
+    queryKey: ["product"],
+    queryFn: () => getProductById(id),
+  });
+
+  // const item: any = {
+  //   id: id,
+  //   name: "Áo",
+  //   description:
+  //     "Áo quần đẹp vlz, còn chờ gì nữa mà không mua, mua đi để xài, mua không xài thì pass lại cho người nhà xài",
+  //   price: 200000,
+  //   defaultImg: "",
+  //   imgs: [
+  //     { id: 1, imgSrc: "" },
+  //     { id: 2, imgSrc: "" },
+  //     { id: 3, imgSrc: "" },
+  //     { id: 4, imgSrc: "" },
+  //   ],
+  // };
+
+  // {
+  //   "data": {
+  //     "name": "1",
+  //     "description": "1111",
+  //     "defaultImage": "https://thewellco.co/wp-content/uploads/2022/03/HM-Conscious-Collection-Organic-Baby-Clothes.jpeg",
+  //     "tryOnImage": "null",
+  //     "canTryOn": true,
+  //     "edgeImage": "null",
+  //     "totalSold": 1,
+  //     "category": {
+  //       "name": "Cate1",
+  //       "subCategories": [],
+  //       "id": 2,
+  //       "isDeleted": false,
+  //       "createAt": "2024-12-03T00:00:00",
+  //       "updateAt": "2024-12-03T00:00:00",
+  //       "updateBy": "e88ff380-70df-4c3b-acdb-08dc3eb66a4a",
+  //       "createBy": "e88ff380-70df-4c3b-acdb-08dc3eb66a4a"
+  //     },
+  //     "brand": {
+  //       "name": "Brand1",
+  //       "id": 1,
+  //       "isDeleted": false,
+  //       "createAt": "2024-12-03T00:00:00",
+  //       "updateAt": "2024-12-03T00:00:00",
+  //       "updateBy": "e88ff380-70df-4c3b-acdb-08dc3eb66a4a",
+  //       "createBy": "e88ff380-70df-4c3b-acdb-08dc3eb66a4a"
+  //     },
+  //     "tryOnImageResult": null,
+  //     "properties": [],
+  //     "images": [],
+  //     "productVariants": [],
+  //     "id": 1,
+  //     "isDeleted": false,
+  //     "createAt": "2024-12-03T00:00:00",
+  //     "updateAt": "2024-12-03T00:00:00",
+  //     "updateBy": "e88ff380-70df-4c3b-acdb-08dc3eb66a4a",
+  //     "createBy": "e88ff380-70df-4c3b-acdb-08dc3eb66a4a"
+  //   },
+  //   "isSuccess": true,
+  //   "message": "Get product successfully",
+  //   "validationErrors": null
+  // }
 
   const _renderItem = (item: any) => {
     return (
       <Image
         style={styles.img}
         source={
-          item.imgSrc
-            ? { uri: item.imgSrc }
+          item.imageUrl
+            ? { uri: item.imageUrl }
             : require("../../../../assets/images/default.png")
         }
       />
@@ -73,46 +124,69 @@ const ProductDetail = () => {
           }}
         />
       </View>
-      <ScrollView>
-        <View style={styles.main}>
-          <View style={styles.imgWrapper}>
-            <Carousel
-              items={item.imgs}
-              renderItem={_renderItem}
-              screenWidth={width}
-            />
-          </View>
-
-          <View style={[styles.horizWrapper, { paddingHorizontal: 20 }]}>
-            <Text style={styles.itemPrice}>{item.price}đ</Text>
-            <View style={styles.horizWrapper}>
-              <View
-                style={{
-                  backgroundColor: COLORS.primary,
-                  borderRadius: SIZES.xxLarge / 2,
-                  padding: 3,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="tshirt-crew"
-                  size={SIZES.large}
-                  color={COLORS.white}
-                  onPress={() => route.push("/(tabs)/(tryonl)/wardrove")}
-                />
-              </View>
-
-              <MaterialCommunityIcons
-                name="share-circle"
-                size={SIZES.xxLarge}
-                color={COLORS.primary}
+      {productQuery.isLoading ? <ActivityIndicator /> : null}
+      {productQuery.isSuccess ? (
+        <ScrollView>
+          <View style={styles.main}>
+            <View style={styles.imgWrapper}>
+              <Carousel
+                items={productQuery.data.data.images}
+                renderItem={_renderItem}
+                screenWidth={width}
               />
             </View>
+
+            <View style={[styles.horizWrapper, { paddingHorizontal: 20 }]}>
+              <Text style={styles.itemPrice}>
+                {productQuery.data.data.price}đ
+              </Text>
+              <View style={styles.horizWrapper}>
+                <View
+                  style={{
+                    backgroundColor: COLORS.primary,
+                    borderRadius: SIZES.xxLarge / 2,
+                    padding: 3,
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="tshirt-crew"
+                    size={SIZES.large}
+                    color={COLORS.white}
+                    onPress={() => route.push("/(tabs)/(tryonl)/wardrove")}
+                  />
+                </View>
+
+                <MaterialCommunityIcons
+                  name="share-circle"
+                  size={SIZES.xxLarge}
+                  color={COLORS.primary}
+                />
+              </View>
+            </View>
+            <View>
+              <Text style={styles.itemDes}>
+                {productQuery.data.data.description}
+              </Text>
+            </View>
+            <View style={styles.variantContaner}>
+              <Text style={styles.secondaryTitle}>Product variation</Text>
+              <View style={styles.variantItemList}>
+                {productQuery.data.data.productVariants.map(
+                  (item: any, index: any) => (
+                    <View key={index} style={[styles.variantItem]}>
+                      <Text style={styles.variantText}>{item.size.value}</Text>
+                      <Text style={styles.variantText}>{item.color.name}</Text>
+                    </View>
+                  )
+                )}
+              </View>
+            </View>
           </View>
-          <View>
-            <Text style={styles.itemDes}>{item.description}</Text>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      ) : (
+        <ActivityIndicator />
+      )}
+
       <View style={[styles.bottom, SHADOWS.medium]}>
         <AntDesign name={"heart"} size={30} color={"red"} />
         <Text
@@ -191,7 +265,7 @@ const styles = StyleSheet.create({
   },
   itemDes: {
     padding: 10,
-    minHeight: 200,
+    minHeight: 100,
     width: "100%",
     textAlign: "left",
     fontFamily: "mon-sb",
@@ -218,5 +292,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 10,
+  },
+  variantContaner: {
+    paddingHorizontal: 10,
+    gap: 10,
+  },
+  variantItemList: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    gap: 10,
+  },
+  variantItem: {
+    minWidth: 120,
+    height: 40,
+    padding: 5,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    backgroundColor: COLORS.pink,
+    borderRadius: 8,
+  },
+  variantText: {
+    fontFamily: "mon",
+    fontSize: SIZES.medium,
   },
 });

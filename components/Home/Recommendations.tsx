@@ -11,19 +11,14 @@ import {
   View,
 } from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
+import { Products } from "../../constants/Type";
 // import { categories } from "../../app/(tabs)/exampledata";
 const { height, width } = Dimensions.get("window");
 
 interface RecommendationsSectionProps {
   props?: any;
-  recommendations: Array<Recommendations>;
+  recommendations: Array<Products>;
 }
-
-type Recommendations = {
-  id: number;
-  name: string;
-  props?: any;
-};
 
 const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   props,
@@ -49,8 +44,8 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                 <Image
                   style={styles.recommendImg}
                   source={
-                    item.defaultImg
-                      ? { uri: item.defaultImg }
+                    item.defaultImage
+                      ? { uri: item.defaultImage }
                       : require("../../assets/images/default.png")
                   }
                 />
