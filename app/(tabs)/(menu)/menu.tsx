@@ -5,6 +5,7 @@ import UserSection from '../../../components/Menu/UserSection';
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
 import CenterSection from '../../../components/Menu/CenterSection';
+import { useUserStore } from '../../store/store';
 
 export type ActiveProps = 'main' | 'noti' | 'ticket'
 
@@ -22,9 +23,6 @@ export default function Menu() {
       setActiveButton('main');
     }, [])
   )
-
-
-
 
   return (
     <SafeAreaView>
