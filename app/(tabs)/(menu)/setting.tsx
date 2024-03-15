@@ -4,6 +4,7 @@ import InputV2 from '../../../components/InputV2'
 import { COLORS } from '../../../assets'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useAuth } from '../../context/auth'
+import CustomButton from '../../../components/Button'
 
 interface ErrorState {
     email?: string
@@ -11,7 +12,7 @@ interface ErrorState {
 
 const Setting = () => {
 
-    const { loginTest, signOut } = useAuth()
+    const { signOut } = useAuth()
 
     // const [inputs, setInputs] = React.useState({
     //     email: '',
@@ -50,7 +51,7 @@ const Setting = () => {
         <View style={styles.componentFull}>
             <Text>Testing</Text>
 
-            <Button title='Ddang xuat' onPress={signOut} />
+            <CustomButton onPress={signOut} buttonText='Đăng xuất' buttonColor='errorColor' ></CustomButton>
         </View>
     )
 }

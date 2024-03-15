@@ -1,8 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { COLORS } from '../../assets'
+import { useUserStore } from '../../app/store/store'
 
 const PersonalInformationSection = () => {
+    const { userState } = useUserStore()
+
     return (
         <View style={styles.account}>
             <View style={styles.componentText}>
@@ -14,23 +17,23 @@ const PersonalInformationSection = () => {
                         Tên
                     </Text>
                     <Text style={styles.secondText}>
-                        Đạt
+                        {userState?.fullName && userState.fullName}
                     </Text>
                 </View>
-                <View style={styles.informationunder}>
+                {/* <View style={styles.informationunder}>
                     <Text style={styles.mainText}>
                         Họ
                     </Text>
                     <Text style={styles.secondText}>
                         Trương
                     </Text>
-                </View>
+                </View> */}
                 <View style={styles.informationunder}>
                     <Text style={styles.mainText}>
                         Giới tính
                     </Text>
                     <Text style={styles.secondText}>
-                        Nam
+                        {userState?.gender && userState.fullName || "Chưa chọn"}
                     </Text>
                 </View>
                 <View style={styles.informationunder}>

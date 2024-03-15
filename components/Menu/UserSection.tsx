@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native'
 import { COLORS } from '../../assets'
 import { ActiveProps } from '../../app/(tabs)/(menu)/menu'
 import { router } from 'expo-router'
+import { useUserStore } from '../../app/store/store'
 
 interface UserSectionProps {
     activeButton: string
@@ -16,13 +17,16 @@ const UserSection: React.FC<UserSectionProps> = ({
     activeButton,
     handleButtonClick
 }) => {
+    const { userState } = useUserStore()
     return (
         <View style={styles.userSection}>
             <View style={styles.leftSection}>
                 <TouchableOpacity onPress={() => router.push('/(tabs)/(menu)/profile')}>
                     <Image
                         style={styles.logo}
-                        source={require('../../assets/images/avatar.jpg')}
+                        source={{
+                            uri: userState?.profilePicture,
+                        }}
                     />
                 </TouchableOpacity>
                 <View>
