@@ -25,3 +25,40 @@ export const useLoadingStore = create<LoadingLogin>((set) => ({
     loading: false,
     setLoadingState: (loading) => set(() => ({ loading: loading }))
 }))
+
+interface RegisterData {
+    selectedValues: {
+        province: string | null;
+        provinceId: string | null;
+        district: string | null;
+        districtId: string | null;
+        ward: string | null;
+        wardCode: string | null;
+        gender: string | null;
+    };
+    setSelectedValues: (values: {
+        province: string | null;
+        provinceId: string | null;
+        district: string | null;
+        districtId: string | null;
+        ward: string | null;
+        wardCode: string | null;
+        gender: string | null;
+    }) => void;
+}
+
+export const useRegisterStore = create((set: any) => ({
+    selectedValues: {
+        province: null,
+        provinceId: null,
+        district: null,
+        districtId: null,
+        ward: null,
+        wardCode: null,
+        gender: null,
+    },
+    setSelectedValues: (values: any) =>
+        set((state: any) => ({
+            selectedValues: { ...state.selectedValues, ...values },
+        })),
+}));

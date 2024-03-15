@@ -1,10 +1,14 @@
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import React from "react";
+import { FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons, SimpleLineIcons } from "@expo/vector-icons";
+import React, { useRef, useState } from "react";
 import {
     ActivityIndicator,
-    Dimensions,
+    Alert,
     Keyboard,
     KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    SafeAreaView,
+    ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -14,73 +18,176 @@ import { COLORS } from "../../assets";
 import CustomButton from "../../components/Button";
 import InputV2 from "../../components/InputV2";
 import SpaceBet from "../../components/SpaceBet";
-import { decodeJWT, useAuth } from "../context/auth";
+import { decodeJWT } from "../context/auth";
 
+import DateTimePicker from '@react-native-community/datetimepicker';
 
-import {
-    GoogleSignin,
-    GoogleSigninButton,
-    statusCodes,
-} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
+import {
+    GoogleSignin
+} from '@react-native-google-signin/google-signin';
 import { router } from "expo-router";
-import instance from "../context/axiosConfig";
+import PhoneInput from "react-native-phone-number-input";
 import { setUserAuthToken } from "../context/authService";
-import { useLoadingStore, useUserStore } from "../store/store";
+import instance from "../context/axiosConfig";
+import { useLoadingStore, useRegisterStore, useUserStore } from "../store/store";
+import AddressComponent from "../../components/AddressComponent";
 
 GoogleSignin.configure({
     webClientId: '130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com',
 });
 async function onGoogleButtonPress() {
-    // Check if your device supports Google Play
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-    // Get the users ID token
     const { idToken } = await GoogleSignin.signIn();
-
-    // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-    // Sign-in the user with the credential
     return auth().signInWithCredential(googleCredential);
 }
 
 
 
-const { height, width } = Dimensions.get("window");
 interface ErrorState {
-    user?: string,
-    password?: string
+    email?: string,
+    password?: string,
+    fullName?: string,
+    retypeNewPassword?: string,
+    street?: string,
+    gender?: "Male" | "Female"
 }
 
 const RegisterPage = () => {
+
+    const { selectedValues } = useRegisterStore()
     const [inputs, setInputs] = React.useState({
-        user: '',
-        password: ''
+        email: '',
+        password: '',
+        fullName: '',
+        retypeNewPassword: '',
+        street: '',
+        gender: ''
     });
     const [errors, setErrors] = React.useState<ErrorState>({
 
     });
+    const phoneInput = useRef<PhoneInput>(null);
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [valid, setValid] = useState(false)
+    const [showError, setShowError] = useState(false)
+    const [date, setDate] = useState(new Date())
+    const [dateOfbirth, setDateOfBirth] = useState("")
+    const [showPicker, setShowPicker] = useState(false)
+
+    const toggleDatePicker = () => {
+        setShowPicker(!showPicker)
+    }
+
+    const formatDate = (rawDate: any) => {
+        let date = new Date(rawDate)
+        let year = date.getFullYear()
+        let month = date.getMonth() + 1
+        let day = date.getDate()
+        return `${day}/${month}/${year}`
+    }
+
+    const convertToISO8601WithTime = (dateStr: any) => {
+        var parts = dateStr.split('/');
+        var dateObject = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
+        var iso8601Date = dateObject.toISOString().split('T')[0] + "T00:00:00.000Z";
+        return iso8601Date;
+    }
+
+    const onChange = ({ type }: any, selectedDate: any) => {
+        if (type == 'set') {
+            const currDate = selectedDate;
+            setDate(currDate)
+            if (Platform.OS === 'android') {
+                toggleDatePicker()
+                setDateOfBirth(formatDate(currDate))
+            }
+        } else {
+            toggleDatePicker()
+        }
+    }
 
     const validate = () => {
         Keyboard.dismiss();
         let isValid = true;
-        console.log(inputs?.user)
-        if (!inputs.user) {
-            handleError('Không được để trống ô này', 'user');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!inputs.email) {
+            handleError('Không được để trống ô này', 'email');
             isValid = false;
-        } else if (inputs.user.length < 6) {
-            handleError('Tên người dùng phải 6 kí tự trở lên', 'user');
+        } else if (!emailRegex.test(inputs.email)) {
+            handleError('Địa chỉ email không hợp lệ', 'email');
+            isValid = false;
+        }
+        if (!inputs.fullName) {
+            handleError('Không được để trống ô này', 'fullName');
+            isValid = false;
+        } else if (inputs.fullName.length < 6) {
+            handleError('Tên người dùng phải 6 kí tự trở lên', 'fullName');
             isValid = false;
         }
         if (!inputs.password) {
             handleError('Không được để trống ô này', 'password');
             isValid = false;
         }
+        if (!inputs.street) {
+            handleError('Không được để trống ô này', 'street');
+            isValid = false;
+        }
+        if (!inputs.retypeNewPassword) {
+            handleError('Không được để trống ô này', 'retypeNewPassword');
+            isValid = false;
+        }
+        if (inputs.password !== inputs.retypeNewPassword) {
+            handleError('Mật khẩu nhập lại không khớp', 'retypeNewPassword');
+            isValid = false;
+        }
+
+        if (!phoneNumber) {
+            Alert.alert("Thông báo", "Không được để trống số điện thoại")
+            isValid = false;
+        } else {
+            const checkValid = phoneInput.current?.isValidNumber(phoneNumber);
+            setShowError(true);
+            setValid(checkValid ? checkValid : false);
+            if (checkValid === false) {
+                console.log(checkValid)
+                isValid = false;
+            }
+        }
+        if (!(selectedValues.district && selectedValues.districtId && selectedValues.gender && selectedValues.province && selectedValues.provinceId && selectedValues.ward && selectedValues.wardCode)) {
+            Alert.alert("Thông báo", "Không được để ô trống")
+            isValid = false;
+        }
+
 
         if (isValid) {
-            // loginTest({ test: inputs?.user });
+            console.log('success')
+            const dataPost = {
+                email: inputs.email,
+                password: inputs.password,
+                phone: phoneNumber,
+                dob: convertToISO8601WithTime(dateOfbirth),
+                fullName: inputs.fullName,
+                gender: selectedValues.gender,
+                address: {
+                    recipientName: inputs.fullName,
+                    recipientPhone: phoneNumber,
+                    recipientEmail: inputs.email,
+                    province: selectedValues.province,
+                    provinceId: selectedValues.provinceId,
+                    district: selectedValues.district,
+                    disctrictId: selectedValues.districtId,
+                    ward: selectedValues.ward,
+                    wardCode: selectedValues.wardCode,
+                    street: inputs.street,
+                }
+            }
+            console.log(dataPost)
         }
     };
+
 
 
     const handleOnchange = (text: string, input: string) => {
@@ -102,76 +209,136 @@ const RegisterPage = () => {
                 <View style={styles.activityLoading}>
                     <ActivityIndicator color={COLORS.primary} size={50}></ActivityIndicator>
                 </View>
-            ) : (<View style={styles.loginForm}>
-                <View style={styles.titleWrapper}>
-                    <Text style={styles.title}>Đăng ký</Text>
-                    <Text style={styles.des}>Chưa có tài khoản?</Text>
-                    <Text style={styles.des}>Hãy bắt đầu mua sắm nào.</Text>
-                </View>
-                <View style={styles.inputCo}>
+            ) : (
+                <ScrollView contentContainerStyle={styles.loginForm} showsVerticalScrollIndicator={false}>
+                    <View style={styles.titleWrapper}>
+                        <Text style={styles.title}>Đăng ký</Text>
+                        <Text style={styles.des}>Chưa có tài khoản?</Text>
+                        <Text style={styles.des}>Hãy bắt đầu mua sắm nào.</Text>
+                    </View>
+                    <View style={styles.inputCo} >
 
-                    <InputV2
-                        onChangeText={text => handleOnchange(text, 'user')}
-                        onFocus={() => handleError(null, 'user')}
-                        error={errors.user}
-                        placeholder="Tên đăng nhập..." label="Tên đăng nhập" iconPlace={<AntDesign name="user" size={24} color={COLORS.black} />} />
-                    <SpaceBet height={10} />
+                        <InputV2
+                            onChangeText={text => handleOnchange(text, 'email')}
+                            onFocus={() => handleError(null, 'email')}
+                            error={errors.email}
+                            placeholder="Email" label="Email" iconPlace={<MaterialCommunityIcons name="email-outline" size={24} color={COLORS.black} />} />
+                        <SpaceBet height={10} />
+                        <InputV2
+                            onChangeText={text => handleOnchange(text, 'fullName')}
+                            onFocus={() => handleError(null, 'fullName')}
+                            error={errors.fullName}
+                            placeholder="Tên đầy đủ" label="Tên" iconPlace={<SimpleLineIcons name="user" size={24} color={COLORS.black} />} />
+                        <SpaceBet height={10} />
 
-                    <InputV2
-                        onChangeText={text => handleOnchange(text, 'password')}
-                        onFocus={() => handleError(null, 'password')}
-                        error={errors.password}
-                        placeholder="Mật khẩu" password label="Mật khẩu" iconPlace={<Ionicons name="lock-closed-outline" size={24} color={COLORS.black} />} />
-                    <SpaceBet height={20} />
-                    <CustomButton
-                        buttonText="Đăng kí"
-                        style={{ width: "100%" }}
-                        onPress={validate}
-                    />
-                    <SpaceBet height={20} />
-                    <CustomButton
-                        buttonText="Đăng kí với Google"
-                        buttonColor="secondary"
-                        style={{ width: "100%" }}
-                        onPress={() =>
-                            onGoogleButtonPress()
-                                .then(result => {
-                                    console.log(result);
-                                    setLoadingState(true)
-                                    const { uid, email, displayName, photoURL } = result.user;
-                                    instance.post(`/api/auth/login-with-google?userId=${uid}`,
-                                        {
-                                            email: email,
-                                            name: displayName,
-                                            imageUrl: photoURL
-                                        })
-                                        .then((response) => {
-                                            const token = response.data.data.accessToken
-                                            const decoded = decodeJWT(token);
-                                            const userID = decoded.UserId
-                                            instance.get(`/api/user/profile/${userID}`)
-                                                .then((res) => {
-                                                    const userData = res.data.data
-                                                    setLoadingState(false)
-                                                    setUserState(userData);
-                                                    setUserAuthToken(token)
-                                                })
-                                        })
-                                        .catch((apiError) => {
-                                            console.error('API call failed:', apiError);
-                                        });
-                                })
-                                .catch(e => {
-                                    console.log(e);
-                                })
-                        }
-                    />
-                    <SpaceBet height={20} />
-                    <TouchableOpacity style={styles.bottomTextContainer} onPress={() => router.push('/(auth)/login')}>
-                        <Text style={styles.bottomText}>Đã có tài khoản ? Đăng nhập ngay</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>)}
+                        <InputV2
+                            onChangeText={text => handleOnchange(text, 'password')}
+                            onFocus={() => handleError(null, 'password')}
+                            error={errors.password}
+                            placeholder="Mật khẩu" password label="Mật khẩu" iconPlace={<Ionicons name="lock-closed-outline" size={24} color={COLORS.black} />} />
+                        <SpaceBet height={10} />
+                        <InputV2
+                            onChangeText={text => handleOnchange(text, 'retypeNewPassword')}
+                            onFocus={() => handleError(null, 'retypeNewPassword')}
+                            error={errors.retypeNewPassword}
+                            placeholder="Nhập lại mật khẩu" password label="Nhập lại mật khẩu" iconPlace={<Ionicons name="lock-closed-outline" size={24} color={COLORS.black} />} />
+                        <SpaceBet height={30} />
+                        <PhoneInput
+                            defaultCode="VN"
+                            placeholder="Số điện thoại"
+                            ref={phoneInput}
+                            onChangeText={(text) => {
+                                setPhoneNumber(text);
+                            }}
+                            defaultValue={phoneNumber}
+                            codeTextStyle={styles.codeTextStyle}
+                            countryPickerButtonStyle={styles.countryPickerButtonStyle}
+                            textContainerStyle={styles.textContainerStyle}
+                            textInputStyle={styles.textInputStyle}
+                            containerStyle={styles.containerStyle}
+                        />
+                        {showError && <Text style={{ color: COLORS.errorColor, fontSize: 13, fontFamily: 'mon-sb' }}>{valid ? null : "Số điện thoại không hợp lệ"}</Text>}
+                        <SpaceBet height={10} />
+                        {showPicker && <DateTimePicker
+                            onChange={onChange}
+                            mode="date"
+                            display="spinner"
+                            value={date}
+                            maximumDate={new Date()}
+                            minimumDate={new Date(1980, 1, 1)}
+                        />}
+                        {!showPicker && (
+                            <Pressable onPress={toggleDatePicker}>
+                                <InputV2
+                                    editable={false}
+                                    label="Ngày sinh"
+                                    placeholder={"Bấm vào để chọn ngày sinh"}
+                                    value={dateOfbirth}
+                                    onChangeText={setDateOfBirth}
+                                    iconPlace={<MaterialIcons name="date-range" size={24} color={COLORS.black} />}
+                                />
+                            </Pressable>
+                        )}
+                        <SpaceBet height={10} />
+                        <InputV2
+                            onChangeText={text => handleOnchange(text, 'street')}
+                            onFocus={() => handleError(null, 'street')}
+                            error={errors.street}
+                            placeholder="Địa chỉ"
+                            label="Nhập địa chỉ"
+                            iconPlace={<FontAwesome name="street-view" size={24} color={COLORS.black} />} />
+                        <SpaceBet height={30} />
+                        <AddressComponent />
+                        <SpaceBet height={20} />
+                        <CustomButton
+                            buttonText="Đăng kí"
+                            style={{ width: "100%" }}
+                            onPress={validate}
+                        />
+                        <SpaceBet height={20} />
+                        <CustomButton
+                            buttonText="Đăng kí với Google"
+                            buttonColor="secondary"
+                            style={{ width: "100%" }}
+                            onPress={() =>
+                                onGoogleButtonPress()
+                                    .then(result => {
+                                        console.log(result);
+                                        setLoadingState(true)
+                                        const { uid, email, displayName, photoURL } = result.user;
+                                        instance.post(`/api/auth/login-with-google?userId=${uid}`,
+                                            {
+                                                email: email,
+                                                name: displayName,
+                                                imageUrl: photoURL
+                                            })
+                                            .then((response) => {
+                                                const token = response.data.data.accessToken
+                                                const decoded = decodeJWT(token);
+                                                const userID = decoded.UserId
+                                                instance.get(`/api/user/profile/${userID}`)
+                                                    .then((res) => {
+                                                        const userData = res.data.data
+                                                        setLoadingState(false)
+                                                        setUserState(userData);
+                                                        setUserAuthToken(token)
+                                                    })
+                                            })
+                                            .catch((apiError) => {
+                                                console.error('API call failed:', apiError);
+                                            });
+                                    })
+                                    .catch(e => {
+                                        console.log(e);
+                                    })
+                            }
+                        />
+                        <SpaceBet height={20} />
+                        <TouchableOpacity style={styles.bottomTextContainer} onPress={() => router.push('/(auth)/login')}>
+                            <Text style={styles.bottomText}>Đã có tài khoản ? Đăng nhập ngay</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>)}
 
         </KeyboardAvoidingView>
     );
@@ -232,5 +399,32 @@ const styles = StyleSheet.create({
     bottomText: {
         fontFamily: 'mon-sb',
         color: COLORS.secondary,
+    },
+    //
+    codeTextStyle: {
+        fontFamily: 'mon-b',
+    },
+    countryPickerButtonStyle: {
+        marginRight: 10,
+        borderWidth: 2,
+        backgroundColor: COLORS.inputBackgroundColor,
+        borderRadius: 16,
+        borderColor: COLORS.gray,
+    },
+    textContainerStyle: {
+        height: 60,
+        backgroundColor: COLORS.inputBackgroundColor,
+        flexDirection: 'row',
+        borderWidth: 2,
+        alignItems: 'center',
+        borderRadius: 16,
+        borderColor: COLORS.gray,
+    },
+    textInputStyle: {
+        fontFamily: 'mon-b',
+    },
+    containerStyle: {
+        width: '100%',
     }
+
 });
