@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -14,7 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomInput from "../../../components/Input";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { COLORS, SHADOWS, SIZES } from "../../../assets";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const { height, width } = Dimensions.get("window");
 
 import {
@@ -27,6 +28,12 @@ import CategoriesSection from "../../../components/Home/CategoriesSection";
 import TopProductsSection from "../../../components/Home/TopProductsSection";
 import NewProductsSection from "../../../components/Home/NewProductsSection";
 import RecommendationsSection from "../../../components/Home/Recommendations";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getNewProduct,
+  getProducts,
+  getTopProducts,
+} from "../../context/productsApi";
 
 export default function HomepageScreen() {
   const router = useRouter();
@@ -37,6 +44,21 @@ export default function HomepageScreen() {
   const handleSearch = (text: string) => {
     setSearchValue(text);
   };
+
+  const productsQuery = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
+
+  const newProductsQuery = useQuery({
+    queryKey: ["newProducts"],
+    queryFn: () => getNewProduct(6),
+  });
+
+  const topProductsQuery = useQuery({
+    queryKey: ["topProducts"],
+    queryFn: () => getTopProducts(5),
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,11 +82,28 @@ export default function HomepageScreen() {
         {/* categories */}
         <CategoriesSection categories={homeCategories} />
         {/* top product */}
-        <TopProductsSection topProducts={topProducts} />
+        {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
+        {topProductsQuery.isSuccess ? (
+          <TopProductsSection topProducts={topProductsQuery.data} />
+        ) : (
+          <ActivityIndicator />
+        )}
+
         {/* new items */}
-        <NewProductsSection newProducts={newItems} />
+        {newProductsQuery.isLoading ? <ActivityIndicator /> : null}
+        {newProductsQuery.isSuccess ? (
+          <NewProductsSection newProducts={newProductsQuery.data} />
+        ) : (
+          <ActivityIndicator />
+        )}
+
         {/* recommendations */}
-        <RecommendationsSection recommendations={recommendations} />
+        {productsQuery.isLoading ? <ActivityIndicator /> : null}
+        {productsQuery.isSuccess ? (
+          <RecommendationsSection recommendations={productsQuery.data} />
+        ) : (
+          <ActivityIndicator />
+        )}
       </ScrollView>
     </SafeAreaView>
   );

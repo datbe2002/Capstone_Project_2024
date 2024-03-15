@@ -12,19 +12,14 @@ import {
   View,
 } from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
+import { Products } from "../../constants/Type";
 // import { categories } from "../../app/(tabs)/exampledata";
 const { height, width } = Dimensions.get("window");
 
 interface NewProductsProps {
   props?: any;
-  newProducts: Array<NewProducts>;
+  newProducts: Array<Products>;
 }
-
-type NewProducts = {
-  id: number;
-  name: string;
-  props?: any;
-};
 
 const NewProductsSection: React.FC<NewProductsProps> = ({
   props,
@@ -66,8 +61,8 @@ const NewProductsSection: React.FC<NewProductsProps> = ({
                 <Image
                   style={styles.itemImg}
                   source={
-                    item.defaultImg
-                      ? { uri: item.defaultImg }
+                    item.defaultImage
+                      ? { uri: item.defaultImage }
                       : require("../../assets/images/default.png")
                   }
                 />
