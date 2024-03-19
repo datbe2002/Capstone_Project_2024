@@ -3,6 +3,8 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { Provider, useAuth } from './context/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import BackButton from '../components/BackButton';
+import { COLORS } from '../assets';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -59,6 +61,19 @@ function RootLayoutNav() {
       <Stack.Screen name="introduce" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/register" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)/verifyemail"
+        options={{
+          headerShown: true,
+          title: 'Xác thực Email',
+          headerTitleAlign: 'center',
+          headerLeft: BackButton,
+          headerTitleStyle: {
+            fontFamily: 'mon-b',
+            fontSize: 25
+          },
+          headerTintColor: COLORS.primary,
+        }}
+      />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );

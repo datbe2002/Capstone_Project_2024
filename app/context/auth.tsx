@@ -6,7 +6,7 @@ import { Alert } from "react-native";
 import { setUserAuthToken } from './authService'
 import { Buffer } from 'buffer';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserData } from "../../constants/types/normal";
+import { AddressData, UserData } from "../../constants/types/normal";
 import { useLoadingStore, useUserStore } from "../store/store";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 interface SignInResponse {
@@ -24,10 +24,8 @@ interface SignOutResponse {
 interface AuthContextValue {
   signIn: (email: string, password: string) => Promise<SignInResponse>;
   // signUp: (
-  //   email: string,
-  //   password: string,
-  //   username: string
-  // ) => Promise<SignInResponse>;
+  //   data: AddressData
+  // ) => Promise<any>;
   signOut: () => Promise<SignOutResponse>;
   authInitialized: boolean;
   userState: any;
@@ -119,6 +117,7 @@ export function Provider(props: ProviderProps) {
     } finally {
       setUserAuthToken()
       setUserState(null);
+      router.replace('/(auth)/login')
     }
   };
 
@@ -139,34 +138,18 @@ export function Provider(props: ProviderProps) {
       setUserState(userData);
       setUserAuthToken(token)
       return { data: userData, error: undefined };
-    } catch (error) {
-      console.log(error)
-      setLoadingState(false)
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        const msg = error.response.data.message;
+        // Handle the response data for status code 400
+        console.log(msg);
+        Alert.alert('Error', msg);
+      }
+      setLoadingState(false);
       setUserState(null);
-      Alert.alert('Đăng nhập', 'Sai mật khẩu hoặc tài khoản')
       return { error: error as Error, data: undefined };
     }
   };
-
-  // const createAccount = async (
-  //   email: string,
-  //   password: string,
-  //   username: string
-  // ): Promise<SignInResponse> => {
-  //   try {
-  //     const response = await axios.post("/api/register", {
-  //       email,
-  //       password,
-  //       username,
-  //     });
-  //     const userData = response.data;
-  //     // setAuth(userData);
-  //     return { data: userData, error: undefined };
-  //   } catch (error) {
-  //     // setAuth(null);
-  //     return { error: error as Error, data: undefined };
-  //   }
-  // };
 
   useProtectedRoute(userState);
 
@@ -175,7 +158,7 @@ export function Provider(props: ProviderProps) {
       value={{
         signIn: login,
         signOut: logout,
-        // signUp: createAccount,
+        // signUp: registerQuery,
         authInitialized,
         userState
       }}
