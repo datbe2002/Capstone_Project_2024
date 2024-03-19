@@ -12,25 +12,24 @@ export interface UserData {
 
 
 export interface AddressData {
-    email: string
-    password: string
-    phone: string
-    dob: string
-    fullName: string
-    gender: number
-    address: Address
+    email: string | null
+    password: string | null
+    phone: string | null
+    dob: string | null
+    fullName: string | null
+    gender: number | null
+    address: Address | null
 }
 
 export interface Address {
-    recipientName: string
-    recipientPhone: string
-    recipientEmail: string
-    province: string
-    provinceId: number
-    district: string
-    disctrictId: number
-    ward: string
-    wardCode: string
-    street: string
-    isDefault: boolean
+    recipientName: string | null
+    recipientPhone: string | null
+    recipientEmail: string | null
+    province: string | null
+    provinceId: number | null
+    district: string | null
+    disctrictId: number | null
+    ward: string | null
+    wardCode: string | null
+    street: string | null
 }

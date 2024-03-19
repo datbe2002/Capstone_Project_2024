@@ -7,7 +7,6 @@ import {
     KeyboardAvoidingView,
     Platform,
     Pressable,
-    SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
@@ -28,10 +27,11 @@ import {
 } from '@react-native-google-signin/google-signin';
 import { router } from "expo-router";
 import PhoneInput from "react-native-phone-number-input";
+import AddressComponent from "../../components/AddressComponent";
 import { setUserAuthToken } from "../context/authService";
 import instance from "../context/axiosConfig";
+import useRegisterHook from "../context/registerMutation";
 import { useLoadingStore, useRegisterStore, useUserStore } from "../store/store";
-import AddressComponent from "../../components/AddressComponent";
 
 GoogleSignin.configure({
     webClientId: '130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com',
@@ -55,7 +55,7 @@ interface ErrorState {
 }
 
 const RegisterPage = () => {
-
+    const { register, isRegisterLoading } = useRegisterHook()
     const { selectedValues } = useRegisterStore()
     const [inputs, setInputs] = React.useState({
         email: '',
@@ -108,10 +108,11 @@ const RegisterPage = () => {
         }
     }
 
-    const validate = () => {
+    const validate = async () => {
         Keyboard.dismiss();
         let isValid = true;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 
         if (!inputs.email) {
             handleError('Không được để trống ô này', 'email');
@@ -163,7 +164,6 @@ const RegisterPage = () => {
 
 
         if (isValid) {
-            console.log('success')
             const dataPost = {
                 email: inputs.email,
                 password: inputs.password,
@@ -183,8 +183,8 @@ const RegisterPage = () => {
                     wardCode: selectedValues.wardCode,
                     street: inputs.street,
                 }
-            }
-            console.log(dataPost)
+            };
+            await register(dataPost)
         }
     };
 
@@ -289,12 +289,23 @@ const RegisterPage = () => {
                             iconPlace={<FontAwesome name="street-view" size={24} color={COLORS.black} />} />
                         <SpaceBet height={30} />
                         <AddressComponent />
-                        <SpaceBet height={20} />
-                        <CustomButton
-                            buttonText="Đăng kí"
-                            style={{ width: "100%" }}
-                            onPress={validate}
-                        />
+                        <View style={styles.acceptTerm}>
+                            <Text style={styles.acceptTermText}>Tiếp tục khi bạn đã chấp thuận <Text style={styles.highlightTermText}>Chính sách bảo mật & Cookie</Text> và <Text style={styles.highlightTermText}>Điều khoản và Điều kiện</Text></Text>
+                        </View>
+                        <SpaceBet height={10} />
+                        {isRegisterLoading ?
+                            <CustomButton
+                                buttonText={<ActivityIndicator color={COLORS.white} size={30} />}
+                                style={{ width: "100%" }}
+                                onPress={validate}
+                            />
+                            :
+                            <CustomButton
+                                buttonText="Đăng kí"
+                                style={{ width: "100%" }}
+                                onPress={validate}
+                            />
+                        }
                         <SpaceBet height={20} />
                         <CustomButton
                             buttonText="Đăng kí với Google"
@@ -334,7 +345,7 @@ const RegisterPage = () => {
                             }
                         />
                         <SpaceBet height={20} />
-                        <TouchableOpacity style={styles.bottomTextContainer} onPress={() => router.push('/(auth)/login')}>
+                        <TouchableOpacity style={styles.bottomTextContainer} onPress={() => router.replace('/(auth)/login')}>
                             <Text style={styles.bottomText}>Đã có tài khoản ? Đăng nhập ngay</Text>
                         </TouchableOpacity>
                     </View>
@@ -357,7 +368,7 @@ const styles = StyleSheet.create({
     activityLoading: {
         flex: 1,
         alignItems: "center",
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     loginForm: {
         width: "95%",
@@ -398,7 +409,6 @@ const styles = StyleSheet.create({
     },
     bottomText: {
         fontFamily: 'mon-sb',
-        color: COLORS.secondary,
     },
     //
     codeTextStyle: {
@@ -425,6 +435,19 @@ const styles = StyleSheet.create({
     },
     containerStyle: {
         width: '100%',
+    },
+    acceptTerm: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    acceptTermText: {
+        fontFamily: 'mon-sb',
+        textAlign: 'center',
+    },
+    highlightTermText: {
+        fontFamily: 'mon-sb',
+        color: COLORS.primary
     }
+
 
 });

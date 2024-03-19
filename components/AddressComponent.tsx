@@ -137,59 +137,62 @@ const AddressComponent = () => {
                         handleDistrict(item.value)
                     }}
                 />
-                <Dropdown
-                    style={[styles.dropdown, isFocusDist && { borderColor: COLORS.black }]}
-                    placeholderStyle={styles.placeholderStyle}
-                    selectedTextStyle={styles.selectedTextStyle}
-                    inputSearchStyle={styles.inputSearchStyle}
-                    iconStyle={styles.iconStyle}
-                    itemTextStyle={styles.itemTextStyle}
-                    data={districtData}
-                    search
-                    maxHeight={300}
-                    labelField="label"
-                    valueField="value"
-                    placeholder={!isFocusDist ? 'Chọn quận' : '...'}
-                    searchPlaceholder="Tìm kiếm..."
-                    value={selectedValues.districtId}
-                    onFocus={() => setIsFocusDist(true)}
-                    onBlur={() => setIsFocusDist(false)}
-                    onChange={item => {
-                        setSelectedValues({
-                            district: item.label,
-                            districtId: item.value
-                        })
-                        setIsFocusDist(false)
-                        handleWard(item.value)
-                    }}
-                    disable={!selectedValues.province}
-                />
-                <Dropdown
-                    style={[styles.dropdown, isFocusWard && { borderColor: COLORS.black }]}
-                    placeholderStyle={styles.placeholderStyle}
-                    selectedTextStyle={styles.selectedTextStyle}
-                    inputSearchStyle={styles.inputSearchStyle}
-                    iconStyle={styles.iconStyle}
-                    itemTextStyle={styles.itemTextStyle}
-                    data={wardData}
-                    search
-                    maxHeight={300}
-                    labelField="label"
-                    valueField="value"
-                    placeholder={!isFocusWard ? 'Chọn phường' : '...'}
-                    searchPlaceholder="Search..."
-                    value={selectedValues.wardCode}
-                    onFocus={() => setIsFocusWard(true)}
-                    onBlur={() => setIsFocusWard(false)}
-                    onChange={item => {
-                        setSelectedValues({
-                            ward: item.label,
-                            wardCode: item.value
-                        })
-                        setIsFocusWard(false)
-                    }}
-                    disable={!selectedValues.district}
-                />
+                {selectedValues.province && (
+                    <Dropdown
+                        style={[styles.dropdown, isFocusDist && { borderColor: COLORS.black }]}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        inputSearchStyle={styles.inputSearchStyle}
+                        iconStyle={styles.iconStyle}
+                        itemTextStyle={styles.itemTextStyle}
+                        data={districtData}
+                        search
+                        maxHeight={300}
+                        labelField="label"
+                        valueField="value"
+                        placeholder={!isFocusDist ? 'Chọn quận' : '...'}
+                        searchPlaceholder="Tìm kiếm..."
+                        value={selectedValues.districtId}
+                        onFocus={() => setIsFocusDist(true)}
+                        onBlur={() => setIsFocusDist(false)}
+                        onChange={item => {
+                            setSelectedValues({
+                                district: item.label,
+                                districtId: item.value
+                            })
+                            setIsFocusDist(false)
+                            handleWard(item.value)
+                        }}
+                    />
+                )}
+                {selectedValues.district && (
+                    <Dropdown
+                        style={[styles.dropdown, isFocusWard && { borderColor: COLORS.black }]}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        inputSearchStyle={styles.inputSearchStyle}
+                        iconStyle={styles.iconStyle}
+                        itemTextStyle={styles.itemTextStyle}
+                        data={wardData}
+                        search
+                        maxHeight={300}
+                        labelField="label"
+                        valueField="value"
+                        placeholder={!isFocusWard ? 'Chọn phường' : '...'}
+                        searchPlaceholder="Search..."
+                        value={selectedValues.wardCode}
+                        onFocus={() => setIsFocusWard(true)}
+                        onBlur={() => setIsFocusWard(false)}
+                        onChange={item => {
+                            setSelectedValues({
+                                ward: item.label,
+                                wardCode: item.value
+                            })
+                            setIsFocusWard(false)
+                        }}
+                    />
+                )}
+
                 <Dropdown
                     style={[styles.dropdown, isFocusGender && { borderColor: COLORS.black }]}
                     placeholderStyle={styles.placeholderStyle}
