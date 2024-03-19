@@ -5,6 +5,9 @@ import { COLORS } from '../../../assets'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { useAuth } from '../../context/auth'
 import CustomButton from '../../../components/Button'
+import MyAccount from '../../../components/Setting/MyAccount'
+import SettingAccount from '../../../components/Setting/SettingAccount'
+import SupportAccount from '../../../components/Setting/SupportAccount'
 
 interface ErrorState {
     email?: string
@@ -49,8 +52,9 @@ const Setting = () => {
     // };
     return (
         <View style={styles.componentFull}>
-            <Text>Testing</Text>
-
+            <MyAccount />
+            <SettingAccount />
+            <SupportAccount />
             <CustomButton onPress={signOut} buttonText='Đăng xuất' buttonColor='errorColor' ></CustomButton>
         </View>
     )

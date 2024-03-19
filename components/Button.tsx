@@ -12,7 +12,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface CustomButtonProps {
   onPress?: () => void;
-  buttonText: string;
+  buttonText: string | React.ReactNode
   buttonColor?: "primary" | "secondary" | "errorColor";
   style?: ViewStyle;
 }
