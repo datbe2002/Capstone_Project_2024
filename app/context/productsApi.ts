@@ -1,5 +1,6 @@
 import axios from "axios";
 import instance from "./axiosConfig";
+import { Products } from "../../constants/Type";
 
 export const getProducts = async (data?: any) => {
   const response = await instance.get(
@@ -21,5 +22,10 @@ export const getTopProducts = async (size: any) => {
 
 export const getProductById = async (id: any) => {
   const response = await instance.get("/api/product/" + id);
+  return response.data;
+};
+
+export const addToCart = async ({ userId, product, cartId }: any) => {
+  const response = await instance.post("/api/cart/add");
   return response.data;
 };

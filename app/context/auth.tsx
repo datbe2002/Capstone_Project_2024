@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useRootNavigation, useRouter, useSegments } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
-import instance from './axiosConfig';
+import instance from "./axiosConfig";
 import { Alert } from "react-native";
-import { setUserAuthToken } from './authService'
-import { Buffer } from 'buffer';
+import { setUserAuthToken } from "./authService";
+import { Buffer } from "buffer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AddressData, UserData } from "../../constants/types/normal";
 import { useLoadingStore, useUserStore } from "../store/store";
@@ -13,8 +13,6 @@ interface SignInResponse {
   data: UserData | undefined;
   error: Error | undefined;
 }
-
-
 
 interface SignOutResponse {
   error: any | undefined;
@@ -42,19 +40,25 @@ const AuthContext = React.createContext<AuthContextValue | undefined>(
 );
 
 export const decodeJWT = (token: string) => {
-  const base64Url = token.split('.')[1]; // Get the payload part
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Convert to regular base64
-  const jsonPayload = decodeURIComponent(Buffer.from(base64, 'base64').toString('binary').split('').map(function (c) {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+  const base64Url = token.split(".")[1]; // Get the payload part
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/"); // Convert to regular base64
+  const jsonPayload = decodeURIComponent(
+    Buffer.from(base64, "base64")
+      .toString("binary")
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
 
   return JSON.parse(jsonPayload);
 };
 
 export function Provider(props: ProviderProps) {
   // const [user, setAuth] = React.useState<any | null>(null); //cho nay ban dau la null
-  const { setUserState, userState } = useUserStore()
-  const { setLoadingState } = useLoadingStore()
+  const { setUserState, userState } = useUserStore();
+  const { setLoadingState } = useLoadingStore();
   const [authInitialized, setAuthInitialized] = React.useState<boolean>(false);
   const [isNavigationReady, setNavigationReady] = useState(false);
 
@@ -115,9 +119,9 @@ export function Provider(props: ProviderProps) {
     } catch (error) {
       return { error, data: undefined };
     } finally {
-      setUserAuthToken()
+      setUserAuthToken();
       setUserState(null);
-      router.replace('/(auth)/login')
+      router.replace("/(auth)/login");
     }
   };
 
@@ -125,25 +129,42 @@ export function Provider(props: ProviderProps) {
     email: string,
     password: string
   ): Promise<SignInResponse> => {
-    setLoadingState(true)
+    setLoadingState(true);
 
     try {
-      const response = await instance.post("/api/auth/login", { email, password });
-      const token = response.data.data.accessToken
+      const response = await instance.post("/api/auth/login", {
+        email,
+        password,
+      });
+      let userData: UserData;
+
+      const token = response.data.data.accessToken;
       const decoded = decodeJWT(token);
-      const userID = decoded.UserId
-      const secondRes = await instance.get(`/api/user/profile/${userID}`)
-      const userData = secondRes.data.data
-      setLoadingState(false)
+      const userID = decoded.UserId;
+      const secondRes = await instance.get(`/api/user/profile/${userID}`);
+      console.log(userID);
+
+      const userCart = await instance.get("/api/cart/" + userID);
+
+      if (userCart) {
+        userData = {
+          ...secondRes.data.data,
+          userCartId: userCart.data.data.id,
+        };
+      } else {
+        userData = secondRes.data.data;
+      }
+
+      setLoadingState(false);
       setUserState(userData);
-      setUserAuthToken(token)
+      setUserAuthToken(token);
       return { data: userData, error: undefined };
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         const msg = error.response.data.message;
         // Handle the response data for status code 400
         console.log(msg);
-        Alert.alert('Error', msg);
+        Alert.alert("Error", msg);
       }
       setLoadingState(false);
       setUserState(null);
@@ -160,7 +181,7 @@ export function Provider(props: ProviderProps) {
         signOut: logout,
         // signUp: registerQuery,
         authInitialized,
-        userState
+        userState,
       }}
     >
       {props.children}

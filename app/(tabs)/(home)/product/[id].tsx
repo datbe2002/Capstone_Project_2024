@@ -26,17 +26,32 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import Carousel from "../../../../components/Carousel";
 import { useQuery } from "@tanstack/react-query";
-import { getProductById } from "../../../context/productsApi";
+import { addToCart, getProductById } from "../../../context/productsApi";
+import { useUserStore } from "../../../store/store";
 // import Carousel from "react-native-snap-carousel";
 const { height, width } = Dimensions.get("window");
 const ProductDetail = () => {
   const route = useRouter();
   const { id } = useLocalSearchParams();
+  const { userState } = useUserStore();
 
   const productQuery = useQuery({
     queryKey: ["product"],
     queryFn: () => getProductById(id),
   });
+
+  const cartQuery = useQuery({
+    queryKey: ["cart"],
+    queryFn: () => {
+      addToCart({
+        userId: userState?.id,
+        product: productQuery.data.data,
+        cartId: userState?.userCartId,
+      });
+    },
+  });
+
+  const handleAddToCart = () => {};
 
   // const item: any = {
   //   id: id,
