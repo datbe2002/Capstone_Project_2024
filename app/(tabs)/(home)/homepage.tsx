@@ -34,13 +34,38 @@ import {
   getProducts,
   getTopProducts,
 } from "../../context/productsApi";
+import { useUserIDStore, useUserStore } from "../../store/store";
+import instance from "../../context/axiosConfig";
+import { UserData } from "../../../constants/types/normal";
 
 export default function HomepageScreen() {
   const router = useRouter();
   const homeCategories = categories.slice(0, 4);
-
+  const { userId } = useUserIDStore()
+  console.log(userId)
   const [searchValue, setSearchValue] = useState<string>("");
-
+  const { userState, setUserState } = useUserStore()
+  useEffect(() => {
+    const getCart = async () => {
+      try {
+        console.log('first')
+        const userCart = await instance.get("/api/cart/" + userId);
+        let userData: any = {
+          ...userState,
+          userCartId: userCart.data.data.id,
+        };
+        setUserState(userData)
+      } catch (error: any) {
+        console.log(error.response.data.Message)
+        if (error.response.data.Message === 'Cart not found') {
+          console.log(error.response.data.Message)
+        } else {
+          throw error
+        }
+      }
+    }
+    getCart()
+  }, [])
   const handleSearch = (text: string) => {
     setSearchValue(text);
   };
@@ -59,6 +84,9 @@ export default function HomepageScreen() {
     queryKey: ["topProducts"],
     queryFn: () => getTopProducts(5),
   });
+
+  console.log(userState)
+
 
   return (
     <SafeAreaView style={styles.container}>

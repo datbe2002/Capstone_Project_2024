@@ -32,7 +32,7 @@ import {
 import auth from "@react-native-firebase/auth";
 import instance from "../context/axiosConfig";
 import { setUserAuthToken } from "../context/authService";
-import { useLoadingStore, useUserStore } from "../store/store";
+import { useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
 import { ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { UserData } from "../../constants/types/normal";
@@ -64,7 +64,7 @@ const LoginPage = () => {
   });
   const [errors, setErrors] = React.useState<ErrorState>({});
   const { signIn } = useAuth();
-
+  const { setUserId } = useUserIDStore()
   const validate = () => {
     Keyboard.dismiss();
     let isValid = true;
@@ -179,29 +179,11 @@ const LoginPage = () => {
                         const secondRes = await instance.get(
                           `/api/user/profile/${userID}`
                         );
-                        const userCart = await instance.get(
-                          "/api/cart/" + userID
-                        );
-                        let userData: UserData;
-                        if (userCart) {
-                          userData = {
-                            ...secondRes.data.data,
-                            userCartId: userCart.data.data.id,
-                          };
-                        } else {
-                          userData = secondRes.data.data;
-                        }
+                        const userData = secondRes.data.data;
+                        setUserId(userID);
                         setLoadingState(false);
                         setUserState(userData);
                         setUserAuthToken(token);
-
-                        // .then(async (res) => {
-
-                        //   const userData = res.data.data
-                        //   setLoadingState(false)
-                        //   setUserState(userData);
-                        //   setUserAuthToken(token)
-                        // })
                       })
                       .catch((apiError) => {
                         console.error("API call failed:", apiError);

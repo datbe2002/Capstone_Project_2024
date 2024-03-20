@@ -31,7 +31,7 @@ import AddressComponent from "../../components/AddressComponent";
 import { setUserAuthToken } from "../context/authService";
 import instance from "../context/axiosConfig";
 import useRegisterHook from "../context/registerMutation";
-import { useLoadingStore, useRegisterStore, useUserStore } from "../store/store";
+import { useLoadingStore, useRegisterStore, useUserIDStore, useUserStore } from "../store/store";
 
 GoogleSignin.configure({
     webClientId: '130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com',
@@ -75,6 +75,7 @@ const RegisterPage = () => {
     const [date, setDate] = useState(new Date())
     const [dateOfbirth, setDateOfBirth] = useState("")
     const [showPicker, setShowPicker] = useState(false)
+    const { setUserId } = useUserIDStore()
 
     const toggleDatePicker = () => {
         setShowPicker(!showPicker)
@@ -313,33 +314,35 @@ const RegisterPage = () => {
                             style={{ width: "100%" }}
                             onPress={() =>
                                 onGoogleButtonPress()
-                                    .then(result => {
+                                    .then((result) => {
                                         console.log(result);
-                                        setLoadingState(true)
+                                        setLoadingState(true);
                                         const { uid, email, displayName, photoURL } = result.user;
-                                        instance.post(`/api/auth/login-with-google?userId=${uid}`,
-                                            {
+                                        instance
+                                            .post(`/api/auth/login-with-google?userId=${uid}`, {
                                                 email: email,
                                                 name: displayName,
-                                                imageUrl: photoURL
+                                                imageUrl: photoURL,
                                             })
-                                            .then((response) => {
-                                                const token = response.data.data.accessToken
+                                            .then(async (response) => {
+                                                const token = response.data.data.accessToken;
                                                 const decoded = decodeJWT(token);
-                                                const userID = decoded.UserId
-                                                instance.get(`/api/user/profile/${userID}`)
-                                                    .then((res) => {
-                                                        const userData = res.data.data
-                                                        setLoadingState(false)
-                                                        setUserState(userData);
-                                                        setUserAuthToken(token)
-                                                    })
+                                                const userID = decoded.UserId;
+
+                                                const secondRes = await instance.get(
+                                                    `/api/user/profile/${userID}`
+                                                );
+                                                const userData = secondRes.data.data;
+                                                setUserId(userID);
+                                                setLoadingState(false);
+                                                setUserState(userData);
+                                                setUserAuthToken(token);
                                             })
                                             .catch((apiError) => {
-                                                console.error('API call failed:', apiError);
+                                                console.error("API call failed:", apiError);
                                             });
                                     })
-                                    .catch(e => {
+                                    .catch((e) => {
                                         console.log(e);
                                     })
                             }
