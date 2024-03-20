@@ -1,18 +1,18 @@
 export interface UserData {
-  dob: string;
-  email: string;
-  fullName: string;
-  gender: any;
-  id: string;
-  phone: string;
-  profilePicture: string;
-  roleId: number;
-  verified: boolean;
-  userCartId: string;
+  dob: any | null;
+  email: string | null;
+  fullName: string | null;
+  gender: any | null;
+  id: string | null;
+  phone: string | null;
+  profilePicture: string | null;
+  roleId: number | null;
+  verified: boolean | null;
+  userCartId: string | null;
 }
 
 export interface AddressData {
-  email: string | null;
+  email: string | null | null;
   password: string | null;
   phone: string | null;
   dob: string | null;

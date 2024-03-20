@@ -14,6 +14,8 @@ export const useUserStore = create<UserStore>((set) => ({
 
 
 
+
+
 interface LoadingLogin {
     loading: boolean
     setLoadingState: (loading: boolean) => void
@@ -24,6 +26,16 @@ interface LoadingLogin {
 export const useLoadingStore = create<LoadingLogin>((set) => ({
     loading: false,
     setLoadingState: (loading) => set(() => ({ loading: loading }))
+}))
+interface UserIDStore {
+    userId: string | null
+    setUserId: (userId: string | null) => void
+
+}
+
+export const useUserIDStore = create<UserIDStore>((set) => ({
+    userId: null,
+    setUserId: (userId) => set(() => ({ userId: userId }))
 }))
 
 interface RegisterData {

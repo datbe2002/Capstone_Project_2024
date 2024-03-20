@@ -7,7 +7,7 @@ import { setUserAuthToken } from "./authService";
 import { Buffer } from "buffer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AddressData, UserData } from "../../constants/types/normal";
-import { useLoadingStore, useUserStore } from "../store/store";
+import { useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 interface SignInResponse {
   data: UserData | undefined;
@@ -58,6 +58,7 @@ export const decodeJWT = (token: string) => {
 export function Provider(props: ProviderProps) {
   // const [user, setAuth] = React.useState<any | null>(null); //cho nay ban dau la null
   const { setUserState, userState } = useUserStore();
+  const { setUserId } = useUserIDStore()
   const { setLoadingState } = useLoadingStore();
   const [authInitialized, setAuthInitialized] = React.useState<boolean>(false);
   const [isNavigationReady, setNavigationReady] = useState(false);
@@ -142,24 +143,24 @@ export function Provider(props: ProviderProps) {
       const decoded = decodeJWT(token);
       const userID = decoded.UserId;
       const secondRes = await instance.get(`/api/user/profile/${userID}`);
-      console.log(userID);
-
-      const userCart = await instance.get("/api/cart/" + userID);
-
-      if (userCart) {
-        userData = {
-          ...secondRes.data.data,
-          userCartId: userCart.data.data.id,
-        };
-      } else {
-        userData = secondRes.data.data;
-      }
+      setUserId(userID);
+      // const userCart = await instance.get("/api/cart/" + userID);
+      // console.log(userCart)
+      // if (userCart) {
+      //   userData = {
+      //     ...secondRes.data.data,
+      //     userCartId: userCart.data.data.id,
+      //   };
+      // } else {
+      userData = secondRes.data.data;
+      // }
 
       setLoadingState(false);
       setUserState(userData);
       setUserAuthToken(token);
       return { data: userData, error: undefined };
     } catch (error: any) {
+      // console.log(error.response)
       if (error.response && error.response.status === 400) {
         const msg = error.response.data.message;
         // Handle the response data for status code 400
