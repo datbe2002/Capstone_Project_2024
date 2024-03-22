@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { SafeAreaView } from 'react-native-safe-area-context';
-import UserSection from '../../../components/Menu/UserSection';
-import { useCallback, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import CenterSection from '../../../components/Menu/CenterSection';
-import { useUserStore } from '../../store/store';
+import UserSection from '../../../components/Menu/UserSection';
+import VerifyAlert from '../../../components/Setting/VerifyAlert';
 
 export type ActiveProps = 'main' | 'noti' | 'ticket'
 
@@ -27,6 +27,7 @@ export default function Menu() {
   return (
     <SafeAreaView>
       <UserSection activeButton={activeButton} handleButtonClick={handleButtonClick} />
+      <VerifyAlert />
       <CenterSection activeButton={activeButton} />
     </SafeAreaView>
   );
