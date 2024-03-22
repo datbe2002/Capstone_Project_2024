@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../../assets";
 import {
@@ -25,33 +25,53 @@ import {
 } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import Carousel from "../../../../components/Carousel";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { addToCart, getProductById } from "../../../context/productsApi";
 import { useUserStore } from "../../../store/store";
+import { CartData } from "../../../../constants/Type";
+import instance from "../../../context/axiosConfig";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+
 // import Carousel from "react-native-snap-carousel";
 const { height, width } = Dimensions.get("window");
 const ProductDetail = () => {
   const route = useRouter();
   const { id } = useLocalSearchParams();
   const { userState } = useUserStore();
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const productQuery = useQuery({
     queryKey: ["product"],
     queryFn: () => getProductById(id),
   });
 
-  const cartQuery = useQuery({
-    queryKey: ["cart"],
-    queryFn: () => {
-      addToCart({
-        userId: userState?.id,
-        product: productQuery.data.data,
-        cartId: userState?.userCartId,
-      });
-    },
+  // console.log("=======Product=============");
+  // console.log(id);
+  // console.log(productQuery?.data?.data);
+  // console.log("=======Product=============");
+
+  const mutation = useMutation({
+    mutationFn: (data: CartData) => instance.post("/api/cart/add", data),
   });
 
-  const handleAddToCart = () => {};
+  const handleAddToCart = () => {
+    bottomSheetRef.current?.expand();
+    // if (userState) {
+    //   mutation.mutate({
+    //     userId: userState.id,
+    //     productId: id,
+    //     cartId: userState.userCartId,
+    //     quantity: 2,
+    //   });
+    // }
+
+    // console.log(mutation);
+  };
+
+  // useEffect(() => {
+  //   console.log("=========Mutate=========");
+  //   console.log(mutation);
+  // }, [mutation]);
 
   // const item: any = {
   //   id: id,
@@ -153,7 +173,7 @@ const ProductDetail = () => {
 
             <View style={[styles.horizWrapper, { paddingHorizontal: 20 }]}>
               <Text style={styles.itemPrice}>
-                {productQuery.data.data.price}đ
+                {productQuery.data.data.productVariants[0].price}đ
               </Text>
               <View style={styles.horizWrapper}>
                 <View
@@ -179,6 +199,9 @@ const ProductDetail = () => {
               </View>
             </View>
             <View>
+              <Text style={[styles.title, { paddingHorizontal: 10 }]}>
+                {productQuery.data.data.name}
+              </Text>
               <Text style={styles.itemDes}>
                 {productQuery.data.data.description}
               </Text>
@@ -201,7 +224,16 @@ const ProductDetail = () => {
       ) : (
         <ActivityIndicator />
       )}
-
+      <BottomSheet
+        ref={bottomSheetRef}
+        enablePanDownToClose={true}
+        index={-1}
+        snapPoints={["60%"]}
+      >
+        <BottomSheetView style={{}}>
+          <Text>Awesome 🎉</Text>
+        </BottomSheetView>
+      </BottomSheet>
       <View style={[styles.bottom, SHADOWS.medium]}>
         <AntDesign name={"heart"} size={30} color={"red"} />
         <Text
@@ -210,7 +242,7 @@ const ProductDetail = () => {
             { backgroundColor: COLORS.black, color: COLORS.white },
           ]}
           onPress={() => {
-            console.log("add to cart");
+            handleAddToCart();
           }}
         >
           Thêm vào giỏ hàng

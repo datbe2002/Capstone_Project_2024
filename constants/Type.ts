@@ -40,3 +40,10 @@ export interface Category {
   updateBy: string;
   createBy: string;
 }
+
+export interface CartData {
+  userId: string | null | undefined;
+  productId: any;
+  cartId: string | null | undefined;
+  quantity: number;
+}
