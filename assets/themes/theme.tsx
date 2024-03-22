@@ -9,6 +9,7 @@ const COLORS = {
   black: "#000000",
   white: "#FFFFFF",
   pink: "#FFEBEB",
+  darkGray: "gray"
 };
 
 const SIZES = {

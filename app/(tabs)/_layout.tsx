@@ -39,7 +39,7 @@ interface CustomTabBarButtonProps {
 //   });
 const CustomTabBarButton: React.FC<CustomTabBarButtonProps> = ({
   children,
-  onPress = () => {},
+  onPress = () => { },
 }) => {
   return (
     <TouchableOpacity
@@ -130,8 +130,8 @@ export default function TabLayout() {
         options={{
           title: "Giỏ hàng",
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="profile" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? "cart" : "cart-outline"} size={size} color={color} />
           ),
         }}
       />

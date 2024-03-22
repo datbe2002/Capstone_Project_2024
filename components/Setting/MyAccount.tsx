@@ -2,29 +2,44 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { COLORS } from '../../assets'
 import { router } from 'expo-router'
+import { AntDesign } from '@expo/vector-icons'
 
 const MyAccount = () => {
     return (
         <View>
             <View style={styles.componentText}>
-                <Text style={styles.syntaxText}>Tài khoản</Text>
+                <Text style={styles.syntaxText}>Tài khoản của tôi</Text>
             </View>
             <View style={styles.lineFunc}>
                 <Pressable style={styles.accountId} onPress={() => router.push('/(tabs)/(menu)/profile')}>
                     <Text style={styles.mainText}>
-                        Quản lý tài khoản của tôi
+                        Tài khoản & Bảo mật
                     </Text>
+                    <View style={styles.changeComp} >
+                        <View>
+                            <AntDesign name="right" size={18} color={COLORS.darkGray} />
+                        </View>
+                    </View>
                 </Pressable>
-                <Pressable style={styles.twoLine} onPress={() => router.push('/(tabs)/(menu)/address')}>
+                <Pressable style={styles.threeComp} onPress={() => router.push('/(tabs)/(menu)/address')}>
                     <Text style={styles.mainText}>
                         Sổ địa chỉ
                     </Text>
+                    <View style={styles.changeComp} >
+                        <View>
+                            <AntDesign name="right" size={18} color={COLORS.darkGray} />
+                        </View>
+                    </View>
                 </Pressable>
                 <Pressable style={styles.threeComp} onPress={() => router.push('/(tabs)/(menu)/paymentmethod')}>
                     <Text style={styles.mainText}>
                         Phương thức thanh toán
                     </Text>
-
+                    <View style={styles.changeComp} >
+                        <View>
+                            <AntDesign name="right" size={18} color={COLORS.darkGray} />
+                        </View>
+                    </View>
                 </Pressable>
             </View>
         </View>
@@ -39,14 +54,14 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     componentText: {
-        height: 80,
+        height: 50,
         justifyContent: 'center',
         paddingLeft: 10,
     },
     syntaxText: {
-        color: COLORS.blue1,
+        color: COLORS.darkGray,
         fontFamily: 'mon-sb',
-        fontSize: 25,
+        fontSize: 17,
     },
     lineFunc: {
         height: 'auto',
@@ -62,7 +77,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10
     },
     mainText: {
-        color: COLORS.primary,
+        color: COLORS.black,
         fontSize: 20,
         fontFamily: 'mon-sb',
     },

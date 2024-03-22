@@ -8,54 +8,23 @@ import CustomButton from '../../../components/Button'
 import MyAccount from '../../../components/Setting/MyAccount'
 import SettingAccount from '../../../components/Setting/SettingAccount'
 import SupportAccount from '../../../components/Setting/SupportAccount'
-
-interface ErrorState {
-    email?: string
-}
+import VerifyAlert from '../../../components/Setting/VerifyAlert'
 
 const Setting = () => {
 
     const { signOut } = useAuth()
 
-    // const [inputs, setInputs] = React.useState({
-    //     email: '',
-    // });
-    // const [errors, setErrors] = React.useState<ErrorState>({
-
-    // });
-
-    // const validate = () => {
-    //     Keyboard.dismiss();
-    //     let isValid = true;
-
-    //     if (!inputs.email) {
-    //         handleError('Please input email', 'email');
-    //         isValid = false;
-    //     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-    //         handleError('Please input a valid email', 'email');
-    //         isValid = false;
-    //     }
-
-    //     if (isValid) {
-    //         loginTest({ test: 'hi' });
-    //     }
-    // };
-
-    // const login = () => {
-    //     console.log('login')
-    // };
-    // const handleOnchange = (text: string, input: string) => {
-    //     setInputs(prevState => ({ ...prevState, [input]: text }));
-    // };
-    // const handleError = (error: string | null, input: string) => {
-    //     setErrors(prevState => ({ ...prevState, [input]: error }));
-    // };
     return (
-        <View style={styles.componentFull}>
-            <MyAccount />
-            <SettingAccount />
-            <SupportAccount />
-            <CustomButton onPress={signOut} buttonText='Đăng xuất' buttonColor='errorColor' ></CustomButton>
+        <View style={{ flex: 1 }}>
+            <View>
+                <VerifyAlert />
+            </View>
+            <View style={styles.componentFull}>
+                <MyAccount />
+                <SettingAccount />
+                <SupportAccount />
+                <CustomButton onPress={signOut} buttonText='Đăng xuất' buttonColor='errorColor' ></CustomButton>
+            </View>
         </View>
     )
 }

@@ -37,7 +37,7 @@ const AccountSection = () => {
                         Số tài khoản
                     </Text>
                     <Text style={styles.secondText}>
-                        id: {userState?.id.slice(0, 13)}
+                        id: {userState?.id?.slice(0, 13)}
                     </Text>
                 </View>
                 <View style={styles.twoLine}>
@@ -82,7 +82,7 @@ const AccountSection = () => {
                 </View>
                 <View style={styles.signUpDate}>
                     <Text style={styles.mainText}>
-                        Ngày đăng kí
+                        Ngày sinh
                     </Text>
                     <Text style={styles.secondText}>
                         {userState?.dob ? dobValidate(userState?.dob) : "Chưa cập nhật"}
