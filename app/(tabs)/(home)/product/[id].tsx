@@ -206,7 +206,7 @@ const ProductDetail = () => {
             { backgroundColor: COLORS.black, color: COLORS.white },
           ]}
           onPress={() => {
-            openBottomSheet();
+            openBottomSheet(null);
           }}
         >
           Thêm vào giỏ hàng
