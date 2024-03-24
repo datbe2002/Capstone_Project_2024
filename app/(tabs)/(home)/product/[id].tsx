@@ -3,67 +3,57 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../../assets";
 import {
   ActivityIndicator,
-  Button,
+  Alert,
   Dimensions,
   Image,
-  Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import {
-  useGlobalSearchParams,
-  useLocalSearchParams,
-  useRouter,
-} from "expo-router";
-
-import {
-  Fontisto,
-  AntDesign,
-  Feather,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import Carousel from "../../../../components/Carousel";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addToCart, getProductById } from "../../../context/productsApi";
 import { useUserStore } from "../../../store/store";
 import { CartData } from "../../../../constants/Type";
-import instance from "../../../context/axiosConfig";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-
+import BottomSheet from "@gorhom/bottom-sheet";
 import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
 import VariantSection from "../../../../components/Product/VariantSelector";
 import ProductCardShort from "../../../../components/Product/ProductCardShort";
 import QuantitySelector from "../../../../components/Product/QuantitySelector";
-// import Carousel from "react-native-snap-carousel";
+import CustomAlert from "../../../../components/Arlert";
 const { height, width } = Dimensions.get("window");
+
 const ProductDetail = () => {
   const [isFavourite, setIsFavourite] = useState<boolean>(false);
   const route = useRouter();
   const { id } = useLocalSearchParams();
   const { userState } = useUserStore();
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [alert, setAlert] = useState<any>(null);
 
   const productQuery = useQuery({
     queryKey: ["product"],
     queryFn: () => getProductById(id),
   });
 
-  // console.log("=======Product=============");
-  // console.log(id);
-  // console.log(productQuery?.data?.data);
-  // console.log("=======Product=============");
-
   const mutation = useMutation({
-    mutationFn: (data: CartData) => instance.post("/api/cart/add", data),
+    mutationFn: (data: CartData) => addToCart(data),
+    onSuccess: () => {
+      setAlert({ title: "Xong", msg: "Đã thêm vào giỏ hàng của bạn!" });
+    },
+    onError: () => {
+      setAlert({ title: "Lỗi", msg: "Thêm thất bại! Vui lòng thử lại sau!" });
+    },
   });
 
   const [mySelectedItem, setMySelectedItem] = useState<any>();
   const [quantity, setQuantity] = useState(1);
 
-  const openBottomSheet = () => {
+  const openBottomSheet = (item: any) => {
+    setMySelectedItem(item);
     bottomSheetRef.current?.expand();
   };
 
@@ -74,22 +64,14 @@ const ProductDetail = () => {
           userId: userState.id,
           productId: id,
           cartId: userState.userCartId,
-          // color: mySelectedItem.colorId,
-          // size: mySelectedItem.sizeId,
-          // price: mySelectedItem.price,
+          color: mySelectedItem.color.colorCode,
+          size: mySelectedItem.size.value,
+          price: mySelectedItem.price,
           quantity: quantity,
         });
       }
     }
-    console.log("========================");
-
-    console.log(mutation);
   };
-
-  // useEffect(() => {
-  //   console.log("=========Mutate=========");
-  //   console.log(mutation);
-  // }, [mutation]);
 
   const _renderItem = (item: any) => {
     return (
@@ -106,6 +88,14 @@ const ProductDetail = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* ==========alert=========== */}
+      <CustomAlert
+        title={alert?.title}
+        message={alert?.msg}
+        show={alert !== null}
+        onDismiss={() => setAlert(null)}
+      />
+      {/* ============ */}
       <View style={styles.heading}>
         <Ionicons
           name="chevron-back"
@@ -168,8 +158,8 @@ const ProductDetail = () => {
             {/* variant */}
             <VariantSection
               data={productQuery.data.data.productVariants}
-              onPress={() => {
-                openBottomSheet();
+              onPress={(item) => {
+                openBottomSheet(item);
               }}
             />
 
@@ -216,7 +206,7 @@ const ProductDetail = () => {
             { backgroundColor: COLORS.black, color: COLORS.white },
           ]}
           onPress={() => {
-            openBottomSheet();
+            openBottomSheet(null);
           }}
         >
           Thêm vào giỏ hàng
@@ -226,6 +216,12 @@ const ProductDetail = () => {
             styles.button,
             { backgroundColor: COLORS.primary, color: COLORS.white },
           ]}
+          onPress={() => {
+            setAlert({
+              title: "Lỗi",
+              msg: "Thêm thất bại! Vui lòng thử lại sau!",
+            });
+          }}
         >
           Mua ngay
         </Text>
@@ -258,9 +254,15 @@ const ProductDetail = () => {
               enabled={mySelectedItem}
             />
             <Text
-              style={[styles.button, styles.bottomSheetBtn]}
+              style={[
+                styles.button,
+                styles.bottomSheetBtn,
+                { opacity: mySelectedItem ? 1 : 0.7 },
+              ]}
               onPress={() => {
-                handleAddToCart();
+                if (mySelectedItem) {
+                  handleAddToCart();
+                }
               }}
             >
               Thêm vào giỏ hàng
@@ -273,6 +275,7 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -297,7 +300,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   title: {
-    fontSize: SIZES.xxLarge,
+    fontSize: SIZES.xLarge,
     fontFamily: "mon-b",
   },
   secondaryTitle: {
@@ -320,7 +323,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     textAlignVertical: "center",
     fontFamily: "mon-sb",
-    fontSize: SIZES.xLarge,
+    fontSize: SIZES.large,
   },
   itemDes: {
     width: "100%",

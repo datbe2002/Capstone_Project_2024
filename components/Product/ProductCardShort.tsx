@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Pressable, Text, StyleSheet, Image } from "react-native";
 import { Products } from "../../constants/Type";
-import { SHADOWS } from "../../assets";
+import { SHADOWS, SIZES } from "../../assets";
 
 interface Props {
   data: Products;
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   name: {
-    fontSize: 16,
+    fontSize: SIZES.medium,
     fontWeight: "bold",
   },
   description: {
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   price: {
-    fontSize: 16,
+    fontSize: SIZES.medium,
     fontWeight: "bold",
   },
 });
@@ -54,7 +54,11 @@ const ProductCardShort: React.FC<Props> = ({ data, variant }) => (
       <Text style={styles.description} numberOfLines={2}>
         {data.description}
       </Text>
-      <Text style={styles.price}>{variant?.price} đ</Text>
+      {variant ? (
+        <Text style={styles.price}>{variant?.price} đ</Text>
+      ) : (
+        <Text></Text>
+      )}
     </View>
   </View>
 );
