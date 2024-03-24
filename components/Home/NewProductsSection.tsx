@@ -73,7 +73,9 @@ const NewProductsSection: React.FC<NewProductsProps> = ({
               >
                 {item.description}
               </Text>
-              <Text style={styles.itemPrice}>{item.price}đ</Text>
+              <Text style={styles.itemPrice}>
+                {item.productVariants[0].price}đ
+              </Text>
             </View>
           </Pressable>
         ))}
