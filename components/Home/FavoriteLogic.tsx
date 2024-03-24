@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import {
@@ -21,11 +21,9 @@ export default function FavoriteLogic({
     isFavourite,
     item,
 }: FavoriteLogicProps) {
-    useFocusEffect(
-        React.useCallback(() => {
-            checkIfFavourited();
-        }, [])
-    );
+    useEffect(() => {
+        checkIfFavourited();
+    }, [item])
 
     const handleChangeFavourite = async () => {
         let key = "favorites";

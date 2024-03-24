@@ -161,6 +161,7 @@ const ProductDetail = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {productQuery.isLoading ? <ActivityIndicator /> : null}
       <View style={styles.heading}>
         <Ionicons
           name="chevron-back"
@@ -173,7 +174,6 @@ const ProductDetail = () => {
           }}
         />
       </View>
-      {productQuery.isLoading ? <ActivityIndicator /> : null}
       {productQuery.isSuccess ? (
         <ScrollView>
           <View style={styles.main}>
@@ -254,7 +254,7 @@ const ProductDetail = () => {
         <FavoriteLogic
           setIsFavourite={setIsFavourite}
           isFavourite={isFavourite}
-          item={productQuery.data.data}
+          item={productQuery?.data?.data}
         />
         {/* ====================================== */}
 

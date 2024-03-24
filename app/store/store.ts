@@ -22,11 +22,23 @@ interface LoadingLogin {
 
 }
 
-
 export const useLoadingStore = create<LoadingLogin>((set) => ({
     loading: false,
     setLoadingState: (loading) => set(() => ({ loading: loading }))
 }))
+interface FavouriteIdDelete {
+    itemId: number | null
+    setItemIdState: (itemId: number) => void
+
+}
+
+export const useFavouriteId = create<FavouriteIdDelete>((set) => ({
+    itemId: null,
+    setItemIdState: (itemId) => set(() => ({ itemId: itemId }))
+}))
+
+
+
 interface UserIDStore {
     userId: string | null
     setUserId: (userId: string | null) => void
