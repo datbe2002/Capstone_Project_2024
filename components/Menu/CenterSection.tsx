@@ -1,21 +1,30 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import VoucherSection from './VoucherSection'
+import React from 'react';
+import { View, Text } from 'react-native';
+import VoucherSection from './VoucherSection';
+import MainSection from './MainSection';
 
 interface CenterSectionProps {
-    activeButton: string
+    activeButton: 'main' | 'noti' | 'ticket';
 }
 
 const CenterSection: React.FC<CenterSectionProps> = ({ activeButton }) => {
-    return (
-        <View>
-            {activeButton === 'main' && <Text>MainSection</Text>}
-            {activeButton === 'noti' && <Text>NotiSection</Text>}
-            {activeButton === 'ticket' && <VoucherSection />}
-        </View>
-    )
-}
+    let sectionContent: JSX.Element | null = null;
 
-export default CenterSection
+    switch (activeButton) {
+        case 'main':
+            sectionContent = <MainSection />;
+            break;
+        case 'noti':
+            sectionContent = <Text>NotiSection</Text>;
+            break;
+        case 'ticket':
+            sectionContent = <VoucherSection />;
+            break;
+        default:
+            break;
+    }
 
-const styles = StyleSheet.create({})
+    return <View>{sectionContent}</View>;
+};
+
+export default CenterSection;

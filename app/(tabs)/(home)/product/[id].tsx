@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../../assets";
 import {
@@ -32,9 +32,11 @@ import { CartData } from "../../../../constants/Type";
 import instance from "../../../context/axiosConfig";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 
+import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
 // import Carousel from "react-native-snap-carousel";
 const { height, width } = Dimensions.get("window");
 const ProductDetail = () => {
+  const [isFavourite, setIsFavourite] = useState<boolean>(false);
   const route = useRouter();
   const { id } = useLocalSearchParams();
   const { userState } = useUserStore();
@@ -72,6 +74,18 @@ const ProductDetail = () => {
   //   console.log("=========Mutate=========");
   //   console.log(mutation);
   // }, [mutation]);
+  // const cartQuery = useQuery({
+  //   queryKey: ["cart"],
+  //   queryFn: () => {
+  //     addToCart({
+  //       userId: userState?.id,
+  //       product: productQuery.data.data,
+  //       cartId: userState?.userCartId,
+  //     });
+  //   },
+  // });
+
+  // const handleAddToCart = () => { };
 
   // const item: any = {
   //   id: id,
@@ -235,7 +249,15 @@ const ProductDetail = () => {
         </BottomSheetView>
       </BottomSheet>
       <View style={[styles.bottom, SHADOWS.medium]}>
-        <AntDesign name={"heart"} size={30} color={"red"} />
+        {/* <AntDesign name={"heart"} size={30} color={"red"} onPress={() => console.log('favourite')} /> */}
+        {/* ====================================== */}
+        <FavoriteLogic
+          setIsFavourite={setIsFavourite}
+          isFavourite={isFavourite}
+          item={productQuery.data.data}
+        />
+        {/* ====================================== */}
+
         <Text
           style={[
             styles.button,
