@@ -45,5 +45,8 @@ export interface CartData {
   userId: string | null | undefined;
   productId: any;
   cartId: string | null | undefined;
+  // color: any;
+  // size: any;
+  // price: any;
   quantity: number;
 }
