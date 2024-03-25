@@ -1,4 +1,4 @@
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from 'react-native-elements'
@@ -7,13 +7,17 @@ import FavoriteListContainer from '../../../components/Favorite/FavoriteListCont
 import { useIsFocused } from '@react-navigation/native'
 import { clearAsyncWithKey, removeItemsFromAsyncStorage } from '../../../shared/helper'
 import { COLORS } from '../../../assets'
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetBackdrop, BottomSheetFooter, BottomSheetView } from "@gorhom/bottom-sheet";
 import { useFavouriteId } from '../../store/store'
+
+const { height, width } = Dimensions.get('window')
+
 
 const favorite = () => {
     const key = "favorites";
     const [favorites, setFavorites] = useState<any>([]);
     const isFocused = useIsFocused();
+    const [loadingState, setLoadingState] = useState(false)
     useEffect(() => {
         // Call only when screen open or when back on screen
         if (isFocused) {
@@ -71,36 +75,76 @@ const favorite = () => {
         ]);
     };
 
+    const { itemId, setItemIdState } = useFavouriteId()
     const bsRef = useRef<BottomSheet>(null)
-    const handleOpenBottom = () => {
+    const handleOpenBottom = (itemId: number) => {
+        setItemIdState(itemId)
         bsRef.current?.expand()
     }
     const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, [])
-    const { itemId } = useFavouriteId()
+    console.log(itemId)
     const handleCheck = () => {
-        handleRemoveFavorite(itemId)
-        bsRef.current?.close()
+        if (itemId !== null) {
+            setLoadingState(true)
+            handleRemoveFavorite(itemId)
+            setTimeout(() => {
+                bsRef.current?.close()
+                setLoadingState(false)
+            }, 1000)
+        } else {
+            console.error("Invalid itemId");
+        }
+
     }
 
+
+
+
+    const renderFooter = useCallback(
+        (props: any) => (
+            <BottomSheetFooter {...props} bottomInset={24}>
+                <Pressable style={styles.footerContainer} onPress={() => bsRef.current?.close()}>
+                    <Text style={styles.footerText}>Thoát</Text>
+                </Pressable>
+            </BottomSheetFooter>
+        ),
+        []
+    );
     return (
+
         <SafeAreaView>
+            {loadingState && <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="white" />
+            </View>}
             {favorites.length > 1 &&
                 <View style={styles.buttonDeleteAllContainer}>
                     <Text style={styles.buttonDeleteAll} onPress={handleConfirm}>Delete all</Text>
                 </View>
             }
-            <FavoriteListContainer favorites={favorites} handleOpenBottom={handleOpenBottom} />
-            <BottomSheet
-                snapPoints={["30%"]}
-                ref={bsRef}
-                index={-1}
-                enablePanDownToClose={true}
-                backdropComponent={renderBackdrop}
-            >
-                <BottomSheetView style={{}}>
-                    <Button title={'delete'} onPress={handleCheck} />
-                </BottomSheetView>
-            </BottomSheet>
+            <View>
+                <FavoriteListContainer favorites={favorites} handleOpenBottom={handleOpenBottom} />
+                <BottomSheet
+                    snapPoints={["35%"]}
+                    ref={bsRef}
+                    index={-1}
+                    enablePanDownToClose={true}
+                    backdropComponent={renderBackdrop}
+                    footerComponent={renderFooter}
+                    backgroundStyle={{ backgroundColor: COLORS.white }}
+                >
+                    <BottomSheetView style={{}}>
+
+                        <View style={{ backgroundColor: COLORS.white }}>
+                            <Pressable onPress={handleCheck} style={{ padding: 15, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 0.5, borderBottomColor: COLORS.darkGray }}>
+                                <Text style={{ fontFamily: 'mon-sb', fontSize: 20, color: COLORS.darkGray }}>Bỏ thích</Text>
+                            </Pressable>
+                            <Pressable style={{ padding: 15, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 30, borderBottomColor: COLORS.gray }}>
+                                <Text style={{ fontFamily: 'mon-sb', fontSize: 20, color: COLORS.darkGray }}>Sản phẩm tương tự</Text>
+                            </Pressable>
+                        </View>
+                    </BottomSheetView>
+                </BottomSheet>
+            </View>
         </SafeAreaView>
     )
 }
@@ -116,5 +160,29 @@ const styles = StyleSheet.create({
         color: COLORS.errorColor,
         fontFamily: 'mon-sb',
         fontSize: 16
-    }
+    },
+    footerContainer: {
+        padding: 12,
+        paddingBottom: 25,
+        // borderRadius: 12,
+        backgroundColor: COLORS.white,
+    },
+    footerText: {
+        textAlign: 'center',
+        color: COLORS.darkGray,
+        fontFamily: 'mon-sb',
+        fontSize: 20
+    },
+    loadingContainer: {
+        position: 'absolute',
+        height: height,
+        top: 0,
+        left: 0,
+        bottom: -10,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 1000,
+    },
 })

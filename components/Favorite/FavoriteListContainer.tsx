@@ -12,20 +12,19 @@ const { height, width } = Dimensions.get("window");
 
 interface FavouriteListContainerProps {
     favorites: any[],
-    handleOpenBottom: () => void;
+    handleOpenBottom: (itemId: number) => void;
 }
 
 interface FavoriteListCardProps {
     item: any,
     index: number,
-    handleOpenBottom: () => void
+    handleOpenBottom: (itemId: number) => void
 }
 
 
 
 const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handleOpenBottom }) => {
     let isEven = index % 2 == 0;
-    const { setItemIdState } = useFavouriteId()
 
     return (
         <Pressable
@@ -38,6 +37,12 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
                 paddingLeft: isEven ? 0 : 8,
                 paddingRight: isEven ? 8 : 0,
             }}
+            onPress={() => {
+                router.push({
+                    pathname: "/(tabs)/(home)/product/[id]",
+                    params: { id: item.id },
+                });
+            }}
         >
             <ImageBackground
 
@@ -45,8 +50,9 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
                 style={{
                     width: "100%",
                     height: index % 3 == 0 ? 180 : 260,
-
                     alignItems: "flex-end",
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10
                 }}
             // imageStyle={{ borderRadius: 16 }}
             >
@@ -69,10 +75,9 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
                 </View>
                 <View style={styles.mainHandle}>
                     <View style={styles.threeDot}>
-                        <Entypo name="dots-three-horizontal" size={24} color={COLORS.darkGray} onPress={() => {
-                            handleOpenBottom()
-                            setItemIdState(item.id)
-                        }} />
+                        <Entypo name="dots-three-horizontal" size={24} color={COLORS.darkGray} onPress={() =>
+                            handleOpenBottom(item.id)
+                        } />
                     </View>
                     <TouchableOpacity style={styles.buyProd}>
                         <View>
@@ -136,7 +141,9 @@ export default FavoriteListContainer
 
 const styles = StyleSheet.create({
     allContainer: {
-        backgroundColor: COLORS.white
+        backgroundColor: COLORS.white,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10
     },
     mainInfo: {
         paddingHorizontal: 10,
