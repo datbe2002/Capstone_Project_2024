@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../../assets";
 import {
@@ -18,7 +18,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { addToCart, getProductById } from "../../../context/productsApi";
 import { useUserStore } from "../../../store/store";
 import { CartData } from "../../../../constants/Type";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
 import VariantSection from "../../../../components/Product/VariantSelector";
 import ProductCardShort from "../../../../components/Product/ProductCardShort";
@@ -44,7 +44,8 @@ const ProductDetail = () => {
     onSuccess: () => {
       setAlert({ title: "Xong", msg: "Đã thêm vào giỏ hàng của bạn!" });
     },
-    onError: () => {
+    onError: (error) => {
+      console.log(error)
       setAlert({ title: "Lỗi", msg: "Thêm thất bại! Vui lòng thử lại sau!" });
     },
   });
@@ -56,7 +57,7 @@ const ProductDetail = () => {
     setMySelectedItem(item);
     bottomSheetRef.current?.expand();
   };
-
+  const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, [])
   const handleAddToCart = () => {
     if (userState) {
       if (mySelectedItem) {
@@ -108,7 +109,6 @@ const ProductDetail = () => {
           }}
         />
       </View>
-      {productQuery.isLoading ? <ActivityIndicator /> : null}
       {productQuery.isSuccess ? (
         <ScrollView>
           <View style={styles.main}>
@@ -230,6 +230,7 @@ const ProductDetail = () => {
       {productQuery.isSuccess && (
         <BottomSheet
           ref={bottomSheetRef}
+          backdropComponent={renderBackdrop}
           enablePanDownToClose={true}
           index={-1}
           snapPoints={["55%"]}

@@ -22,7 +22,7 @@ const addItemsToAsyncStorage = async (item: any, key: string) => {
     }
 };
 
-const removeItemsFromAsyncStorage = async (id: number, key: string) => {
+const removeItemsFromAsyncStorage = async (id: number | null, key: string) => {
     try {
         const items = await getItemsFromAsyncStorage(key);
         const updated = items.filter((item: any) => item.id !== id);
