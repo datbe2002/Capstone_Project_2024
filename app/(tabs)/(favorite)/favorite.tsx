@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from 'react-native-elements'
@@ -65,7 +65,7 @@ const favorite = () => {
     };
 
     const handleConfirm = async () => {
-        Alert.alert("Delete", "Are you sure to delete all ?", [
+        Alert.alert("Thông báo", "Bạn có muốn xóa tất cả ?", [
             {
                 text: "Cancel",
                 onPress: () => console.log("Cancel Pressed"),
@@ -97,55 +97,41 @@ const favorite = () => {
 
     }
 
-
-
-
-    const renderFooter = useCallback(
-        (props: any) => (
-            <BottomSheetFooter {...props} bottomInset={24}>
-                <Pressable style={styles.footerContainer} onPress={() => bsRef.current?.close()}>
-                    <Text style={styles.footerText}>Thoát</Text>
-                </Pressable>
-            </BottomSheetFooter>
-        ),
-        []
-    );
     return (
 
-        <SafeAreaView>
-            {loadingState && <View style={styles.loadingContainer}>
+        <View style={{ height: "100%" }}>
+            {loadingState ? <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="white" />
-            </View>}
-            {favorites.length > 1 &&
-                <View style={styles.buttonDeleteAllContainer}>
-                    <Text style={styles.buttonDeleteAll} onPress={handleConfirm}>Delete all</Text>
-                </View>
-            }
-            <View>
+            </View> : null}
+            <ScrollView style={{ flex: 1 }}>
+                {favorites.length > 1 &&
+                    <View style={styles.buttonDeleteAllContainer}>
+                        <Text style={styles.buttonDeleteAll} onPress={handleConfirm}>Xóa tất cả</Text>
+                    </View>
+                }
                 <FavoriteListContainer favorites={favorites} handleOpenBottom={handleOpenBottom} />
-                <BottomSheet
-                    snapPoints={["35%"]}
-                    ref={bsRef}
-                    index={-1}
-                    enablePanDownToClose={true}
-                    backdropComponent={renderBackdrop}
-                    footerComponent={renderFooter}
-                    backgroundStyle={{ backgroundColor: COLORS.white }}
-                >
-                    <BottomSheetView style={{}}>
 
-                        <View style={{ backgroundColor: COLORS.white }}>
-                            <Pressable onPress={handleCheck} style={{ padding: 15, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 0.5, borderBottomColor: COLORS.darkGray }}>
-                                <Text style={{ fontFamily: 'mon-sb', fontSize: 20, color: COLORS.darkGray }}>Bỏ thích</Text>
-                            </Pressable>
-                            <Pressable style={{ padding: 15, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 30, borderBottomColor: COLORS.gray }}>
-                                <Text style={{ fontFamily: 'mon-sb', fontSize: 20, color: COLORS.darkGray }}>Sản phẩm tương tự</Text>
-                            </Pressable>
-                        </View>
-                    </BottomSheetView>
-                </BottomSheet>
-            </View>
-        </SafeAreaView>
+            </ScrollView>
+            <BottomSheet
+                snapPoints={["25%"]}
+                ref={bsRef}
+                index={-1}
+                enablePanDownToClose={true}
+                backdropComponent={renderBackdrop}
+                backgroundStyle={{ backgroundColor: COLORS.white }}
+            >
+                <BottomSheetView style={{}}>
+                    <View style={{ backgroundColor: COLORS.white }}>
+                        <Pressable onPress={handleCheck} style={{ padding: 15, alignItems: 'center', justifyContent: 'center', borderBottomWidth: 0.5, borderBottomColor: COLORS.darkGray }}>
+                            <Text style={{ fontFamily: 'mon-sb', fontSize: 20, color: COLORS.darkGray }}>Bỏ thích</Text>
+                        </Pressable>
+                        <Pressable style={{ padding: 15, alignItems: 'center', justifyContent: 'center' }}>
+                            <Text style={{ fontFamily: 'mon-sb', fontSize: 20, color: COLORS.darkGray }}>Sản phẩm tương tự</Text>
+                        </Pressable>
+                    </View>
+                </BottomSheetView>
+            </BottomSheet>
+        </View>
     )
 }
 

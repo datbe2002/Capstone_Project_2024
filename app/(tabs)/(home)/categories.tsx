@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: SIZES.xxLarge,
+    fontSize: SIZES.xLarge,
     fontFamily: "mon-b",
   },
   secondaryTitle: {

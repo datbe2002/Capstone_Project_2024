@@ -45,7 +45,6 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
             }}
         >
             <ImageBackground
-
                 source={item.defaultImage ? { uri: item.defaultImage } : require("../../assets/images/default.png")}
                 style={{
                     width: "100%",
