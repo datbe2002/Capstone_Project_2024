@@ -25,7 +25,7 @@ import { router } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 const { height, width } = Dimensions.get("window");
 
-interface Props {}
+interface Props { }
 
 interface Product {
   id: any;
@@ -37,7 +37,7 @@ interface Product {
   quantity: number;
 }
 
-const Cart: React.FC<Props> = ({}) => {
+const Cart: React.FC<Props> = ({ }) => {
   const [isAdjust, setIsAdjust] = useState(false);
   const [isSelectAll, setSelectAll] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Array<CartItem>>([]);
@@ -64,8 +64,8 @@ const Cart: React.FC<Props> = ({}) => {
   const handleQuantityChange = (updatedItem: CartItem) => {
     const updatedCartItems = cartItems.map((item) =>
       item.productId === updatedItem.productId &&
-      item.color === updatedItem.color &&
-      item.size === updatedItem.size
+        item.color === updatedItem.color &&
+        item.size === updatedItem.size
         ? updatedItem
         : item
     );
@@ -189,7 +189,7 @@ const Cart: React.FC<Props> = ({}) => {
           ) : (
             <View style={styles.checkoutWrapper}>
               <Text style={styles.secondaryTitle}>Tổng tiền: 1000</Text>
-              <Pressable style={styles.checkout}>
+              <Pressable style={styles.checkout} onPress={() => router.push('/(tabs)/(cart)/payment')}>
                 <Text style={styles.btnText}>Thanh toán</Text>
               </Pressable>
             </View>

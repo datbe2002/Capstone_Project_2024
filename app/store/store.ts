@@ -86,3 +86,32 @@ export const useRegisterStore = create((set: any) => ({
             selectedValues: { ...state.selectedValues, ...values },
         })),
 }));
+
+
+
+
+export const useAddressChange = create((set: any) => ({
+    selectedAddress: {
+        userId: null,
+        recipientName: null,
+        recipientPhone: null,
+        province: null,
+        provinceId: null,
+        district: null,
+        disctrictId: null,
+        ward: null,
+        wardCode: null,
+        street: null,
+        isDefault: null,
+        id: null,
+        isDeleted: null,
+        createAt: null,
+        updateAt: null,
+        updateBy: null,
+        createBy: null,
+    },
+    setSelectedAddress: (values: any) =>
+        set((state: any) => ({
+            selectedAddress: { ...state.selectedAddress, ...values },
+        })),
+}));

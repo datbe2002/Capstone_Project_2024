@@ -4,7 +4,7 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import { COLORS } from '../../assets';
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { Image } from 'react-native';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useFavouriteId } from '../../app/store/store';
 
 const { height, width } = Dimensions.get("window");
@@ -27,66 +27,68 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
     let isEven = index % 2 == 0;
 
     return (
-        <Pressable
-            style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                marginTop: 15,
-                paddingTop: index === 1 ? 10 : 0,
-                paddingLeft: isEven ? 0 : 8,
-                paddingRight: isEven ? 8 : 0,
-            }}
-            onPress={() => {
-                router.push({
-                    pathname: "/(tabs)/(home)/product/[id]",
-                    params: { id: item.id },
-                });
+        <Link asChild
+            href={{
+                pathname: "/(tabs)/(home)/product/[id]",
+                params: { id: item.id },
             }}
         >
-            <ImageBackground
-                source={item.defaultImage ? { uri: item.defaultImage } : require("../../assets/images/default.png")}
+            <Pressable
                 style={{
                     width: "100%",
-                    height: index % 3 == 0 ? 180 : 260,
-                    alignItems: "flex-end",
-                    borderTopLeftRadius: 10,
-                    borderTopRightRadius: 10
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: 15,
+                    paddingTop: index === 1 ? 10 : 0,
+                    paddingLeft: isEven ? 0 : 8,
+                    paddingRight: isEven ? 8 : 0,
                 }}
-            // imageStyle={{ borderRadius: 16 }}
             >
-                <View
+                <ImageBackground
+                    source={item.defaultImage ? { uri: item.defaultImage } : require("../../assets/images/default.png")}
                     style={{
-                        paddingTop: 10,
+                        width: "100%",
+                        height: index % 3 == 0 ? 180 : 260,
+                        alignItems: "flex-end",
+                        borderTopLeftRadius: 10,
+                        borderTopRightRadius: 10
                     }}
+                // imageStyle={{ borderRadius: 16 }}
                 >
-                </View>
-            </ImageBackground>
-            <View style={styles.allContainer}>
-                <View style={styles.mainInfo}>
-                    <Text style={styles.mainNameText}>
-                        {item.name}
-                    </Text>
-                    <View style={styles.priceNTotalCon}>
-                        <Text style={styles.textPrice}><Text style={styles.vndText}>đ</Text>{item.productVariants[0].price}</Text>
-                        <Text style={styles.totalSoldPrice}>Đã bán {item.totalSold}</Text>
+                    <View
+                        style={{
+                            paddingTop: 10,
+                        }}
+                    >
                     </View>
-                </View>
-                <View style={styles.mainHandle}>
-                    <View style={styles.threeDot}>
-                        <Entypo name="dots-three-horizontal" size={24} color={COLORS.darkGray} onPress={() =>
-                            handleOpenBottom(item.id)
-                        } />
-                    </View>
-                    <TouchableOpacity style={styles.buyProd}>
-                        <View>
-                            <Ionicons name="cart" size={20} color={COLORS.white} />
+                </ImageBackground>
+                <View style={styles.allContainer}>
+                    <View style={styles.mainInfo}>
+                        <Text style={styles.mainNameText}>
+                            {item.name}
+                        </Text>
+                        <View style={styles.priceNTotalCon}>
+                            <Text style={styles.textPrice}><Text style={styles.vndText}>đ</Text>{item.productVariants[0].price}</Text>
+                            <Text style={styles.totalSoldPrice}>Đã bán {item.totalSold}</Text>
                         </View>
-                    </TouchableOpacity>
+                    </View>
+                    <View style={styles.mainHandle}>
+                        <View style={styles.threeDot}>
+                            <Entypo name="dots-three-horizontal" size={24} color={COLORS.darkGray} onPress={() =>
+                                handleOpenBottom(item.id)
+                            } />
+                        </View>
+                        <TouchableOpacity style={styles.buyProd}>
+                            <View>
+                                <Ionicons name="cart" size={20} color={COLORS.white} />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
 
-        </Pressable>
+            </Pressable>
+        </Link>
+
     )
 }
 
