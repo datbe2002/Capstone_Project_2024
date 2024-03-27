@@ -1,10 +1,6 @@
 import {
   ActivityIndicator,
   Dimensions,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
 } from "react-native";
@@ -18,12 +14,7 @@ import { COLORS, SHADOWS, SIZES } from "../../../assets";
 import { useEffect, useState } from "react";
 const { height, width } = Dimensions.get("window");
 
-import {
-  categories,
-  newItems,
-  recommendations,
-  topProducts,
-} from "../exampledata";
+import { categories } from "../exampledata";
 import CategoriesSection from "../../../components/Home/CategoriesSection";
 import TopProductsSection from "../../../components/Home/TopProductsSection";
 import NewProductsSection from "../../../components/Home/NewProductsSection";
@@ -36,36 +27,36 @@ import {
 } from "../../context/productsApi";
 import { useUserIDStore, useUserStore } from "../../store/store";
 import instance from "../../context/axiosConfig";
-import { UserData } from "../../../constants/types/normal";
+import Background from "../../../components/BackGround";
 
 export default function HomepageScreen() {
   const router = useRouter();
   const homeCategories = categories.slice(0, 4);
-  const { userId } = useUserIDStore()
-  console.log(userId)
+  const { userId } = useUserIDStore();
+  console.log(userId);
   const [searchValue, setSearchValue] = useState<string>("");
-  const { userState, setUserState } = useUserStore()
+  const { userState, setUserState } = useUserStore();
   useEffect(() => {
     const getCart = async () => {
       try {
-        console.log('first')
+        console.log("first");
         const userCart = await instance.get("/api/cart/" + userId);
         let userData: any = {
           ...userState,
           userCartId: userCart.data.data.id,
         };
-        setUserState(userData)
+        setUserState(userData);
       } catch (error: any) {
-        console.log(error.response.data.Message)
-        if (error.response.data.Message === 'Cart not found') {
-          console.log(error.response.data.Message)
+        console.log(error.response.data.Message);
+        if (error.response.data.Message === "Cart not found") {
+          console.log(error.response.data.Message);
         } else {
-          throw error
+          throw error;
         }
       }
-    }
-    getCart()
-  }, [])
+    };
+    getCart();
+  }, []);
   const handleSearch = (text: string) => {
     setSearchValue(text);
   };
@@ -85,54 +76,55 @@ export default function HomepageScreen() {
     queryFn: () => getTopProducts(5),
   });
 
-  console.log(userState)
-
+  console.log(userState);
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* search box */}
-      <View style={[styles.horizWrapper, styles.searchBoxWrapper]}>
-        <Text style={styles.title}>Shop</Text>
-        <View>
-          <CustomInput
-            placeholder="Tìm kiếm..."
-            onChangeText={handleSearch}
-            value={searchValue}
-            style={styles.searchInput}
-            elementAfter={
-              <FontAwesome5 name="search" size={22} color={COLORS.primary} />
-            }
-          />
+      <Background imageKey={"i6"}>
+        {/* search box */}
+        <View style={[styles.horizWrapper, styles.searchBoxWrapper]}>
+          <Text style={styles.title}>Shop</Text>
+          <View style={{ backgroundColor: "transparent" }}>
+            <CustomInput
+              placeholder="Tìm kiếm..."
+              onChangeText={handleSearch}
+              value={searchValue}
+              style={styles.searchInput}
+              elementAfter={
+                <FontAwesome5 name="search" size={22} color={COLORS.primary} />
+              }
+            />
+          </View>
         </View>
-      </View>
-      {/* main */}
-      <ScrollView style={styles.container}>
-        {/* categories */}
-        <CategoriesSection categories={homeCategories} />
-        {/* top product */}
-        {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
-        {topProductsQuery.isSuccess ? (
-          <TopProductsSection topProducts={topProductsQuery.data} />
-        ) : (
-          <ActivityIndicator />
-        )}
+        {/* main */}
+        <ScrollView style={styles.container}>
+          {/* categories */}
+          <CategoriesSection categories={homeCategories} />
+          {/* top product */}
+          {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
+          {topProductsQuery.isSuccess ? (
+            <TopProductsSection topProducts={topProductsQuery.data} />
+          ) : (
+            <ActivityIndicator />
+          )}
 
-        {/* new items */}
-        {newProductsQuery.isLoading ? <ActivityIndicator /> : null}
-        {newProductsQuery.isSuccess ? (
-          <NewProductsSection newProducts={newProductsQuery.data} />
-        ) : (
-          <ActivityIndicator />
-        )}
+          {/* new items */}
+          {newProductsQuery.isLoading ? <ActivityIndicator /> : null}
+          {newProductsQuery.isSuccess ? (
+            <NewProductsSection newProducts={newProductsQuery.data} />
+          ) : (
+            <ActivityIndicator />
+          )}
 
-        {/* recommendations */}
-        {productsQuery.isLoading ? <ActivityIndicator /> : null}
-        {productsQuery.isSuccess ? (
-          <RecommendationsSection recommendations={productsQuery.data} />
-        ) : (
-          <ActivityIndicator />
-        )}
-      </ScrollView>
+          {/* recommendations */}
+          {productsQuery.isLoading ? <ActivityIndicator /> : null}
+          {productsQuery.isSuccess ? (
+            <RecommendationsSection recommendations={productsQuery.data} />
+          ) : (
+            <ActivityIndicator />
+          )}
+        </ScrollView>
+      </Background>
     </SafeAreaView>
   );
 }
@@ -140,7 +132,7 @@ export default function HomepageScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: "transparent",
   },
   horizWrapper: {
     display: "flex",
@@ -161,6 +153,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     height: 55,
     gap: 30,
+    backgroundColor: "transparent",
   },
   searchInput: {
     height: 40,

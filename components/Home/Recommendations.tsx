@@ -54,7 +54,7 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
                 {item.description}
               </Text>
               <Text style={styles.itemPrice}>
-                {item.productVariants[0].price}đ
+                {item.productVariants[0]?.price} đ
               </Text>
             </View>
           </Pressable>

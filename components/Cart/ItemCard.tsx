@@ -10,23 +10,15 @@ import {
 import { COLORS, SIZES } from "../../assets";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { CheckBox } from "react-native-elements";
+import { CartItem } from "../../constants/Type";
 const { height, width } = Dimensions.get("window");
-type Props = {
-  item: Product;
-  handleQuantityChange: (item: Product) => void;
-  isChecked: any;
-  handleCheck: (item: Product) => void;
-};
 
-interface Product {
-  id: any;
-  defaultImg: string;
-  name: string;
-  size: string;
-  color: string;
-  price: number;
-  quantity: number;
-}
+type Props = {
+  item: CartItem;
+  handleQuantityChange: (item: CartItem) => void;
+  isChecked: any;
+  handleCheck: (item: CartItem) => void;
+};
 
 const ItemCard: React.FC<Props> = ({
   item,
@@ -35,6 +27,7 @@ const ItemCard: React.FC<Props> = ({
   handleCheck,
 }) => {
   const [quantity, setQuantity] = useState<number>(item.quantity);
+
   const handleIncrease = () => {
     setQuantity(quantity + 1);
   };
@@ -43,7 +36,7 @@ const ItemCard: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    handleQuantityChange(item);
+    handleQuantityChange({ ...item, quantity });
   }, [quantity]);
 
   return (
@@ -56,15 +49,15 @@ const ItemCard: React.FC<Props> = ({
           <Image
             style={styles.img}
             source={
-              item.defaultImg
-                ? { uri: item.defaultImg }
+              item.product.defaultImage
+                ? { uri: item.product.defaultImage }
                 : require("../../assets/images/default.png")
             }
           />
         </View>
         <View style={styles.info}>
           <View style={styles.vertiWrapper}>
-            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.name}>{item.product.name}</Text>
             <Text style={styles.description} numberOfLines={2}>
               Size: {item.size}
             </Text>

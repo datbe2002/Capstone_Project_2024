@@ -16,7 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import Carousel from "../../../../components/Carousel";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addToCart, getProductById } from "../../../context/productsApi";
-import { useUserStore } from "../../../store/store";
+import { useUserIDStore, useUserStore } from "../../../store/store";
 import { CartData } from "../../../../constants/Type";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
@@ -24,13 +24,16 @@ import VariantSection from "../../../../components/Product/VariantSelector";
 import ProductCardShort from "../../../../components/Product/ProductCardShort";
 import QuantitySelector from "../../../../components/Product/QuantitySelector";
 import CustomAlert from "../../../../components/Arlert";
+import Background from "../../../../components/BackGround";
+import instance from "../../../context/axiosConfig";
 const { height, width } = Dimensions.get("window");
 
 const ProductDetail = () => {
   const [isFavourite, setIsFavourite] = useState<boolean>(false);
   const route = useRouter();
   const { id } = useLocalSearchParams();
-  const { userState } = useUserStore();
+  const { userState, setUserState } = useUserStore();
+  const { userId } = useUserIDStore();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [alert, setAlert] = useState<any>(null);
 
@@ -45,7 +48,7 @@ const ProductDetail = () => {
       setAlert({ title: "Xong", msg: "Đã thêm vào giỏ hàng của bạn!" });
     },
     onError: (error) => {
-      console.log(error)
+      console.log(error);
       setAlert({ title: "Lỗi", msg: "Thêm thất bại! Vui lòng thử lại sau!" });
     },
   });
@@ -57,9 +60,21 @@ const ProductDetail = () => {
     setMySelectedItem(item);
     bottomSheetRef.current?.expand();
   };
-  const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, [])
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    ),
+    []
+  );
+
   const handleAddToCart = () => {
     if (userState) {
+      console.log(userState.userCartId, userState.id);
+
       if (mySelectedItem) {
         mutation.mutate({
           userId: userState.id,
@@ -87,190 +102,241 @@ const ProductDetail = () => {
     );
   };
 
+  useEffect(() => {
+    const getCart = async () => {
+      try {
+        console.log("first 1");
+        const userCart = await instance.get("/api/cart/" + userId);
+        let userData: any = {
+          ...userState,
+          userCartId: userCart.data.data.id,
+        };
+        setUserState(userData);
+      } catch (error: any) {
+        console.log(error.response.data.Message);
+        if (error.response.data.Message === "Cart not found") {
+          console.log(error.response.data.Message);
+        } else {
+          throw error;
+        }
+      }
+    };
+    getCart();
+  }, [mutation.isSuccess]);
   return (
     <SafeAreaView style={styles.container}>
-      {/* ==========alert=========== */}
-      <CustomAlert
-        title={alert?.title}
-        message={alert?.msg}
-        show={alert !== null}
-        onDismiss={() => setAlert(null)}
-      />
-      {/* ============ */}
-      <View style={styles.heading}>
-        <Ionicons
-          name="chevron-back"
-          size={32}
-          color={COLORS.primary}
-          onPress={() => {
-            route.canGoBack()
-              ? route.back()
-              : route.push("/(tabs)/(home)/homepage");
-          }}
+      <Background imageKey={"i1"}>
+        {/* ==========alert=========== */}
+        <CustomAlert
+          title={alert?.title}
+          message={alert?.msg}
+          show={alert !== null}
+          onDismiss={() => setAlert(null)}
         />
-      </View>
-      {productQuery.isSuccess ? (
-        <ScrollView>
-          <View style={styles.main}>
-            <View style={styles.imgWrapper}>
-              <Carousel
-                items={productQuery.data.data.images}
-                renderItem={_renderItem}
-                screenWidth={width}
-              />
-            </View>
-
-            <View style={[styles.horizWrapper, { paddingHorizontal: 20 }]}>
-              <Text style={styles.itemPrice}>
-                {productQuery.data.data.productVariants[0].price} đ
-              </Text>
-              <View style={styles.horizWrapper}>
-                {productQuery.data.data.canTryOn && (
-                  <View
-                    style={{
-                      backgroundColor: COLORS.primary,
-                      borderRadius: SIZES.xxLarge / 2,
-                      padding: 3,
-                    }}
-                  >
-                    <MaterialCommunityIcons
-                      name="tshirt-crew"
-                      size={SIZES.large}
-                      color={COLORS.white}
-                      onPress={() => route.push("/(tabs)/(tryonl)/wardrove")}
-                    />
-                  </View>
-                )}
-                <MaterialCommunityIcons
-                  name="share-circle"
-                  size={SIZES.xxLarge}
-                  color={COLORS.primary}
+        {/* ============ */}
+        <View style={styles.heading}>
+          <Ionicons
+            name="chevron-back"
+            size={32}
+            color={COLORS.primary}
+            onPress={() => {
+              route.canGoBack()
+                ? route.back()
+                : route.push("/(tabs)/(home)/homepage");
+            }}
+          />
+        </View>
+        {productQuery.isSuccess ? (
+          <ScrollView>
+            <View style={styles.main}>
+              <View style={styles.imgWrapper}>
+                <Carousel
+                  items={productQuery.data.data.images}
+                  renderItem={_renderItem}
+                  screenWidth={width}
                 />
               </View>
-            </View>
 
-            <View>
-              <Text style={[styles.title, { paddingHorizontal: 10 }]}>
-                {productQuery.data.data.name}
-              </Text>
-            </View>
-
-            {/* variant */}
-            <VariantSection
-              data={productQuery.data.data.productVariants}
-              onPress={(item) => {
-                openBottomSheet(item);
-              }}
-            />
-
-            <View style={styles.detailContainer}>
-              <Text style={styles.secondaryTitle}>Chi tiết sản phẩm</Text>
-              <View style={styles.detailBox}>
-                <Text style={styles.itemDes}>
-                  Mô tả: {productQuery.data.data.description}
+              <View style={[styles.horizWrapper, { paddingHorizontal: 20 }]}>
+                <Text style={styles.itemPrice}>
+                  {productQuery.data.data.productVariants[0]?.price} đ
                 </Text>
-                <Text style={styles.itemDes}>
-                  Thương hiệu: {productQuery.data.data.brand.name}
+                <View style={styles.horizWrapper}>
+                  {productQuery.data.data.canTryOn && (
+                    <View
+                      style={{
+                        backgroundColor: COLORS.primary,
+                        borderRadius: SIZES.xxLarge / 2,
+                        padding: 3,
+                      }}
+                    >
+                      <MaterialCommunityIcons
+                        name="tshirt-crew"
+                        size={SIZES.large}
+                        color={COLORS.white}
+                        onPress={() => route.push("/(tabs)/(tryonl)/wardrove")}
+                      />
+                    </View>
+                  )}
+                  <MaterialCommunityIcons
+                    name="share-circle"
+                    size={SIZES.xxLarge}
+                    color={COLORS.primary}
+                  />
+                </View>
+              </View>
+
+              <View>
+                <Text style={[styles.title, { paddingHorizontal: 10 }]}>
+                  {productQuery.data.data.name}
                 </Text>
-                {productQuery.data.data.properties.map(
-                  (item: any, index: any) => (
-                    <Text key={index}>
-                      {item.name}: {item.value}
-                    </Text>
-                  )
-                )}
+              </View>
+
+              {/* variant */}
+              <VariantSection
+                data={productQuery.data.data.productVariants}
+                onPress={(item) => {
+                  openBottomSheet(item);
+                }}
+              />
+
+              <View style={styles.detailContainer}>
+                <Text style={styles.secondaryTitle}>Chi tiết sản phẩm</Text>
+                <View style={styles.detailBox}>
+                  <Text style={styles.itemDes}>
+                    Mô tả: {productQuery.data.data.description}
+                  </Text>
+                  <Text style={styles.itemDes}>
+                    Thương hiệu: {productQuery.data.data.brand.name}
+                  </Text>
+                  {productQuery.data.data.properties.map(
+                    (item: any, index: any) => (
+                      <Text key={index}>
+                        {item.name}: {item.value}
+                      </Text>
+                    )
+                  )}
+                </View>
               </View>
             </View>
-          </View>
-        </ScrollView>
-      ) : (
-        <ActivityIndicator />
-      )}
-
-      {/* ============================ */}
-      <View style={[styles.bottom, SHADOWS.medium]}>
-        {/* <AntDesign name={"heart"} size={30} color={"red"} onPress={() => console.log('favourite')} /> */}
-        {/* ====================================== */}
-        {productQuery.isSuccess && (
-          <FavoriteLogic
-            setIsFavourite={setIsFavourite}
-            isFavourite={isFavourite}
-            item={productQuery.data.data}
-          />
+          </ScrollView>
+        ) : (
+          <ActivityIndicator />
         )}
-        {/* ====================================== */}
+        {/* ============================ */}
+        <View style={[styles.bottom, SHADOWS.medium]}>
+          {/* <AntDesign name={"heart"} size={30} color={"red"} onPress={() => console.log('favourite')} /> */}
+          {/* ====================================== */}
+          {productQuery.isSuccess && (
+            <FavoriteLogic
+              setIsFavourite={setIsFavourite}
+              isFavourite={isFavourite}
+              item={productQuery.data.data}
+            />
+          )}
+          {/* ====================================== */}
 
-        <Text
-          style={[
-            styles.button,
-            { backgroundColor: COLORS.black, color: COLORS.white },
-          ]}
-          onPress={() => {
-            openBottomSheet(null);
-          }}
-        >
-          Thêm vào giỏ hàng
-        </Text>
-        <Text
-          style={[
-            styles.button,
-            { backgroundColor: COLORS.primary, color: COLORS.white },
-          ]}
-          onPress={() => {
-            setAlert({
-              title: "Lỗi",
-              msg: "Thêm thất bại! Vui lòng thử lại sau!",
-            });
-          }}
-        >
-          Mua ngay
-        </Text>
-      </View>
-      {/* bottom sheet */}
-      {productQuery.isSuccess && (
-        <BottomSheet
-          ref={bottomSheetRef}
-          backdropComponent={renderBackdrop}
-          enablePanDownToClose={true}
-          index={-1}
-          snapPoints={["55%"]}
-        >
-          <View style={styles.bottomSheet}>
-            <ProductCardShort
-              data={productQuery.data.data}
-              variant={mySelectedItem}
-            />
+          <Text
+            style={[
+              styles.button,
+              { backgroundColor: COLORS.black, color: COLORS.white },
+            ]}
+            onPress={() => {
+              openBottomSheet(null);
+            }}
+          >
+            Thêm vào giỏ hàng
+          </Text>
+          <Text
+            style={[
+              styles.button,
+              { backgroundColor: COLORS.primary, color: COLORS.white },
+            ]}
+            onPress={() => {
+              setAlert({
+                title: "Lỗi",
+                msg: "Thêm thất bại! Vui lòng thử lại sau!",
+              });
+            }}
+          >
+            Mua ngay
+          </Text>
+        </View>
+        {/* bottom sheet */}
+        {productQuery.isSuccess && (
+          <BottomSheet
+            ref={bottomSheetRef}
+            backdropComponent={renderBackdrop}
+            enablePanDownToClose={true}
+            index={-1}
+            snapPoints={["55%"]}
+          >
+            <View style={styles.bottomSheet}>
+              <ProductCardShort
+                data={productQuery.data.data}
+                variant={mySelectedItem}
+              />
 
-            <VariantSection
-              data={productQuery.data.data.productVariants}
-              onPress={(item) => {
-                setMySelectedItem(item);
-              }}
-              selectedItem={mySelectedItem}
-            />
-            <QuantitySelector
-              style={{ position: "absolute", bottom: 70 }}
-              initialQuantity={quantity}
-              onQuantityChange={(newQuantity) => setQuantity(newQuantity)}
-              enabled={mySelectedItem}
-            />
-            <Text
-              style={[
-                styles.button,
-                styles.bottomSheetBtn,
-                { opacity: mySelectedItem ? 1 : 0.7 },
-              ]}
-              onPress={() => {
-                if (mySelectedItem) {
-                  handleAddToCart();
-                }
-              }}
-            >
-              Thêm vào giỏ hàng
-            </Text>
-          </View>
-        </BottomSheet>
-      )}
+              <VariantSection
+                data={productQuery.data.data.productVariants}
+                onPress={(item) => {
+                  setMySelectedItem(item);
+                }}
+                selectedItem={mySelectedItem}
+              />
+              <QuantitySelector
+                style={{ position: "absolute", bottom: 70 }}
+                initialQuantity={quantity}
+                onQuantityChange={(newQuantity) => setQuantity(newQuantity)}
+                enabled={mySelectedItem}
+              />
+              <Text
+                style={[
+                  styles.button,
+                  styles.bottomSheetBtn,
+                  {
+                    backgroundColor: COLORS.black,
+                    color: COLORS.white,
+                    left: 20,
+                    width: "50%",
+                  },
+                  { opacity: mySelectedItem ? 1 : 0.7 },
+                ]}
+                onPress={() => {
+                  if (mySelectedItem) {
+                    handleAddToCart();
+                  }
+                }}
+              >
+                Thêm vào giỏ hàng
+              </Text>
+              <Text
+                style={[
+                  styles.button,
+                  styles.bottomSheetBtn,
+                  {
+                    backgroundColor: COLORS.primary,
+                    color: COLORS.white,
+                    right: 20,
+                    width: "35%",
+                  },
+                  { opacity: mySelectedItem ? 1 : 0.7 },
+                ]}
+                onPress={() => {
+                  if (mySelectedItem) {
+                    setAlert({
+                      title: "Lỗi",
+                      msg: "Thêm thất bại! Vui lòng thử lại sau!",
+                    });
+                  }
+                }}
+              >
+                Mua ngay
+              </Text>
+            </View>
+          </BottomSheet>
+        )}
+      </Background>
     </SafeAreaView>
   );
 };
@@ -280,7 +346,7 @@ export default ProductDetail;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: "transparent",
     position: "relative",
   },
   heading: {
@@ -376,11 +442,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   bottomSheetBtn: {
-    backgroundColor: COLORS.black,
-    color: COLORS.white,
-    alignSelf: "center",
-    width: "90%",
     position: "absolute",
-    bottom: 5,
+    bottom: 16,
   },
 });

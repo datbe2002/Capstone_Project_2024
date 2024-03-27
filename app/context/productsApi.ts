@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import instance from "./axiosConfig";
-import { CartData, Products } from "../../constants/Type";
+import { CartData } from "../../constants/Type";
 
 export const getProducts = async (data?: any) => {
   const response = await instance.get(
@@ -26,8 +26,17 @@ export const getProductById = async (id: any) => {
 };
 
 export const addToCart = async (data: CartData) => {
-  console.log(data)
   const response = await instance.post("/api/cart/add", data);
   console.log("api" + response);
+  return response.data;
+};
+
+export const getCartById = async (id: any) => {
+  const response = await instance.get("/api/cart/" + id);
+  return response.data;
+};
+
+export const updateCart = async (id: any, data: any) => {
+  const response = await instance.put("/api/cart/" + id, data);
   return response.data;
 };

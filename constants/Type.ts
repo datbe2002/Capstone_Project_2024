@@ -1,4 +1,4 @@
-export interface Products {
+export interface Product {
   name: string;
   description: string;
   defaultImage: string;
@@ -50,3 +50,31 @@ export interface CartData {
   price: number;
   quantity: number;
 }
+
+export interface CartItem {
+  cartId: number;
+  productId: number;
+  color: string;
+  size: string;
+  price: number;
+  quantity: number;
+  product: Product;
+}
+
+// interface RootObject {
+//   data: Data;
+//   isSuccess: boolean;
+//   message: string;
+//   validationErrors?: any;
+// }
+
+// interface Data {
+//   cartItems: CartItem[];
+//   createAt: string;
+//   createBy?: any;
+//   id: number;
+//   isDeleted: boolean;
+//   updateAt: string;
+//   updateBy?: any;
+//   userId: string;
+// }
