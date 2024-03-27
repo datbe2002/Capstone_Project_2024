@@ -1,0 +1,75 @@
+import { AntDesign, Fontisto } from '@expo/vector-icons';
+import React, { useCallback, useRef, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { COLORS } from '../../assets';
+import { router } from 'expo-router';
+
+const AddressChosen = ({ addressData }: any) => {
+
+    return (
+        <View>
+            <Pressable onPress={() => router.push('/(tabs)/(cart)/addresspayment')}>
+                <View style={styles.defaultAddressContainer}>
+                    <View style={styles.infoDefault}>
+                        <Fontisto name="map-marker-alt" size={24} color={COLORS.primary} />
+                        <View style={styles.rightContainer}>
+                            <Text style={{ fontFamily: 'mon-sb', fontSize: 18 }}>
+                                Địa chỉ nhận hàng
+                            </Text>
+                            <View style={{ display: 'flex', flexDirection: 'column' }}>
+                                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <Text style={{ fontFamily: 'mon-sb', fontSize: 16, borderRightWidth: 2, borderColor: COLORS.darkGray, paddingRight: 10 }}>{addressData.recipientName}</Text>
+                                    <Text style={{ fontFamily: 'mon-sb', fontSize: 16, paddingLeft: 10 }}>{addressData.recipientPhone}</Text>
+                                </View>
+                                <View>
+                                    <Text style={{ fontFamily: 'mon-sb', fontSize: 16 }}>{addressData.street}</Text>
+                                </View>
+                                <View>
+                                    <Text style={{ fontFamily: 'mon-sb', fontSize: 16 }}>{addressData.ward}, {addressData.district}, {addressData.province}</Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View style={{ justifyContent: 'center', alignItems: 'flex-end' }}>
+                            <AntDesign name="swap" size={24} color={COLORS.darkGray} />
+                        </View>
+                    </View>
+                </View>
+            </Pressable>
+        </View>
+
+    )
+}
+
+export default AddressChosen
+
+const styles = StyleSheet.create({
+    container: {
+        flexGrow: 1,
+        padding: 20
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10
+    },
+    defaultAddressContainer: {
+        padding: 20,
+        marginBottom: 10,
+        backgroundColor: COLORS.white
+    },
+    infoDefault: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 10
+    },
+    rightContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10
+    },
+    addressContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10
+    }
+})

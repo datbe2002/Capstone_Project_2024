@@ -16,9 +16,10 @@ import { cartItems } from "../exampledata";
 import ItemCard from "../../../components/Cart/ItemCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { CheckBox } from "react-native-elements";
+import { router } from "expo-router";
 const { height, width } = Dimensions.get("window");
 
-interface Props {}
+interface Props { }
 
 interface Product {
   id: any;
@@ -30,7 +31,7 @@ interface Product {
   quantity: number;
 }
 
-const Cart: React.FC<Props> = ({}) => {
+const Cart: React.FC<Props> = ({ }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [isAdjust, setIsAdjust] = useState(false);
   const [isSelectAll, setSelectAll] = useState(false);
@@ -162,7 +163,7 @@ const Cart: React.FC<Props> = ({}) => {
         ) : (
           <View style={styles.checkoutWrapper}>
             <Text style={styles.secondaryTitle}>Tổng tiền: 1000</Text>
-            <Pressable style={styles.checkout}>
+            <Pressable style={styles.checkout} onPress={() => router.push('/(tabs)/(cart)/payment')}>
               <Text style={styles.btnText}>Thanh toán</Text>
             </Pressable>
           </View>

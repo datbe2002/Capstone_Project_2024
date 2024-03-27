@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddressConfig from '../../../components/Address/AddressConfig'
 import { useQuery } from '@tanstack/react-query';
 import { getAddress } from '../../context/addressApi';
-import { useUserIDStore } from '../../store/store';
+import { useAddressChange, useUserIDStore } from '../../store/store';
 import LoadingComponent from '../../../components/LoadingComponent';
 
 const Address = () => {
@@ -14,6 +14,7 @@ const Address = () => {
         queryKey: ["address"],
         queryFn: () => getAddress(userId),
     });
+
 
 
     return (
