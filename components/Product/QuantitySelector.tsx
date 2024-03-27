@@ -54,7 +54,7 @@ const QuantitySelector: React.FC<Props> = ({
             textAlignVertical: "center",
             borderTopWidth: 1,
             borderBottomWidth: 1,
-            borderColor: COLORS.errorColor,
+            borderColor: COLORS.primary,
           }}
         >
           {quantity}
@@ -101,6 +101,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderColor: COLORS.errorColor,
+    borderColor: COLORS.primary,
   },
 });

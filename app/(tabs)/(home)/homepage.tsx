@@ -27,6 +27,7 @@ import {
 } from "../../context/productsApi";
 import { useUserIDStore, useUserStore } from "../../store/store";
 import instance from "../../context/axiosConfig";
+import Background from "../../../components/BackGround";
 
 export default function HomepageScreen() {
   const router = useRouter();
@@ -79,49 +80,51 @@ export default function HomepageScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* search box */}
-      <View style={[styles.horizWrapper, styles.searchBoxWrapper]}>
-        <Text style={styles.title}>Shop</Text>
-        <View>
-          <CustomInput
-            placeholder="Tìm kiếm..."
-            onChangeText={handleSearch}
-            value={searchValue}
-            style={styles.searchInput}
-            elementAfter={
-              <FontAwesome5 name="search" size={22} color={COLORS.primary} />
-            }
-          />
+      <Background imageKey={"i6"}>
+        {/* search box */}
+        <View style={[styles.horizWrapper, styles.searchBoxWrapper]}>
+          <Text style={styles.title}>Shop</Text>
+          <View style={{ backgroundColor: "transparent" }}>
+            <CustomInput
+              placeholder="Tìm kiếm..."
+              onChangeText={handleSearch}
+              value={searchValue}
+              style={styles.searchInput}
+              elementAfter={
+                <FontAwesome5 name="search" size={22} color={COLORS.primary} />
+              }
+            />
+          </View>
         </View>
-      </View>
-      {/* main */}
-      <ScrollView style={styles.container}>
-        {/* categories */}
-        <CategoriesSection categories={homeCategories} />
-        {/* top product */}
-        {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
-        {topProductsQuery.isSuccess ? (
-          <TopProductsSection topProducts={topProductsQuery.data} />
-        ) : (
-          <ActivityIndicator />
-        )}
+        {/* main */}
+        <ScrollView style={styles.container}>
+          {/* categories */}
+          <CategoriesSection categories={homeCategories} />
+          {/* top product */}
+          {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
+          {topProductsQuery.isSuccess ? (
+            <TopProductsSection topProducts={topProductsQuery.data} />
+          ) : (
+            <ActivityIndicator />
+          )}
 
-        {/* new items */}
-        {newProductsQuery.isLoading ? <ActivityIndicator /> : null}
-        {newProductsQuery.isSuccess ? (
-          <NewProductsSection newProducts={newProductsQuery.data} />
-        ) : (
-          <ActivityIndicator />
-        )}
+          {/* new items */}
+          {newProductsQuery.isLoading ? <ActivityIndicator /> : null}
+          {newProductsQuery.isSuccess ? (
+            <NewProductsSection newProducts={newProductsQuery.data} />
+          ) : (
+            <ActivityIndicator />
+          )}
 
-        {/* recommendations */}
-        {productsQuery.isLoading ? <ActivityIndicator /> : null}
-        {productsQuery.isSuccess ? (
-          <RecommendationsSection recommendations={productsQuery.data} />
-        ) : (
-          <ActivityIndicator />
-        )}
-      </ScrollView>
+          {/* recommendations */}
+          {productsQuery.isLoading ? <ActivityIndicator /> : null}
+          {productsQuery.isSuccess ? (
+            <RecommendationsSection recommendations={productsQuery.data} />
+          ) : (
+            <ActivityIndicator />
+          )}
+        </ScrollView>
+      </Background>
     </SafeAreaView>
   );
 }
@@ -129,7 +132,7 @@ export default function HomepageScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: "transparent",
   },
   horizWrapper: {
     display: "flex",
@@ -150,6 +153,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     height: 55,
     gap: 30,
+    backgroundColor: "transparent",
   },
   searchInput: {
     height: 40,
