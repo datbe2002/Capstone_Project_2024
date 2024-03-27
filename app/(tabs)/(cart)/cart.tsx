@@ -16,6 +16,10 @@ import { cartItems } from "../exampledata";
 import ItemCard from "../../../components/Cart/ItemCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { CheckBox } from "react-native-elements";
+import { useQuery } from "@tanstack/react-query";
+import { useUserStore } from "../../store/store";
+import { getCartById } from "../../context/productsApi";
+import Background from "../../../components/BackGround";
 const { height, width } = Dimensions.get("window");
 
 interface Props {}
@@ -36,16 +40,24 @@ const Cart: React.FC<Props> = ({}) => {
   const [isSelectAll, setSelectAll] = useState(false);
   const textInputRef = useRef<TextInput>(null);
   const [selectedItems, setSelectedItems] = useState<Array<Product>>([]);
+  const { userState } = useUserStore();
+
+  const cartQuery = useQuery({
+    queryKey: ["cart"],
+    queryFn: () => getCartById(userState?.id),
+  });
+  console.log(userState?.id);
+  useEffect(() => {
+    console.log(cartQuery.data.data);
+  }, [cartQuery.isSuccess]);
 
   // edit quantity
   const handleQuantityChange = (item: Product) => {
     let origin = cartItems.find((x) => x.id === item.id);
     if (origin) {
       origin.quantity = item.quantity;
-      console.log(origin.quantity);
     }
   };
-
   // selector
   useEffect(() => {
     if (isSelectAll) {
@@ -88,21 +100,22 @@ const Cart: React.FC<Props> = ({}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.horizWrapper, styles.heading]}>
-        <Text style={styles.title}>Giỏ hàng</Text>
-        <Pressable
-          onPress={() => {
-            setIsAdjust(!isAdjust);
-          }}
-        >
-          <Text style={{ fontSize: SIZES.medium }}>
-            {isAdjust ? "Xong" : "Sửa"}
-          </Text>
-        </Pressable>
-      </View>
+      <Background imageKey="i5">
+        <View style={[styles.horizWrapper, styles.heading]}>
+          <Text style={styles.title}>Giỏ hàng</Text>
+          <Pressable
+            onPress={() => {
+              setIsAdjust(!isAdjust);
+            }}
+          >
+            <Text style={{ fontSize: SIZES.medium, color: COLORS.white }}>
+              {isAdjust ? "Xong" : "Sửa"}
+            </Text>
+          </Pressable>
+        </View>
 
-      {/* address */}
-      <View style={styles.address}>
+        {/* address */}
+        {/* <View style={styles.address}>
         <Text style={styles.secondaryTitle}>Địa chỉ</Text>
         <View style={styles.horizWrapper}>
           <TextInput
@@ -122,52 +135,53 @@ const Cart: React.FC<Props> = ({}) => {
             <FontAwesome5 name="pen" size={20} color="white" />
           </Pressable>
         </View>
-      </View>
+      </View> */}
 
-      {/* cart item */}
-      <ScrollView>
-        {cartItems.map((item: any, index) => (
-          <View key={index}>
-            <ItemCard
-              item={item}
-              isChecked={selectedItems.some((x) => x.id === item.id)}
-              handleCheck={() => handleSelected(item)}
-              handleQuantityChange={(i) => handleQuantityChange(i)}
+        {/* cart item */}
+        <ScrollView>
+          {cartItems.map((item: any, index) => (
+            <View key={index}>
+              <ItemCard
+                item={item}
+                isChecked={selectedItems.some((x) => x.id === item.id)}
+                handleCheck={() => handleSelected(item)}
+                handleQuantityChange={(i) => handleQuantityChange(i)}
+              />
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* total and check out */}
+
+        <View style={styles.summary}>
+          <View style={styles.checkBox}>
+            <CheckBox
+              checked={isSelectAll}
+              onPress={() => {
+                setSelectAll(!isSelectAll);
+                if (selectedItems.length === cartItems.length) {
+                  setSelectedItems([]);
+                }
+              }}
             />
+            <Text style={{ fontSize: SIZES.medium }}>Chọn tất cả</Text>
           </View>
-        ))}
-      </ScrollView>
-
-      {/* total and check out */}
-
-      <View style={styles.summary}>
-        <View style={styles.checkBox}>
-          <CheckBox
-            checked={isSelectAll}
-            onPress={() => {
-              setSelectAll(!isSelectAll);
-              if (selectedItems.length === cartItems.length) {
-                setSelectedItems([]);
-              }
-            }}
-          />
-          <Text style={{ fontSize: SIZES.medium }}>Chọn tất cả</Text>
+          {isAdjust ? (
+            <View>
+              <Pressable style={styles.delete}>
+                <Text style={styles.btnTextDanger}>Xóa</Text>
+              </Pressable>
+            </View>
+          ) : (
+            <View style={styles.checkoutWrapper}>
+              <Text style={styles.secondaryTitle}>Tổng tiền: 1000</Text>
+              <Pressable style={styles.checkout}>
+                <Text style={styles.btnText}>Thanh toán</Text>
+              </Pressable>
+            </View>
+          )}
         </View>
-        {isAdjust ? (
-          <View>
-            <Pressable style={styles.delete}>
-              <Text style={styles.btnTextDanger}>Xóa</Text>
-            </Pressable>
-          </View>
-        ) : (
-          <View style={styles.checkoutWrapper}>
-            <Text style={styles.secondaryTitle}>Tổng tiền: 1000</Text>
-            <Pressable style={styles.checkout}>
-              <Text style={styles.btnText}>Thanh toán</Text>
-            </Pressable>
-          </View>
-        )}
-      </View>
+      </Background>
     </SafeAreaView>
   );
 };

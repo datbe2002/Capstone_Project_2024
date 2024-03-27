@@ -5,13 +5,16 @@ import i2 from "../assets/images/bb2.png";
 import i3 from "../assets/images/bb3.png";
 import i4 from "../assets/images/bb4.png";
 import i5 from "../assets/images/bb5.png";
+import i6 from "../assets/images/bb6.png";
 // Map of images
+
 const images = {
   i1,
   i2,
   i3,
   i4,
   i5,
+  i6,
 };
 
 interface BackgroundProps {
