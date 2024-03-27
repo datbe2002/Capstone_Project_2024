@@ -22,9 +22,7 @@ export const getAddress = async (userId?: string | null) => {
 //   return response.data;
 // };
 
-// export const addToCart = async (data: CartData) => {
-//   console.log(data)
-//   const response = await instance.post("/api/cart/add", data);
-//   console.log("api" + response);
-//   return response.data;
-// };
+export const getShippingFee = async (addressId: number | null) => {
+    const response = await instance.get(`/api/shipping/fee?addressId=${addressId}`);
+    return response.data;
+};

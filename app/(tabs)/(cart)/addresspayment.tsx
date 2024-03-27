@@ -14,13 +14,14 @@ interface AddressPaymentListProps {
 }
 
 
-const AddressCard = ({ addressUnique }: any) => {
+const AddressCard = ({ addressUnique, setLoadding }: any) => {
     const { selectedAddress, setSelectedAddress } = useAddressChange()
     const [checkbox, setCheckbox] = useState<any>(selectedAddress)
-
     const handleChosen = () => {
+        setLoadding(true)
         setSelectedAddress(addressUnique)
         setTimeout(() => {
+            setLoadding(false)
             router.back()
         }, 1000)
     }
@@ -71,6 +72,7 @@ const ListEmptyAddress = () => {
 
 const AddressPaymentList: React.FC<AddressPaymentListProps> = () => {
 
+    const [loadding, setLoadding] = useState<boolean>(false)
 
     const { userId } = useUserIDStore()
 
@@ -85,13 +87,14 @@ const AddressPaymentList: React.FC<AddressPaymentListProps> = () => {
 
     return (
         <View style={styles.containerAddress}>
+            {loadding && <LoadingComponent />}
             <View style={styles.componentText}>
                 <Text style={styles.syntaxText}>Địa chỉ</Text>
             </View>
             <View>
                 <FlatList
                     data={getUserAddress.data.data}
-                    renderItem={({ item }) => <AddressCard addressUnique={item} />}
+                    renderItem={({ item }) => <AddressCard addressUnique={item} setLoadding={setLoadding} />}
                     keyExtractor={item => item.id}
                     ListEmptyComponent={<ListEmptyAddress />}
                 />
@@ -109,7 +112,7 @@ export default AddressPaymentList
 
 const styles = StyleSheet.create({
     containerAddress: {
-        marginHorizontal: 10,
+        // marginHorizontal: 10,
     },
     componentText: {
         height: 50,

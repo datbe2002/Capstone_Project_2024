@@ -21,9 +21,12 @@ const AddressCard = ({ addressUnique }: any) => {
             <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.darkGray }}>{addressUnique.province}, {addressUnique.district}, {addressUnique.ward}</Text>
         </View>
         <View style={{ paddingTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            {addressUnique.isDefault && <Text style={{ color: COLORS.primary, borderColor: COLORS.primary, borderWidth: 1, padding: 5, height: 30, fontFamily: 'mon-b', textAlign: 'center' }}>
+            {addressUnique.isDefault ? <Text style={{ color: COLORS.primary, borderColor: COLORS.primary, borderWidth: 1, padding: 5, height: 30, fontFamily: 'mon-b', textAlign: 'center' }}>
                 Mặc định
-            </Text>}
+            </Text> :
+                <Text style={{ padding: 5, height: 30, fontFamily: 'mon-b', textAlign: 'center' }}>
+                </Text>
+            }
             <TouchableOpacity onPress={() => router.push({ pathname: '/(tabs)/(menu)/editaddress', params: { item: JSON.stringify(addressUnique) } })} style={{ backgroundColor: COLORS.primary, borderRadius: 50, padding: 8, justifyContent: 'center', alignItems: 'center' }}>
                 <Feather name="edit-2" size={20} color={COLORS.white} />
             </TouchableOpacity>
