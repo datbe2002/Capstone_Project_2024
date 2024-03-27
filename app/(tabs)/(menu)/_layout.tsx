@@ -54,6 +54,17 @@ const MenuLayout = () => {
                 },
                 headerTintColor: COLORS.primary,
             }} />
+            <Stack.Screen name='editaddress' options={{
+                headerShown: true,
+                title: 'Sửa địa chỉ',
+                headerTitleAlign: 'center',
+                headerLeft: BackButton,
+                headerTitleStyle: {
+                    fontFamily: 'mon-b',
+                    fontSize: 25
+                },
+                headerTintColor: COLORS.primary,
+            }} />
             <Stack.Screen name='paymentmethod' options={{
                 headerShown: true,
                 title: 'Phương thức thanh toán',

@@ -33,3 +33,27 @@ export interface Address {
   wardCode: string | null;
   street: string | null;
 }
+
+
+export interface AddressSetting extends AddressConfig {
+}
+
+export interface AddressConfig {
+  userId: string
+  recipientName: string
+  recipientPhone: string
+  province: string
+  provinceId: number
+  district: string
+  disctrictId: number
+  ward: string
+  wardCode: string
+  street: string
+  isDefault: boolean
+  id: number
+  isDeleted: boolean
+  createAt: string
+  updateAt: any
+  updateBy: any
+  createBy: any
+}

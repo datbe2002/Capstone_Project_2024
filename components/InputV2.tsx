@@ -17,7 +17,7 @@ const InputV2: React.FC<InputV2Props> = ({ label, iconName, error, iconPlace, pa
     const [hidePassword, setHidePassword] = useState(password)
     return (
         <View>
-            <Text style={styles.label}>{label}</Text>
+            {label && <Text style={styles.label}>{label}</Text>}
             <View style={[styles.inputContainer, { borderColor: error ? COLORS.errorColor : isFocused ? COLORS.black : COLORS.gray }]}>
                 {iconPlace}
                 <TextInput
