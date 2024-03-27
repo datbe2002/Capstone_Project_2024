@@ -45,7 +45,7 @@ const ProductDetail = () => {
       setAlert({ title: "Xong", msg: "Đã thêm vào giỏ hàng của bạn!" });
     },
     onError: (error) => {
-      console.log(error)
+      console.log(error);
       setAlert({ title: "Lỗi", msg: "Thêm thất bại! Vui lòng thử lại sau!" });
     },
   });
@@ -57,7 +57,16 @@ const ProductDetail = () => {
     setMySelectedItem(item);
     bottomSheetRef.current?.expand();
   };
-  const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, [])
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    ),
+    []
+  );
   const handleAddToCart = () => {
     if (userState) {
       if (mySelectedItem) {
@@ -122,7 +131,7 @@ const ProductDetail = () => {
 
             <View style={[styles.horizWrapper, { paddingHorizontal: 20 }]}>
               <Text style={styles.itemPrice}>
-                {productQuery.data.data.productVariants[0].price} đ
+                {productQuery.data.data.productVariants[0]?.price} đ
               </Text>
               <View style={styles.horizWrapper}>
                 {productQuery.data.data.canTryOn && (
