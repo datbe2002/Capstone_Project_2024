@@ -1,10 +1,6 @@
 import {
   ActivityIndicator,
   Dimensions,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
 } from "react-native";
@@ -18,12 +14,7 @@ import { COLORS, SHADOWS, SIZES } from "../../../assets";
 import { useEffect, useState } from "react";
 const { height, width } = Dimensions.get("window");
 
-import {
-  categories,
-  newItems,
-  recommendations,
-  topProducts,
-} from "../exampledata";
+import { categories } from "../exampledata";
 import CategoriesSection from "../../../components/Home/CategoriesSection";
 import TopProductsSection from "../../../components/Home/TopProductsSection";
 import NewProductsSection from "../../../components/Home/NewProductsSection";
@@ -36,36 +27,35 @@ import {
 } from "../../context/productsApi";
 import { useUserIDStore, useUserStore } from "../../store/store";
 import instance from "../../context/axiosConfig";
-import { UserData } from "../../../constants/types/normal";
 
 export default function HomepageScreen() {
   const router = useRouter();
   const homeCategories = categories.slice(0, 4);
-  const { userId } = useUserIDStore()
-  console.log(userId)
+  const { userId } = useUserIDStore();
+  console.log(userId);
   const [searchValue, setSearchValue] = useState<string>("");
-  const { userState, setUserState } = useUserStore()
+  const { userState, setUserState } = useUserStore();
   useEffect(() => {
     const getCart = async () => {
       try {
-        console.log('first')
+        console.log("first");
         const userCart = await instance.get("/api/cart/" + userId);
         let userData: any = {
           ...userState,
           userCartId: userCart.data.data.id,
         };
-        setUserState(userData)
+        setUserState(userData);
       } catch (error: any) {
-        console.log(error.response.data.Message)
-        if (error.response.data.Message === 'Cart not found') {
-          console.log(error.response.data.Message)
+        console.log(error.response.data.Message);
+        if (error.response.data.Message === "Cart not found") {
+          console.log(error.response.data.Message);
         } else {
-          throw error
+          throw error;
         }
       }
-    }
-    getCart()
-  }, [])
+    };
+    getCart();
+  }, []);
   const handleSearch = (text: string) => {
     setSearchValue(text);
   };
@@ -85,8 +75,7 @@ export default function HomepageScreen() {
     queryFn: () => getTopProducts(5),
   });
 
-  console.log(userState)
-
+  console.log(userState);
 
   return (
     <SafeAreaView style={styles.container}>
