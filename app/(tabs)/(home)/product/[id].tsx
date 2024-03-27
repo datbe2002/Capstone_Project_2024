@@ -16,7 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import Carousel from "../../../../components/Carousel";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addToCart, getProductById } from "../../../context/productsApi";
-import { useUserStore } from "../../../store/store";
+import { useUserIDStore, useUserStore } from "../../../store/store";
 import { CartData } from "../../../../constants/Type";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
@@ -25,13 +25,15 @@ import ProductCardShort from "../../../../components/Product/ProductCardShort";
 import QuantitySelector from "../../../../components/Product/QuantitySelector";
 import CustomAlert from "../../../../components/Arlert";
 import Background from "../../../../components/BackGround";
+import instance from "../../../context/axiosConfig";
 const { height, width } = Dimensions.get("window");
 
 const ProductDetail = () => {
   const [isFavourite, setIsFavourite] = useState<boolean>(false);
   const route = useRouter();
   const { id } = useLocalSearchParams();
-  const { userState } = useUserStore();
+  const { userState, setUserState } = useUserStore();
+  const { userId } = useUserIDStore();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [alert, setAlert] = useState<any>(null);
 
@@ -68,8 +70,11 @@ const ProductDetail = () => {
     ),
     []
   );
+
   const handleAddToCart = () => {
     if (userState) {
+      console.log(userState.userCartId, userState.id);
+
       if (mySelectedItem) {
         mutation.mutate({
           userId: userState.id,
@@ -97,6 +102,27 @@ const ProductDetail = () => {
     );
   };
 
+  useEffect(() => {
+    const getCart = async () => {
+      try {
+        console.log("first 1");
+        const userCart = await instance.get("/api/cart/" + userId);
+        let userData: any = {
+          ...userState,
+          userCartId: userCart.data.data.id,
+        };
+        setUserState(userData);
+      } catch (error: any) {
+        console.log(error.response.data.Message);
+        if (error.response.data.Message === "Cart not found") {
+          console.log(error.response.data.Message);
+        } else {
+          throw error;
+        }
+      }
+    };
+    getCart();
+  }, [mutation.isSuccess]);
   return (
     <SafeAreaView style={styles.container}>
       <Background imageKey={"i1"}>

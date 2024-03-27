@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Button,
   Dimensions,
+  FlatList,
+  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -10,16 +13,16 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../../assets";
-import InputV2 from "../../../components/InputV2";
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
-import { cartItems } from "../exampledata";
 import ItemCard from "../../../components/Cart/ItemCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { CheckBox } from "react-native-elements";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useUserStore } from "../../store/store";
-import { getCartById } from "../../context/productsApi";
+import { getCartById, updateCart } from "../../context/productsApi";
 import Background from "../../../components/BackGround";
+import { CartItem } from "../../../constants/Type";
+import { router } from "expo-router";
+import { useIsFocused } from "@react-navigation/native";
 const { height, width } = Dimensions.get("window");
 
 interface Props {}
@@ -35,29 +38,41 @@ interface Product {
 }
 
 const Cart: React.FC<Props> = ({}) => {
-  const [isEditable, setIsEditable] = useState(false);
   const [isAdjust, setIsAdjust] = useState(false);
   const [isSelectAll, setSelectAll] = useState(false);
-  const textInputRef = useRef<TextInput>(null);
-  const [selectedItems, setSelectedItems] = useState<Array<Product>>([]);
+  const [selectedItems, setSelectedItems] = useState<Array<CartItem>>([]);
   const { userState } = useUserStore();
+  const [cartItems, setCartItems] = useState<Array<CartItem>>([]);
+  const isFocus = useIsFocused();
 
   const cartQuery = useQuery({
     queryKey: ["cart"],
     queryFn: () => getCartById(userState?.id),
   });
-  console.log(userState?.id);
+
+  const mutation = useMutation({
+    mutationFn: (data: any) => updateCart(userState?.userCartId, data),
+  });
+
   useEffect(() => {
-    console.log(cartQuery.data.data);
+    if (cartQuery.isSuccess) {
+      setCartItems(cartQuery.data.data.cartItems);
+    }
   }, [cartQuery.isSuccess]);
 
   // edit quantity
-  const handleQuantityChange = (item: Product) => {
-    let origin = cartItems.find((x) => x.id === item.id);
-    if (origin) {
-      origin.quantity = item.quantity;
-    }
+  const handleQuantityChange = (updatedItem: CartItem) => {
+    const updatedCartItems = cartItems.map((item) =>
+      item.productId === updatedItem.productId &&
+      item.color === updatedItem.color &&
+      item.size === updatedItem.size
+        ? updatedItem
+        : item
+    );
+    setCartItems(updatedCartItems);
+    mutation.mutate({ userId: userState?.id, cartItems: updatedCartItems });
   };
+
   // selector
   useEffect(() => {
     if (isSelectAll) {
@@ -69,7 +84,7 @@ const Cart: React.FC<Props> = ({}) => {
     if (
       selectedItems.length === cartItems.length &&
       selectedItems.every((selectedItem) =>
-        cartItems.some((cartItem) => cartItem.id === selectedItem.id)
+        cartItems.some((cartItem) => cartItem === selectedItem)
       )
     ) {
       setSelectAll(true);
@@ -78,24 +93,42 @@ const Cart: React.FC<Props> = ({}) => {
     }
   }, [selectedItems]);
 
-  const handleSelected = (item: Product) => {
-    if (selectedItems.some((selectedItem) => selectedItem.id === item.id)) {
+  const handleSelected = (item: CartItem) => {
+    if (selectedItems.some((selectedItem) => selectedItem === item)) {
       setSelectedItems(
-        selectedItems.filter((selectedItem) => selectedItem.id !== item.id)
+        selectedItems.filter((selectedItem) => selectedItem !== item)
       );
     } else {
       setSelectedItems([...selectedItems, item]);
     }
   };
-  // address
-  useEffect(() => {
-    if (isEditable && textInputRef.current) {
-      textInputRef.current.focus();
-    }
-  }, [isEditable]);
 
-  const toggleEditable = () => {
-    setIsEditable(!isEditable);
+  const ListEmptyComponent = () => {
+    return (
+      <View style={styles.emptyList}>
+        <Image
+          style={styles.imageWL}
+          source={require("../../../assets/images/wishlistempty.png")}
+        />
+        <Text style={{ fontFamily: "mon", color: COLORS.black, fontSize: 18 }}>
+          Giỏ hàng trống
+        </Text>
+        <Pressable
+          style={{
+            backgroundColor: COLORS.primary,
+            padding: 15,
+            borderRadius: 2,
+          }}
+          onPress={() => router.push("/(tabs)/(home)/homepage")}
+        >
+          <Text
+            style={{ fontFamily: "mon-sb", color: COLORS.white, fontSize: 16 }}
+          >
+            Mua sắm ngay!
+          </Text>
+        </Pressable>
+      </View>
+    );
   };
 
   return (
@@ -114,42 +147,23 @@ const Cart: React.FC<Props> = ({}) => {
           </Pressable>
         </View>
 
-        {/* address */}
-        {/* <View style={styles.address}>
-        <Text style={styles.secondaryTitle}>Địa chỉ</Text>
-        <View style={styles.horizWrapper}>
-          <TextInput
-            style={[
-              styles.textInput,
-              isEditable
-                ? { backgroundColor: COLORS.white }
-                : { backgroundColor: "transparent" },
-            ]}
-            ref={textInputRef}
-            multiline
-            numberOfLines={4}
-            editable={isEditable}
-            placeholder="Địa chỉ của bạn."
-          />
-          <Pressable style={styles.iconWrapper} onPress={toggleEditable}>
-            <FontAwesome5 name="pen" size={20} color="white" />
-          </Pressable>
-        </View>
-      </View> */}
-
         {/* cart item */}
-        <ScrollView>
-          {cartItems.map((item: any, index) => (
-            <View key={index}>
-              <ItemCard
-                item={item}
-                isChecked={selectedItems.some((x) => x.id === item.id)}
-                handleCheck={() => handleSelected(item)}
-                handleQuantityChange={(i) => handleQuantityChange(i)}
-              />
-            </View>
-          ))}
-        </ScrollView>
+        {cartQuery.isLoading && <ActivityIndicator size={20} />}
+        {cartQuery.isSuccess ? (
+          <ScrollView>
+            {cartItems.length < 1 && <ListEmptyComponent />}
+            {cartItems.map((item: any, index: any) => (
+              <View key={index}>
+                <ItemCard
+                  item={item}
+                  isChecked={selectedItems.some((x) => x === item)}
+                  handleCheck={() => handleSelected(item)}
+                  handleQuantityChange={(i) => handleQuantityChange(i)}
+                />
+              </View>
+            ))}
+          </ScrollView>
+        ) : null}
 
         {/* total and check out */}
 
@@ -286,5 +300,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
+  },
+  emptyList: {
+    backgroundColor: "transparent",
+    display: "flex",
+    gap: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    height: height / 1.4,
+  },
+  imageWL: {
+    width: width / 2,
+    objectFit: "cover",
   },
 });
