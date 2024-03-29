@@ -1,36 +1,32 @@
 import {
   ActivityIndicator,
-  Dimensions,
   ScrollView,
   StyleSheet,
 } from "react-native";
 
-import { Text, View } from "../../../components/Themed";
-import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import CustomInput from "../../../components/Input";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { COLORS, SHADOWS, SIZES } from "../../../assets";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-const { height, width } = Dimensions.get("window");
-
-import { categories } from "../exampledata";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS, SIZES } from "../../../assets";
+import CustomInput from "../../../components/Input";
+import { Text, View } from "../../../components/Themed";
+import { useQuery } from "@tanstack/react-query";
+import Background from "../../../components/BackGround";
 import CategoriesSection from "../../../components/Home/CategoriesSection";
-import TopProductsSection from "../../../components/Home/TopProductsSection";
 import NewProductsSection from "../../../components/Home/NewProductsSection";
 import RecommendationsSection from "../../../components/Home/Recommendations";
-import { useQuery } from "@tanstack/react-query";
+import TopProductsSection from "../../../components/Home/TopProductsSection";
+import instance from "../../context/axiosConfig";
 import {
   getNewProduct,
   getProducts,
   getTopProducts,
 } from "../../context/productsApi";
 import { useUserIDStore, useUserStore } from "../../store/store";
-import instance from "../../context/axiosConfig";
-import Background from "../../../components/BackGround";
+import { categories } from "../exampledata";
 
 export default function HomepageScreen() {
-  const router = useRouter();
   const homeCategories = categories.slice(0, 4);
   const { userId } = useUserIDStore();
   console.log(userId);
@@ -75,8 +71,6 @@ export default function HomepageScreen() {
     queryKey: ["topProducts"],
     queryFn: () => getTopProducts(5),
   });
-
-  console.log(userState);
 
   return (
     <SafeAreaView style={styles.container}>

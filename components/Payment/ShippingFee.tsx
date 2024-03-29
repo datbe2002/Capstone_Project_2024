@@ -1,31 +1,39 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import { getShippingFee } from '../../app/context/addressApi'
-import LoadingComponent from '../LoadingComponent'
+import { COLORS } from '../../assets'
 
 interface ShippingFeeProps {
     addressId: number | null
 }
-export const transNumberFormatter = (number: any) => {
-    const formattedNumber = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+export const transNumberFormatter = (number: any | null) => {
+    const formattedNumber = number?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     return formattedNumber
 };
 const ShippingFee: React.FC<ShippingFeeProps> = ({ addressId }) => {
-
-    const getShippingFeeAddr = useQuery({
-        queryKey: ["shippingFee"],
+    // Call useQuery directly in the component body
+    const { isFetching, error, data } = useQuery({
+        queryKey: ["shippingFee", addressId],
         queryFn: () => getShippingFee(addressId),
+        enabled: addressId !== null
     });
-
-
-
+    console.log(isFetching)
     return (
         <View style={styles.shippingMethod}>
             <Text style={styles.shippingMethodText}>Phương thức vận chuyển</Text>
             <View style={styles.methodContainer}>
                 <Text style={styles.methodTextMain}>Truyền thống</Text>
-                {getShippingFeeAddr.isPending ? <LoadingComponent /> : <Text style={styles.methodFeeMain}><Text style={styles.vndText}>đ</Text> {transNumberFormatter(getShippingFeeAddr.data.data.total)}</Text>}
+                {isFetching ? (
+                    <ActivityIndicator size={20} color={COLORS.primary} />
+                ) : error ? (
+                    <Text style={styles.methodFeeMain}>Error fetching fee</Text>
+                ) : (
+                    <Text style={styles.methodFeeMain}>
+                        <Text style={styles.vndText}>đ</Text>
+                        {transNumberFormatter(data?.data?.total)}
+                    </Text>
+                )}
             </View>
         </View>
     )

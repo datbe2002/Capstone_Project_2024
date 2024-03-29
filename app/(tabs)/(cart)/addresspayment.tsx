@@ -1,4 +1,4 @@
-import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { Feather, Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
@@ -8,6 +8,9 @@ import { useQuery } from '@tanstack/react-query'
 import { getAddress } from '../../context/addressApi'
 import LoadingComponent from '../../../components/LoadingComponent'
 import { CheckBox } from 'react-native-elements'
+
+const { width } = Dimensions.get("window");
+
 
 interface AddressPaymentListProps {
     address: Array<any>
@@ -28,7 +31,7 @@ const AddressCard = ({ addressUnique, setLoadding }: any) => {
 
     return (
         <View style={styles.cardContainer}>
-            <View>
+            <View style={styles.checkBoxContainer}>
                 <CheckBox
                     checked={selectedAddress.id === addressUnique.id ? checkbox : !checkbox}
                     onPress={handleChosen}
@@ -37,7 +40,7 @@ const AddressCard = ({ addressUnique, setLoadding }: any) => {
                     size={28}
                 />
             </View>
-            <View>
+            <View style={styles.rightContainer}>
                 <View style={styles.nameNphone}>
                     <Text style={{ fontFamily: 'mon-b', fontSize: 18 }}>{addressUnique.recipientName.toUpperCase()}</Text>
                     <Text style={{ fontFamily: 'mon-sb', fontSize: 18, color: COLORS.darkGray }}>{addressUnique.recipientPhone}</Text>
@@ -81,7 +84,7 @@ const AddressPaymentList: React.FC<AddressPaymentListProps> = () => {
         queryFn: () => getAddress(userId),
     });
 
-    if (getUserAddress.isPending) {
+    if (getUserAddress.isFetching) {
         return <LoadingComponent />;
     }
 
@@ -125,13 +128,12 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     cardContainer: {
-        padding: 10,
         backgroundColor: 'white',
+        padding: 10,
         marginBottom: 10,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: 'auto',
     },
     nameNphone: {
         display: 'flex',
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
     addressInfo: {
         paddingTop: 10,
         display: 'flex',
-        gap: 10
+        gap: 10,
     },
     emptyList: {
         backgroundColor: '#FAFAFC',
@@ -167,5 +169,13 @@ const styles = StyleSheet.create({
         width: 150,
         opacity: 0.1,
         objectFit: "cover",
+    },
+    checkBoxContainer: {
+        justifyContent: "center",
+        alignItems: 'center',
+        width: '15%'
+    },
+    rightContainer: {
+        width: '85%'
     }
 })

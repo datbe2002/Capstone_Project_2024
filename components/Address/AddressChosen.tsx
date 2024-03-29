@@ -3,14 +3,14 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { COLORS } from '../../assets';
 import { router } from 'expo-router';
+import { ActivityIndicator } from 'react-native';
 
 const AddressChosen = ({ addressData }: any) => {
-
     return (
         <View>
             <Pressable onPress={() => router.push('/(tabs)/(cart)/addresspayment')}>
                 <View style={styles.defaultAddressContainer}>
-                    <View style={styles.infoDefault}>
+                    {addressData.recipientName !== null ? <View style={styles.infoDefault}>
                         <Fontisto name="map-marker-alt" size={24} color={COLORS.primary} />
                         <View style={styles.rightContainer}>
                             <Text style={{ fontFamily: 'mon-sb', fontSize: 18 }}>
@@ -32,7 +32,9 @@ const AddressChosen = ({ addressData }: any) => {
                         <View style={{ justifyContent: 'center', alignItems: 'flex-end' }}>
                             <AntDesign name="swap" size={24} color={COLORS.darkGray} />
                         </View>
-                    </View>
+                    </View> : <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator size={25} color={COLORS.primary} />
+                    </View>}
                 </View>
             </Pressable>
         </View>
@@ -53,9 +55,12 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     defaultAddressContainer: {
-        padding: 20,
+        height: 150,
+        paddingHorizontal: 20,
         marginBottom: 10,
-        backgroundColor: COLORS.white
+        backgroundColor: COLORS.white,
+        justifyContent: 'center',
+        alignContent: 'center'
     },
     infoDefault: {
         display: 'flex',
@@ -63,6 +68,7 @@ const styles = StyleSheet.create({
         gap: 10
     },
     rightContainer: {
+        width: '85%',
         display: 'flex',
         flexDirection: 'column',
         gap: 10

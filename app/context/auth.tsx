@@ -7,7 +7,7 @@ import { setUserAuthToken } from "./authService";
 import { Buffer } from "buffer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AddressData, UserData } from "../../constants/types/normal";
-import { useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
+import { useAddressChange, useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 interface SignInResponse {
   data: UserData | undefined;
@@ -60,6 +60,7 @@ export function Provider(props: ProviderProps) {
   const { setUserState, userState } = useUserStore();
   const { setUserId } = useUserIDStore()
   const { setLoadingState } = useLoadingStore();
+  const { setSelectedAddress } = useAddressChange()
   const [authInitialized, setAuthInitialized] = React.useState<boolean>(false);
   const [isNavigationReady, setNavigationReady] = useState(false);
 
@@ -122,6 +123,25 @@ export function Provider(props: ProviderProps) {
     } finally {
       setUserAuthToken();
       setUserState(null);
+      setSelectedAddress({
+        userId: null,
+        recipientName: null,
+        recipientPhone: null,
+        province: null,
+        provinceId: null,
+        district: null,
+        disctrictId: null,
+        ward: null,
+        wardCode: null,
+        street: null,
+        isDefault: null,
+        id: null,
+        isDeleted: null,
+        createAt: null,
+        updateAt: null,
+        updateBy: null,
+        createBy: null,
+      })
       router.replace("/(auth)/login");
     }
   };
