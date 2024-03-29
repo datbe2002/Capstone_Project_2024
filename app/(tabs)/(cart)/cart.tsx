@@ -1,14 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Button,
   Dimensions,
-  FlatList,
   Image,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,34 +14,29 @@ import ItemCard from "../../../components/Cart/ItemCard";
 import { ScrollView } from "react-native-gesture-handler";
 import { CheckBox } from "react-native-elements";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useUserStore } from "../../store/store";
+import { useOrderItems, useUserStore } from "../../store/store";
 import { getCartById, updateCart } from "../../context/productsApi";
 import Background from "../../../components/BackGround";
 import { CartItem } from "../../../constants/Type";
 import { router } from "expo-router";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+
+import CustomAlert from "../../../components/Arlert";
+
 const { height, width } = Dimensions.get("window");
 
 interface Props { }
 
-interface Product {
-  id: any;
-  defaultImg: string;
-  name: string;
-  size: string;
-  color: string;
-  price: number;
-  quantity: number;
-}
-
 const Cart: React.FC<Props> = ({ }) => {
   const [isAdjust, setIsAdjust] = useState(false);
   const [isSelectAll, setSelectAll] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<Array<CartItem>>([]);
   const { userState } = useUserStore();
+  const [selectedItems, setSelectedItems] = useState<Array<CartItem>>([]);
   const [cartItems, setCartItems] = useState<Array<CartItem>>([]);
-  const isFocus = useIsFocused();
+  const [total, setTotal] = useState<number>(0);
+  const [alert, setAlert] = useState<any>(null);
 
+  const { orderItems, setOrderItems } = useOrderItems();
   const cartQuery = useQuery({
     queryKey: ["cart"],
     queryFn: () => getCartById(userState?.id),
@@ -54,14 +46,33 @@ const Cart: React.FC<Props> = ({ }) => {
     mutationFn: (data: any) => updateCart(userState?.userCartId, data),
   });
 
-  useEffect(() => {
-    if (cartQuery.isSuccess) {
-      setCartItems(cartQuery.data.data.cartItems);
-    }
-  }, [cartQuery.isSuccess]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (cartQuery.status === "error" || cartQuery.isStale) {
+        cartQuery.refetch();
+      }
+    }, [cartQuery])
+  );
+
+  const handleDeleteItems = () => {
+    const updatedCartItems = cartItems.filter(
+      (cartItem) =>
+        !selectedItems.some(
+          (selectedItem) =>
+            selectedItem.productId === cartItem.productId &&
+            selectedItem.color === cartItem.color &&
+            selectedItem.size === cartItem.size
+        )
+    );
+    mutation.mutate({ userId: userState?.id, cartItems: updatedCartItems });
+    setTimeout(() => {
+      setAlert(null);
+    }, 400);
+  };
 
   // edit quantity
   const handleQuantityChange = (updatedItem: CartItem) => {
+    // update cart items
     const updatedCartItems = cartItems.map((item) =>
       item.productId === updatedItem.productId &&
         item.color === updatedItem.color &&
@@ -70,37 +81,39 @@ const Cart: React.FC<Props> = ({ }) => {
         : item
     );
     setCartItems(updatedCartItems);
+    // update selected items
+    const updatedSelectedItems = selectedItems.map((item) =>
+      item.productId === updatedItem.productId &&
+        item.color === updatedItem.color &&
+        item.size === updatedItem.size
+        ? updatedItem
+        : item
+    );
+    setSelectedItems(updatedSelectedItems);
+    // call api
     mutation.mutate({ userId: userState?.id, cartItems: updatedCartItems });
   };
 
-  // selector
-  useEffect(() => {
-    if (isSelectAll) {
-      setSelectedItems(cartItems);
-    }
-  }, [isSelectAll]);
-
-  useEffect(() => {
-    if (
-      selectedItems.length === cartItems.length &&
-      selectedItems.every((selectedItem) =>
-        cartItems.some((cartItem) => cartItem === selectedItem)
-      )
-    ) {
-      setSelectAll(true);
-    } else {
-      setSelectAll(false);
-    }
-  }, [selectedItems]);
-
-  const handleSelected = (item: CartItem) => {
-    if (selectedItems.some((selectedItem) => selectedItem === item)) {
-      setSelectedItems(
-        selectedItems.filter((selectedItem) => selectedItem !== item)
+  const handleSelected = (selectedItem: CartItem) => {
+    setSelectedItems((prevSelectedItems) => {
+      const isAlreadySelected = prevSelectedItems.some(
+        (item) =>
+          item.productId === selectedItem.productId &&
+          item.color === selectedItem.color &&
+          item.size === selectedItem.size
       );
-    } else {
-      setSelectedItems([...selectedItems, item]);
-    }
+
+      if (isAlreadySelected) {
+        return prevSelectedItems.filter(
+          (item) =>
+            item.productId !== selectedItem.productId ||
+            item.color !== selectedItem.color ||
+            item.size !== selectedItem.size
+        );
+      } else {
+        return [...prevSelectedItems, selectedItem];
+      }
+    });
   };
 
   const ListEmptyComponent = () => {
@@ -130,10 +143,51 @@ const Cart: React.FC<Props> = ({ }) => {
       </View>
     );
   };
+  // use effect call
+
+  // update cart items
+  useEffect(() => {
+    if (cartQuery.isSuccess) {
+      setCartItems(cartQuery.data.data.cartItems);
+    }
+  }, [cartQuery.isSuccess, cartQuery.data]);
+
+  // update selection
+  // selector
+  useEffect(() => {
+    if (isSelectAll) {
+      setSelectedItems(cartItems);
+    }
+  }, [isSelectAll]);
+
+  useEffect(() => {
+    setSelectAll(
+      cartItems.length > 0 &&
+      cartItems.every((item) => selectedItems.includes(item))
+    );
+  }, [selectedItems, cartItems]);
+
+  // total
+  useEffect(() => {
+    let newTotal = 0;
+    if (selectedItems.length != 0) {
+      selectedItems.forEach((element) => {
+        newTotal += element.price * element.quantity;
+      });
+    }
+    setTotal(newTotal);
+  }, [selectedItems]);
 
   return (
     <SafeAreaView style={styles.container}>
       <Background imageKey="i5">
+        <CustomAlert
+          title={alert?.title}
+          message={alert?.msg}
+          show={alert !== null}
+          onDismiss={() => setAlert(null)}
+          onConfirm={() => handleDeleteItems()}
+        />
         <View style={[styles.horizWrapper, styles.heading]}>
           <Text style={styles.title}>Giỏ hàng</Text>
           <Pressable
@@ -150,13 +204,22 @@ const Cart: React.FC<Props> = ({ }) => {
         {/* cart item */}
         {cartQuery.isLoading && <ActivityIndicator size={20} />}
         {cartQuery.isSuccess ? (
-          <ScrollView>
-            {cartItems.length < 1 && <ListEmptyComponent />}
+          <ScrollView style={{ marginBottom: 80 }}>
+            {/* {cartQuery.isLoading ? (
+              <ListEmptyComponent />
+            ) : (
+              <ActivityIndicator />
+            )} */}
             {cartItems.map((item: any, index: any) => (
               <View key={index}>
                 <ItemCard
                   item={item}
-                  isChecked={selectedItems.some((x) => x === item)}
+                  isChecked={selectedItems.some(
+                    (x) =>
+                      x.productId === item.productId &&
+                      x.color === item.color &&
+                      x.size === item.size
+                  )}
                   handleCheck={() => handleSelected(item)}
                   handleQuantityChange={(i) => handleQuantityChange(i)}
                 />
@@ -166,30 +229,54 @@ const Cart: React.FC<Props> = ({ }) => {
         ) : null}
 
         {/* total and check out */}
-
         <View style={styles.summary}>
           <View style={styles.checkBox}>
-            <CheckBox
-              checked={isSelectAll}
-              onPress={() => {
-                setSelectAll(!isSelectAll);
-                if (selectedItems.length === cartItems.length) {
-                  setSelectedItems([]);
-                }
-              }}
-            />
+            {cartQuery.isSuccess && (
+              <CheckBox
+                checked={isSelectAll}
+                onPress={() => {
+                  const newIsSelectAll = !isSelectAll;
+                  setSelectAll(newIsSelectAll);
+                  setSelectedItems(newIsSelectAll ? cartItems : []);
+                }}
+                disabled={cartItems.length === 0}
+              />
+            )}
+
             <Text style={{ fontSize: SIZES.medium }}>Chọn tất cả</Text>
           </View>
           {isAdjust ? (
             <View>
-              <Pressable style={styles.delete}>
-                <Text style={styles.btnTextDanger}>Xóa</Text>
+              <Pressable
+                style={styles.delete}
+                onPress={() =>
+                  setAlert({
+                    title: "Xóa",
+                    msg: "Xác nhận xóa các sản phẩm đã chọn?",
+                  })
+                }
+                disabled={cartItems.length === 0}
+              >
+                <Text
+                  style={[
+                    styles.btnTextDanger,
+                    { opacity: cartItems.length === 0 ? 0.4 : 1 },
+                  ]}
+                >
+                  Xóa
+                </Text>
               </Pressable>
             </View>
           ) : (
             <View style={styles.checkoutWrapper}>
-              <Text style={styles.secondaryTitle}>Tổng tiền: 1000</Text>
-              <Pressable style={styles.checkout} onPress={() => router.push('/(tabs)/(cart)/payment')}>
+              <Text style={styles.secondaryTitle}>Tổng tiền: {total}</Text>
+              <Pressable
+                style={styles.checkout}
+                onPress={() => {
+                  setOrderItems({ items: selectedItems, total: total });
+                  router.push("/(tabs)/(cart)/payment");
+                }}
+              >
                 <Text style={styles.btnText}>Thanh toán</Text>
               </Pressable>
             </View>
@@ -206,6 +293,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
+    position: "relative",
   },
   horizWrapper: {
     display: "flex",
@@ -253,12 +341,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   summary: {
+    position: "absolute",
+    bottom: 0,
     height: 80,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
     alignItems: "center",
+    width: "100%",
+    backgroundColor: COLORS.white,
   },
   checkBox: {
     width: 50,
