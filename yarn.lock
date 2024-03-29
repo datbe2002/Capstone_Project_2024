@@ -1197,6 +1197,13 @@
     deepmerge "^3.2.0"
     hoist-non-react-statics "^3.3.0"
 
+"@dev-plugins/react-query@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@dev-plugins/react-query/-/react-query-0.0.6.tgz#bc4b15a821ed4591a3d92d40058abd0d729b4a24"
+  integrity sha512-vxddpeongPPTN3NeWRsNRxwpB+7KpL+3FUVU0PmrFpEbMsLd0zbDEM7uC7z7ZR9qFuqeIY3uvwuq3LoYHBLT4w==
+  dependencies:
+    flatted "^3.2.9"
+
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.npmjs.org/@egjs/hammerjs/-/hammerjs-2.0.17.tgz"
@@ -4476,6 +4483,11 @@ find-yarn-workspace-root@~2.0.0:
   integrity sha512-1IMnbjt4KzsQfnhnzNd8wUEgXZ44IzZaZmnLYx7D5FZlaHt2gW20Cri8Q+E/t5tIj4+epTBub+2Zxu/vNILzqQ==
   dependencies:
     micromatch "^4.0.2"
+
+flatted@^3.2.9:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.3.1.tgz#21db470729a6734d4997002f439cb308987f567a"
+  integrity sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==
 
 flow-enums-runtime@^0.0.5:
   version "0.0.5"

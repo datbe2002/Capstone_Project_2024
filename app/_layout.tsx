@@ -5,7 +5,6 @@ import { Provider, useAuth } from './context/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import BackButton from '../components/BackButton';
 import { COLORS } from '../assets';
-
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary
@@ -52,7 +51,6 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const { authInitialized, userState } = useAuth();
-
 
   if (!authInitialized && !userState) return null;
   return (

@@ -12,24 +12,28 @@ import VoucherChosen from '../../../components/Payment/VoucherChosen'
 import PaymentMethod from '../../../components/Payment/PaymentMethodChosen'
 import PaymentMethodChosen from '../../../components/Payment/PaymentMethodChosen'
 import TotalPriceComponent from '../../../components/Payment/TotalPriceComponent'
+import { useIsFocused } from '@react-navigation/native'
 
 const Payment = () => {
     const { userId } = useUserIDStore()
+    console.log(userId)
+    const isFocused = useIsFocused()
     const [note, setNote] = useState<string | null>(null)
-    const getUserAddress = useQuery({
-        queryKey: ["address"],
-        queryFn: () => getAddress(userId),
-    });
-    const totalProd = 1
     const { setSelectedAddress, selectedAddress } = useAddressChange()
-    useEffect(() => {
-        if (getUserAddress.isSuccess) {
-            const data = getUserAddress.data.data.find((data1: any) => data1.isDefault === true)
-            console.log('data', data)
-            setSelectedAddress(data)
-        }
-    }, [getUserAddress.isSuccess])
+    const getUserAddress = useQuery({
+        queryKey: ["address", userId],
+        queryFn: () => getAddress(userId),
 
+    });
+    useEffect(() => {
+        if (getUserAddress?.isSuccess && getUserAddress?.data) {
+            const data1 = getUserAddress?.data?.data?.find((data1: any) => data1.isDefault === true);
+            setSelectedAddress(data1);
+        }
+    }, [getUserAddress?.isSuccess, getUserAddress?.data?.data]);
+
+    console.log('selectedAddress', selectedAddress)
+    const totalProd = 1
     const totalPrice = 10000
     const shippingFeePrice = 10000
     return (

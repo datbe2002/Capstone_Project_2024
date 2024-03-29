@@ -18,7 +18,7 @@ const AddressCard = ({ addressUnique }: any) => {
         </View>
         <View style={styles.addressInfo}>
             <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.darkGray }}>{addressUnique.street}</Text>
-            <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.darkGray }}>{addressUnique.province}, {addressUnique.district}, {addressUnique.ward}</Text>
+            <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.darkGray }}>{addressUnique.ward}, {addressUnique.district},{addressUnique.province} </Text>
         </View>
         <View style={{ paddingTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             {addressUnique.isDefault ? <Text style={{ color: COLORS.primary, borderColor: COLORS.primary, borderWidth: 1, padding: 5, height: 30, fontFamily: 'mon-b', textAlign: 'center' }}>
@@ -49,7 +49,6 @@ const ListEmptyAddress = () => {
 
 
 const AddressConfig: React.FC<AddressConfigProps> = ({ address }) => {
-    console.log('address', address)
     return (
         <View style={styles.containerAddress}>
             <View style={styles.componentText}>
