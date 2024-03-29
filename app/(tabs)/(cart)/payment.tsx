@@ -10,12 +10,12 @@ import ShippingFee, { transNumberFormatter } from '../../../components/Payment/S
 import TotalPriceComponent from '../../../components/Payment/TotalPriceComponent'
 import VoucherChosen from '../../../components/Payment/VoucherChosen'
 import { getAddress } from '../../context/addressApi'
-import { useAddressChange, useUserIDStore } from '../../store/store'
+import { useAddressChange, useOrderItems, useUserIDStore } from '../../store/store'
 
 const Payment = () => {
     const { userId } = useUserIDStore()
-    console.log(userId)
-    const isFocused = useIsFocused()
+    const { orderItems, setOrderItems } = useOrderItems();
+
     const [note, setNote] = useState<string | null>(null)
     const { setSelectedAddress, selectedAddress } = useAddressChange()
     const getUserAddress = useQuery({

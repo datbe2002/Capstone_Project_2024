@@ -178,6 +178,7 @@ const Cart: React.FC<Props> = ({ }) => {
     setTotal(newTotal);
   }, [selectedItems]);
 
+
   return (
     <SafeAreaView style={styles.container}>
       <Background imageKey="i5">
@@ -271,11 +272,13 @@ const Cart: React.FC<Props> = ({ }) => {
             <View style={styles.checkoutWrapper}>
               <Text style={styles.secondaryTitle}>Tổng tiền: {total}</Text>
               <Pressable
-                style={styles.checkout}
+                style={[styles.checkout, { opacity: selectedItems.length === 0 ? 0.6 : 1 },]}
                 onPress={() => {
+
                   setOrderItems({ items: selectedItems, total: total });
                   router.push("/(tabs)/(cart)/payment");
                 }}
+                disabled={selectedItems.length === 0}
               >
                 <Text style={styles.btnText}>Thanh toán</Text>
               </Pressable>
