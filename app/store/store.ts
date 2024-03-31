@@ -40,6 +40,20 @@ export const useUserIDStore = create<UserIDStore>((set) => ({
   setUserId: (userId) => set(() => ({ userId: userId })),
 }));
 
+
+
+export const useAfterVoucher = create((set: any) => ({
+  itemVoucher: {
+    code: null,
+    totalVoucherMoney: null
+  },
+  setItemVoucher: (values: any) =>
+    set((state: any) => ({
+      itemVoucher: { ...state.itemVoucher, ...values },
+    })),
+}));
+
+
 interface RegisterData {
   selectedValues: {
     province: string | null;
@@ -111,6 +125,7 @@ export const useOrderItems = create((set: any) => ({
   orderItems: {
     items: [null],
     total: null,
+    totalQuantityProd: null,
   },
   setOrderItems: (values: any) =>
     set((state: any) => ({

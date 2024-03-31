@@ -1,8 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { COLORS } from '../../assets'
+import { transNumberFormatter } from './ShippingFee'
 
-const TotalPriceComponent = ({ totalPrice, shippingFeePrice }: any) => {
+const TotalPriceComponent = ({ totalPrice, shippingFeePrice, totalVoucher }: any) => {
+
+
+
     return (
         <View style={styles.totalPriceContainer}>
             <View style={styles.labelContainer}>
@@ -11,19 +15,19 @@ const TotalPriceComponent = ({ totalPrice, shippingFeePrice }: any) => {
             <View style={{ marginTop: 10 }}>
                 <View style={styles.line}>
                     <Text style={styles.textLine}>Tổng tiền hàng</Text>
-                    <Text style={styles.textLine}>đ100000</Text>
+                    <Text style={styles.textLine}>{transNumberFormatter(totalPrice)}đ</Text>
                 </View>
                 <View style={styles.line}>
                     <Text style={styles.textLine}>Tổng tiền phí vận chuyển</Text>
-                    <Text style={styles.textLine}>đ100000</Text>
+                    <Text style={styles.textLine}>{transNumberFormatter(shippingFeePrice)}đ</Text>
                 </View>
                 <View style={styles.line}>
                     <Text style={styles.textLine}>Tổng cộng voucher giảm</Text>
-                    <Text style={styles.textLine}>- đ10000</Text>
+                    <Text style={[styles.textLine]}>- {transNumberFormatter(totalVoucher)}đ</Text>
                 </View>
                 <View style={styles.line}>
                     <Text style={styles.textLineEnd}>Tổng thanh toán</Text>
-                    <Text style={styles.textLineEndPrice}>đ190000</Text>
+                    <Text style={styles.textLineEndPrice}>{transNumberFormatter(totalPrice + shippingFeePrice - totalVoucher)}đ</Text>
                 </View>
             </View>
         </View>

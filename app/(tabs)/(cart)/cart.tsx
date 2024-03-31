@@ -34,6 +34,8 @@ const Cart: React.FC<Props> = ({ }) => {
   const [selectedItems, setSelectedItems] = useState<Array<CartItem>>([]);
   const [cartItems, setCartItems] = useState<Array<CartItem>>([]);
   const [total, setTotal] = useState<number>(0);
+  const [totalQuantityProd, setTotalQuantityProd] = useState<number>(0);
+
   const [alert, setAlert] = useState<any>(null);
 
   const { orderItems, setOrderItems } = useOrderItems();
@@ -177,7 +179,16 @@ const Cart: React.FC<Props> = ({ }) => {
     }
     setTotal(newTotal);
   }, [selectedItems]);
-
+  // get all products
+  useEffect(() => {
+    let newTotalProds = 0;
+    if (selectedItems.length != 0) {
+      selectedItems.forEach((element) => {
+        newTotalProds += element.quantity;
+      });
+    }
+    setTotalQuantityProd(newTotalProds);
+  }, [selectedItems]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -275,7 +286,7 @@ const Cart: React.FC<Props> = ({ }) => {
                 style={[styles.checkout, { opacity: selectedItems.length === 0 ? 0.6 : 1 },]}
                 onPress={() => {
 
-                  setOrderItems({ items: selectedItems, total: total });
+                  setOrderItems({ items: selectedItems, total, totalQuantityProd });
                   router.push("/(tabs)/(cart)/payment");
                 }}
                 disabled={selectedItems.length === 0}

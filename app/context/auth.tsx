@@ -142,6 +142,7 @@ export function Provider(props: ProviderProps) {
         updateBy: null,
         createBy: null,
       })
+
       router.replace("/(auth)/login");
     }
   };

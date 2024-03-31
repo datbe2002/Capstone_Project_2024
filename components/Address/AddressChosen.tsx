@@ -17,8 +17,8 @@ const AddressChosen = ({ addressData }: any) => {
                                 Địa chỉ nhận hàng
                             </Text>
                             <View style={{ display: 'flex', flexDirection: 'column' }}>
-                                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <Text style={{ fontFamily: 'mon-sb', fontSize: 16, borderRightWidth: 2, borderColor: COLORS.darkGray, paddingRight: 10 }}>{addressData.recipientName}</Text>
+                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ color: COLORS.primary, fontFamily: 'mon-b', fontSize: 16, borderRightWidth: 2, borderColor: COLORS.darkGray, paddingRight: 10 }}>{addressData.recipientName}</Text>
                                     <Text style={{ fontFamily: 'mon-sb', fontSize: 16, paddingLeft: 10 }}>{addressData.recipientPhone}</Text>
                                 </View>
                                 <View>

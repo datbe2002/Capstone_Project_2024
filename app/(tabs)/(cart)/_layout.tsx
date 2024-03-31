@@ -31,6 +31,17 @@ const CartLayout = () => {
         },
         headerTintColor: COLORS.primary,
       }} />
+      <Stack.Screen name="voucher" options={{
+        headerShown: true,
+        title: 'Chọn mã giảm giá',
+        headerTitleAlign: 'center',
+        headerLeft: BackButton,
+        headerTitleStyle: {
+          fontFamily: 'mon-b',
+          fontSize: 25
+        },
+        headerTintColor: COLORS.primary,
+      }} />
     </Stack>
   );
 };
