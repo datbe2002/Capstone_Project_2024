@@ -1,24 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import { getShippingFee } from '../../app/context/addressApi'
 import { COLORS } from '../../assets'
 
 interface ShippingFeeProps {
-    addressId: number | null
+    addressId: number | null,
+    setShippingFeePrice: React.Dispatch<React.SetStateAction<any | null>>,
 }
 export const transNumberFormatter = (number: any | null) => {
     const formattedNumber = number?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     return formattedNumber
 };
-const ShippingFee: React.FC<ShippingFeeProps> = ({ addressId }) => {
+const ShippingFee: React.FC<ShippingFeeProps> = ({ addressId, setShippingFeePrice }) => {
     // Call useQuery directly in the component body
-    const { isFetching, error, data } = useQuery({
+    const { isFetching, error, data, isSuccess } = useQuery({
         queryKey: ["shippingFee", addressId],
         queryFn: () => getShippingFee(addressId),
-        enabled: addressId !== null
+        enabled: addressId !== null,
+
     });
-    console.log(isFetching)
+    useEffect(() => {
+        if (isSuccess) {
+            setShippingFeePrice(data?.data?.total)
+        }
+    }, [data?.data?.total])
     return (
         <View style={styles.shippingMethod}>
             <Text style={styles.shippingMethodText}>Phương thức vận chuyển</Text>

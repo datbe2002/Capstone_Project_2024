@@ -23,13 +23,12 @@ import {
   getProducts,
   getTopProducts,
 } from "../../context/productsApi";
-import { useUserIDStore, useUserStore } from "../../store/store";
+import { useAddressChange, useOrderItems, useUserIDStore, useUserStore } from "../../store/store";
 import { categories } from "../exampledata";
 
 export default function HomepageScreen() {
   const homeCategories = categories.slice(0, 4);
   const { userId } = useUserIDStore();
-  console.log(userId);
   const [searchValue, setSearchValue] = useState<string>("");
   const { userState, setUserState } = useUserStore();
   useEffect(() => {

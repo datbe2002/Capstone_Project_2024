@@ -21,12 +21,10 @@ const AddressCard = ({ addressUnique, setLoadding }: any) => {
     const { selectedAddress, setSelectedAddress } = useAddressChange()
     const [checkbox, setCheckbox] = useState<any>(selectedAddress)
     const handleChosen = () => {
-        setLoadding(true)
         setSelectedAddress(addressUnique)
         setTimeout(() => {
-            setLoadding(false)
             router.back()
-        }, 1000)
+        }, 500)
     }
 
     return (
