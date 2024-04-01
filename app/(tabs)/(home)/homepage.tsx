@@ -59,7 +59,7 @@ export default function HomepageScreen() {
 
   const productsQuery = useQuery({
     queryKey: ["products"],
-    queryFn: getProducts,
+    queryFn: () => getProducts(6),
   });
 
   const newProductsQuery = useQuery({
@@ -109,7 +109,9 @@ export default function HomepageScreen() {
           {/* recommendations */}
           {productsQuery.isLoading ? <ActivityIndicator /> : null}
           {productsQuery.isSuccess ? (
-            <RecommendationsSection recommendations={productsQuery.data} />
+            <RecommendationsSection
+              recommendations={productsQuery.data.items}
+            />
           ) : null}
         </ScrollView>
       </Background>

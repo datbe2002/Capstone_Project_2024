@@ -2,10 +2,11 @@ import axios, { AxiosResponse } from "axios";
 import instance from "./axiosConfig";
 import { CartData } from "../../constants/Type";
 
-export const getProducts = async (data?: any) => {
+export const getProducts = async (size: any) => {
   const response = await instance.get(
-    "/api/product"
-    //  + `&PageNumber=${data.pageIndex}&PageSize=${data.pageSize}`
+    // "/api/product"
+    // //  + `&PageNumber=${data.pageIndex}&PageSize=${data.pageSize}`
+    "api/product/paging?PageNumber=1&PageSize=" + size
   );
   return response.data;
 };
