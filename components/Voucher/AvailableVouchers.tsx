@@ -1,15 +1,13 @@
+import React from 'react'
 import { Entypo, MaterialIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import React from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import { useAfterVoucher } from '../../app/store/store'
 import { COLORS } from '../../assets'
-import CustomButton from '../Button'
-import EmptyComponentCustom from '../EmptyComponentCustom'
 import { transNumberFormatter } from '../Payment/ShippingFee'
+import CustomButton from '../Button'
 import VoucherCard from './VoucherCard'
-
-
+import EmptyComponentCustom from '../EmptyComponentCustom'
 
 const ListHeader = () => {
     return (<View style={styles.warnAnnounce}>
@@ -54,7 +52,7 @@ const AvailableVouchers = ({ totalPrice, dataVoucherAvailable }: any) => {
                         fontSize: 16
                     }}>Tiết kiệm <Text style={{ color: COLORS.primary, fontSize: 18, fontFamily: 'mon-b' }}>{transNumberFormatter(itemVoucher.totalVoucherMoney)}đ</Text></Text>}
                 </View>
-                <CustomButton buttonText={dataVoucherAvailable.length < 1 ? `Quay lại` : `Tiếp tục`} onPress={() => router.back()} />
+                <CustomButton buttonText={dataVoucherAvailable?.length < 1 || !itemVoucher.code ? `Quay lại` : `Tiếp tục`} onPress={() => router.back()} />
             </View>
         </View>
 

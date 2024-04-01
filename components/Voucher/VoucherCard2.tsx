@@ -4,6 +4,7 @@ import { CheckBox } from 'react-native-elements';
 import { useAfterVoucher } from "../../app/store/store";
 import { COLORS } from '../../assets';
 import moment from 'moment';
+import { Feather } from '@expo/vector-icons';
 
 
 const dateConvert = (date: string | null) => {
@@ -12,55 +13,16 @@ const dateConvert = (date: string | null) => {
     return formattedDateTime
 }
 
-const VoucherCard = ({ item, totalPrice }: any) => {
-
-    const { itemVoucher, setItemVoucher } = useAfterVoucher()
-    const handleVoucherCodeChange = () => {
-        if (!item?.code) {
-            console.log('No voucher selected');
-            return;
-        }
-
-        if (totalPrice < item.minTotalValue) {
-            console.log('Minimum value not met');
-            return;
-
-        }
-
-        const finalPrice = (totalPrice * item.percent) / 100;
-        const adjustedPrice = Math.min(finalPrice, item.maxValue);
-        setItemVoucher({ totalVoucherMoney: adjustedPrice });
-    }
-
-
-    const handleChecked = () => {
-        if (item.code === itemVoucher.code) {
-            setItemVoucher({ code: null, totalVoucherMoney: null });
-        } else {
-            setItemVoucher({ code: item?.code });
-            handleVoucherCodeChange()
-        }
-
-    };
+const VoucherCard2 = ({ item }: any) => {
 
     return (
         <View style={styles.cardVoucher}>
             <View style={styles.upperPart}>
                 <View style={styles.couponPercent}>
                     <Text style={styles.percentText}>- {item.percent}%</Text>
-                    <Text style={styles.description}>{item.description}</Text>
-                    <Text style={styles.match}>Các yêu cầu về mã giảm giá đã đủ</Text>
+                    <Text style={styles.match}>Trên {item.minTotalValue}đ</Text>
                 </View>
                 <View style={styles.checkboxChosen}>
-                    <CheckBox
-                        checked={itemVoucher?.code === item?.code}
-                        onPress={handleChecked}
-                        checkedIcon="dot-circle-o"
-                        uncheckedIcon="circle-o"
-                        checkedColor={COLORS.primary}
-                        uncheckedColor={COLORS.white}
-                        size={28}
-                    />
                 </View>
                 <View style={[styles.whiteCircle, { position: 'absolute', bottom: -17, left: -17, }]}></View>
                 <View style={[styles.whiteCircle, { position: 'absolute', bottom: -17, right: -17 }]}></View>
@@ -70,10 +32,16 @@ const VoucherCard = ({ item, totalPrice }: any) => {
                 <Text style={styles.itemText}>{`\u2022 ${dateConvert(item.startDate)}~${dateConvert(item.exprireDate)}`}</Text>
                 <Text style={styles.itemText}>{`\u2022 Cho bộ sản phẩm đã chọn`}</Text>
             </View>
+            <View style={styles.bottomInfo}>
+                <View style={styles.iconInfo}>
+                    <Feather name="info" size={28} color="black" />
+                </View>
+                <Text style={styles.infoText}>Không đáp ứng giới hạn tiền tối thiểu. </Text>
+            </View>
         </View>
     )
 }
-export default VoucherCard
+export default VoucherCard2
 
 
 const styles = StyleSheet.create({
@@ -89,7 +57,7 @@ const styles = StyleSheet.create({
         borderLeftWidth: 0.5,
         borderRightWidth: 0.5,
         margin: 10,
-        borderColor: COLORS.primary,
+        borderColor: '#8AA9FF',
         backgroundColor: '#E6E8FF',
     },
     upperPart: {
@@ -99,15 +67,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderStyle: 'dashed',
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     description: {
         fontFamily: 'mon-sb',
         color: COLORS.primary
     },
     couponPercent: {
-        width: '70%'
-
+        width: '70%',
+        opacity: 0.4
     },
     checkboxChosen: {
         width: '30%',
@@ -116,7 +84,8 @@ const styles = StyleSheet.create({
     },
     match: {
         fontFamily: 'mon-sb',
-        color: COLORS.primary
+        color: COLORS.primary,
+        fontSize: 20
     },
 
     percentText: {
@@ -131,4 +100,20 @@ const styles = StyleSheet.create({
         fontFamily: 'mon-sb',
         color: COLORS.darkGray
     },
+    bottomInfo: {
+        backgroundColor: 'wheat',
+        height: 50,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    iconInfo: {
+        width: 50,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    infoText: {
+        fontSize: 16,
+        fontFamily: 'mon-sb',
+    }
 })

@@ -1,11 +1,12 @@
-import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
-import { useLocalSearchParams } from 'expo-router'
-import { Tab, Text, TabView } from '@rneui/themed';
+import { Tab, TabView } from '@rneui/themed';
+import { useQuery } from '@tanstack/react-query';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { COLORS } from '../../../assets';
 import AvailableVouchers from '../../../components/Voucher/AvailableVouchers';
+import UnavailableVoucher from '../../../components/Voucher/UnavailableVoucher';
 import { getVoucher } from '../../context/voucherApi';
-import { useQuery } from '@tanstack/react-query';
 const Voucher = () => {
     const [index, setIndex] = useState(0);
     const { totalPrice } = useLocalSearchParams()
@@ -14,9 +15,9 @@ const Voucher = () => {
         queryFn: getVoucher,
     });
 
-    console.log(data)
     const dataVoucherAvailable = data?.data?.filter((da: any) => da.minTotalValue <= totalPrice)
-    console.log(dataVoucherAvailable)
+    const dataVoucherUnavailable = data?.data?.filter((da: any) => da.minTotalValue > totalPrice)
+
 
     return (
         <>
@@ -32,9 +33,6 @@ const Voucher = () => {
                 <Tab.Item
                     title="Có sẵn"
                     titleStyle={{ fontFamily: 'mon-b', color: COLORS.primary }}
-                    containerStyle={{
-
-                    }}
                 />
                 <Tab.Item
                     title="Không khả dụng"
@@ -48,7 +46,7 @@ const Voucher = () => {
                     <AvailableVouchers totalPrice={totalPrice} dataVoucherAvailable={dataVoucherAvailable} />
                 </TabView.Item>
                 <TabView.Item style={{ backgroundColor: 'white', width: '100%' }}>
-                    <Text h1>Favorite</Text>
+                    <UnavailableVoucher dataVoucherUnavailable={dataVoucherUnavailable} />
                 </TabView.Item>
 
             </TabView>

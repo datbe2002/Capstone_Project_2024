@@ -13,6 +13,7 @@ import TotalPriceComponent from '../../../components/Payment/TotalPriceComponent
 import VoucherChosen from '../../../components/Payment/VoucherChosen'
 import { getAddress } from '../../context/addressApi'
 import { useAddressChange, useAfterVoucher, useOrderItems, useUserIDStore } from '../../store/store'
+import { router } from 'expo-router'
 
 const Payment = () => {
     const { userId } = useUserIDStore()
@@ -68,6 +69,7 @@ const Payment = () => {
             orderItems: transformedArray
         }
         console.log('orderPad', orderPad)
+        router.push('/success_payment')
     }
 
 
