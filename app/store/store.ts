@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { UserData } from "../../constants/types/normal";
+import { Product } from "../../constants/Type";
 
 interface UserStore {
   userState: UserData | null;
@@ -40,19 +41,16 @@ export const useUserIDStore = create<UserIDStore>((set) => ({
   setUserId: (userId) => set(() => ({ userId: userId })),
 }));
 
-
-
 export const useAfterVoucher = create((set: any) => ({
   itemVoucher: {
     code: null,
-    totalVoucherMoney: null
+    totalVoucherMoney: null,
   },
   setItemVoucher: (values: any) =>
     set((state: any) => ({
       itemVoucher: { ...state.itemVoucher, ...values },
     })),
 }));
-
 
 interface RegisterData {
   selectedValues: {
@@ -117,10 +115,6 @@ export const useAddressChange = create((set: any) => ({
     })),
 }));
 
-// interface OrderStore {
-//     orderItems: [] | null;
-//     setOrderItems: (orderItems: string | null) => void;
-//   }
 export const useOrderItems = create((set: any) => ({
   orderItems: {
     items: [null],
@@ -130,5 +124,28 @@ export const useOrderItems = create((set: any) => ({
   setOrderItems: (values: any) =>
     set((state: any) => ({
       orderItems: { ...state.orderItems, ...values },
+    })),
+}));
+
+// export const useWardove = create((set: any) => ({
+//   wardroveItems: [] as Product[],
+//   setWardroveItems: (values: Product[]) =>
+//     set((state: any) => ({
+//       wardroveItems: [...state.wardroveItems, ...values],
+//     })),
+// }));
+
+type SetWardroveItems = React.Dispatch<React.SetStateAction<Product[]>>;
+
+export const useWardove = create((set: any) => ({
+  wardroveItems: [] as Product[],
+  setWardroveItems: (
+    values: Product[] | ((prevItems: Product[]) => Product[])
+  ) =>
+    set((state: any) => ({
+      wardroveItems:
+        typeof values === "function"
+          ? values(state.wardroveItems)
+          : [...state.wardroveItems, ...values],
     })),
 }));

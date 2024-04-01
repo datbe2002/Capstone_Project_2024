@@ -1,8 +1,4 @@
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -14,7 +10,7 @@ import { Text, View } from "../../../components/Themed";
 import { useQuery } from "@tanstack/react-query";
 import Background from "../../../components/BackGround";
 import CategoriesSection from "../../../components/Home/CategoriesSection";
-import NewProductsSection from "../../../components/Home/NewProductsSection";
+import NewProductSection from "../../../components/Home/NewProductsSection";
 import RecommendationsSection from "../../../components/Home/Recommendations";
 import TopProductsSection from "../../../components/Home/TopProductsSection";
 import instance from "../../context/axiosConfig";
@@ -23,7 +19,12 @@ import {
   getProducts,
   getTopProducts,
 } from "../../context/productsApi";
-import { useAddressChange, useOrderItems, useUserIDStore, useUserStore } from "../../store/store";
+import {
+  useAddressChange,
+  useOrderItems,
+  useUserIDStore,
+  useUserStore,
+} from "../../store/store";
 import { categories } from "../exampledata";
 
 export default function HomepageScreen() {
@@ -58,7 +59,7 @@ export default function HomepageScreen() {
 
   const productsQuery = useQuery({
     queryKey: ["products"],
-    queryFn: getProducts,
+    queryFn: () => getProducts(6),
   });
 
   const newProductsQuery = useQuery({
@@ -97,25 +98,21 @@ export default function HomepageScreen() {
           {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
           {topProductsQuery.isSuccess ? (
             <TopProductsSection topProducts={topProductsQuery.data} />
-          ) : (
-            <ActivityIndicator />
-          )}
+          ) : null}
 
           {/* new items */}
           {newProductsQuery.isLoading ? <ActivityIndicator /> : null}
           {newProductsQuery.isSuccess ? (
-            <NewProductsSection newProducts={newProductsQuery.data} />
-          ) : (
-            <ActivityIndicator />
-          )}
+            <NewProductSection newProduct={newProductsQuery.data} />
+          ) : null}
 
           {/* recommendations */}
           {productsQuery.isLoading ? <ActivityIndicator /> : null}
           {productsQuery.isSuccess ? (
-            <RecommendationsSection recommendations={productsQuery.data} />
-          ) : (
-            <ActivityIndicator />
-          )}
+            <RecommendationsSection
+              recommendations={productsQuery.data.items}
+            />
+          ) : null}
         </ScrollView>
       </Background>
     </SafeAreaView>

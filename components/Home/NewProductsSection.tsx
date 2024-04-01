@@ -12,18 +12,18 @@ import {
   View,
 } from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
-import { Products } from "../../constants/Type";
+import { Product } from "../../constants/Type";
 // import { categories } from "../../app/(tabs)/exampledata";
 const { height, width } = Dimensions.get("window");
 
-interface NewProductsProps {
+interface NewProductProps {
   props?: any;
-  newProducts: Array<Products>;
+  newProduct: Array<Product>;
 }
 
-const NewProductsSection: React.FC<NewProductsProps> = ({
+const NewProductSection: React.FC<NewProductProps> = ({
   props,
-  newProducts,
+  newProduct,
 }) => {
   const router = useRouter();
   return (
@@ -46,7 +46,7 @@ const NewProductsSection: React.FC<NewProductsProps> = ({
       </View>
 
       <ScrollView style={styles.newItemsList} horizontal={true}>
-        {newProducts.map((item: any, index) => (
+        {newProduct.map((item: any, index) => (
           <Pressable
             key={index}
             onPress={() => {
@@ -84,7 +84,7 @@ const NewProductsSection: React.FC<NewProductsProps> = ({
   );
 };
 
-export default NewProductsSection;
+export default NewProductSection;
 
 const styles = StyleSheet.create({
   container: {
@@ -118,11 +118,11 @@ const styles = StyleSheet.create({
   },
   itemCard: {
     width: width / 3,
-    height: width / 2,
+    height: width / 1.8,
     alignItems: "center",
     gap: 5,
     padding: 5,
-    backgroundColor: "white",
+    backgroundColor: "transparent",
   },
   itemImgContainer: {
     width: width / 3.5,

@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../../assets";
 import ItemCard from "../../../components/Cart/ItemCard";
-import { ScrollView } from "react-native-gesture-handler";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { CheckBox } from "react-native-elements";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useOrderItems, useUserStore } from "../../store/store";
@@ -25,9 +25,9 @@ import CustomAlert from "../../../components/Arlert";
 
 const { height, width } = Dimensions.get("window");
 
-interface Props { }
+interface Props {}
 
-const Cart: React.FC<Props> = ({ }) => {
+const Cart: React.FC<Props> = ({}) => {
   const [isAdjust, setIsAdjust] = useState(false);
   const [isSelectAll, setSelectAll] = useState(false);
   const { userState } = useUserStore();
@@ -77,8 +77,8 @@ const Cart: React.FC<Props> = ({ }) => {
     // update cart items
     const updatedCartItems = cartItems.map((item) =>
       item.productId === updatedItem.productId &&
-        item.color === updatedItem.color &&
-        item.size === updatedItem.size
+      item.color === updatedItem.color &&
+      item.size === updatedItem.size
         ? updatedItem
         : item
     );
@@ -86,8 +86,8 @@ const Cart: React.FC<Props> = ({ }) => {
     // update selected items
     const updatedSelectedItems = selectedItems.map((item) =>
       item.productId === updatedItem.productId &&
-        item.color === updatedItem.color &&
-        item.size === updatedItem.size
+      item.color === updatedItem.color &&
+      item.size === updatedItem.size
         ? updatedItem
         : item
     );
@@ -165,7 +165,7 @@ const Cart: React.FC<Props> = ({ }) => {
   useEffect(() => {
     setSelectAll(
       cartItems.length > 0 &&
-      cartItems.every((item) => selectedItems.includes(item))
+        cartItems.every((item) => selectedItems.includes(item))
     );
   }, [selectedItems, cartItems]);
 
@@ -216,14 +216,11 @@ const Cart: React.FC<Props> = ({ }) => {
         {/* cart item */}
         {cartQuery.isLoading && <ActivityIndicator size={20} />}
         {cartQuery.isSuccess ? (
-          <ScrollView style={{ marginBottom: 80 }}>
-            {/* {cartQuery.isLoading ? (
-              <ListEmptyComponent />
-            ) : (
-              <ActivityIndicator />
-            )} */}
-            {cartItems.map((item: any, index: any) => (
-              <View key={index}>
+          <FlatList
+            data={cartItems}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View>
                 <ItemCard
                   item={item}
                   isChecked={selectedItems.some(
@@ -236,9 +233,31 @@ const Cart: React.FC<Props> = ({ }) => {
                   handleQuantityChange={(i) => handleQuantityChange(i)}
                 />
               </View>
-            ))}
-          </ScrollView>
-        ) : null}
+            )}
+          />
+        ) : // <ScrollView style={{ marginBottom: 80 }}>
+        //   {/* {cartQuery.isLoading ? (
+        //     <ListEmptyComponent />
+        //   ) : (
+        //     <ActivityIndicator />
+        //   )} */}
+        //   {cartItems.map((item: any, index: any) => (
+        //     <View key={index}>
+        //       <ItemCard
+        //         item={item}
+        //         isChecked={selectedItems.some(
+        //           (x) =>
+        //             x.productId === item.productId &&
+        //             x.color === item.color &&
+        //             x.size === item.size
+        //         )}
+        //         handleCheck={() => handleSelected(item)}
+        //         handleQuantityChange={(i) => handleQuantityChange(i)}
+        //       />
+        //     </View>
+        //   ))}
+        // </ScrollView>
+        null}
 
         {/* total and check out */}
         <View style={styles.summary}>
@@ -283,10 +302,16 @@ const Cart: React.FC<Props> = ({ }) => {
             <View style={styles.checkoutWrapper}>
               <Text style={styles.secondaryTitle}>Tổng tiền: {total}</Text>
               <Pressable
-                style={[styles.checkout, { opacity: selectedItems.length === 0 ? 0.6 : 1 },]}
+                style={[
+                  styles.checkout,
+                  { opacity: selectedItems.length === 0 ? 0.6 : 1 },
+                ]}
                 onPress={() => {
-
-                  setOrderItems({ items: selectedItems, total, totalQuantityProd });
+                  setOrderItems({
+                    items: selectedItems,
+                    total,
+                    totalQuantityProd,
+                  });
                   router.push("/(tabs)/(cart)/payment");
                 }}
                 disabled={selectedItems.length === 0}

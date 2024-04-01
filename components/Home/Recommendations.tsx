@@ -11,13 +11,13 @@ import {
   View,
 } from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
-import { Products } from "../../constants/Type";
+import { Product } from "../../constants/Type";
 // import { categories } from "../../app/(tabs)/exampledata";
 const { height, width } = Dimensions.get("window");
 
 interface RecommendationsSectionProps {
   props?: any;
-  recommendations: Array<Products>;
+  recommendations: Array<Product>;
 }
 
 const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({

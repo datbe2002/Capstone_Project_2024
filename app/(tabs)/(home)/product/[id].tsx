@@ -16,8 +16,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import Carousel from "../../../../components/Carousel";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addToCart, getProductById } from "../../../context/productsApi";
-import { useUserIDStore, useUserStore } from "../../../store/store";
-import { CartData } from "../../../../constants/Type";
+import { useUserIDStore, useUserStore, useWardove } from "../../../store/store";
+import { CartData, Product } from "../../../../constants/Type";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
 import VariantSection from "../../../../components/Product/VariantSelector";
@@ -33,6 +33,7 @@ const ProductDetail = () => {
   const route = useRouter();
   const { id } = useLocalSearchParams();
   const { userState, setUserState } = useUserStore();
+  const { wardroveItems, setWardroveItems } = useWardove();
   const { userId } = useUserIDStore();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [alert, setAlert] = useState<any>(null);
@@ -89,6 +90,23 @@ const ProductDetail = () => {
     }
   };
 
+  const handleAddToWardrove = () => {
+    console.log("product ", productQuery.data.data);
+
+    // Check if the item already exists in the wardroveItems
+    if (
+      !wardroveItems.some((item: any) => item.id === productQuery.data.data.id)
+    ) {
+      setWardroveItems([productQuery.data.data]);
+      setAlert({ title: "Xong", msg: "Đã thêm vào tủ đồ của bạn!" });
+    } else {
+      setAlert({
+        title: "Thông báo",
+        msg: "Sản phẩm này đã có trong tủ đồ của bạn!",
+      });
+    }
+  };
+
   const _renderItem = (item: any) => {
     return (
       <Image
@@ -125,7 +143,7 @@ const ProductDetail = () => {
   }, [mutation.isSuccess]);
   return (
     <SafeAreaView style={styles.container}>
-      <Background imageKey={"i1"}>
+      <Background imageKey={"i2"}>
         {/* ==========alert=========== */}
         <CustomAlert
           title={alert?.title}
@@ -149,7 +167,7 @@ const ProductDetail = () => {
         {productQuery.isSuccess ? (
           <ScrollView>
             <View style={styles.main}>
-              <View style={styles.imgWrapper}>
+              <View style={[styles.imgWrapper]}>
                 <Carousel
                   items={productQuery.data.data.images}
                   renderItem={_renderItem}
@@ -174,7 +192,7 @@ const ProductDetail = () => {
                         name="tshirt-crew"
                         size={SIZES.large}
                         color={COLORS.white}
-                        onPress={() => route.push("/(tabs)/(tryonl)/wardrove")}
+                        onPress={() => handleAddToWardrove()}
                       />
                     </View>
                   )}
@@ -355,7 +373,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     justifyContent: "center",
     position: "absolute",
-    top: 25,
+    top: 8,
     zIndex: 1,
     backgroundColor: "transparent",
   },
