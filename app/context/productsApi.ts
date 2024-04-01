@@ -7,9 +7,15 @@ export const getProductsFiltered = async (params: FilterParams) => {
   console.log(params);
 
   let queryString = Object.keys(params)
-    .filter((key) => params[key as keyof FilterParams] !== undefined)
+    .filter(
+      (key) =>
+        params[key as keyof FilterParams] !== undefined &&
+        params[key as keyof FilterParams] !== null
+    )
     .map((key) => `${key}=${params[key as keyof FilterParams]}`)
     .join("&");
+
+  console.log(`api/product/search?${queryString}`);
 
   const response = await instance.get(`api/product/search?${queryString}`);
   return response.data;

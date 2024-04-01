@@ -15,15 +15,15 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 
 const ProductsScreen = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>();
   const [filterParams, setFilterParams] = useState<FilterParams>({
-    name: searchValue,
-    // category: "",
-    // subCategory: "",
-    // color: "",
-    // size: "",
-    // minPrice: 0,
-    // maxPrice: 200000,
+    name: null,
+    category: null,
+    subCategory: null,
+    color: null,
+    size: null,
+    minPrice: null,
+    maxPrice: null,
   });
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const ProductsScreen = () => {
   const productsQuery = useQuery({
     queryKey: ["products"],
     queryFn: () => getProductsFiltered(filterParams),
-    refetchOnWindowFocus: true,
+    // refetchOnWindowFocus: true,
   });
 
   useFocusEffect(
