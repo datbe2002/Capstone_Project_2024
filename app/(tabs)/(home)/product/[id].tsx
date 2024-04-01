@@ -287,7 +287,7 @@ const ProductDetail = () => {
             backdropComponent={renderBackdrop}
             enablePanDownToClose={true}
             index={-1}
-            snapPoints={["55%"]}
+            snapPoints={["60%"]}
           >
             <View style={styles.bottomSheet}>
               <ProductCardShort
@@ -303,7 +303,7 @@ const ProductDetail = () => {
                 selectedItem={mySelectedItem}
               />
               <QuantitySelector
-                style={{ position: "absolute", bottom: 70 }}
+                style={{ position: "absolute", bottom: 75 }}
                 initialQuantity={quantity}
                 onQuantityChange={(newQuantity) => setQuantity(newQuantity)}
                 enabled={mySelectedItem}
@@ -462,11 +462,11 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   bottomSheet: {
-    height: height * 0.45,
+    height: height * 0.5,
     position: "relative",
   },
   bottomSheetBtn: {
     position: "absolute",
-    bottom: 16,
+    bottom: 25,
   },
 });
