@@ -1,6 +1,19 @@
 import axios, { AxiosResponse } from "axios";
 import instance from "./axiosConfig";
-import { CartData } from "../../constants/Type";
+import { CartData, FilterParams } from "../../constants/Type";
+
+export const getProductsFiltered = async (params: FilterParams) => {
+  // Construct the query string
+  console.log(params);
+
+  let queryString = Object.keys(params)
+    .filter((key) => params[key as keyof FilterParams] !== undefined)
+    .map((key) => `${key}=${params[key as keyof FilterParams]}`)
+    .join("&");
+
+  const response = await instance.get(`api/product/search?${queryString}`);
+  return response.data;
+};
 
 export const getProducts = async (size: any) => {
   const response = await instance.get(

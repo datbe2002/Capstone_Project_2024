@@ -392,7 +392,10 @@ const styles = StyleSheet.create({
     fontSize: SIZES.medium,
     fontFamily: "mon-sb",
   },
-  main: {},
+  main: {
+    width: width,
+    paddingBottom: 90,
+  },
   imgWrapper: {
     width: width,
     minHeight: width,
@@ -426,6 +429,9 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 35,
     alignItems: "center",
+    position: "absolute",
+    bottom: 0,
+    width: width,
   },
   button: {
     height: 50,

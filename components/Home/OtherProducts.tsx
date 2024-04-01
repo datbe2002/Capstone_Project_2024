@@ -15,21 +15,17 @@ import { Product } from "../../constants/Type";
 // import { categories } from "../../app/(tabs)/exampledata";
 const { height, width } = Dimensions.get("window");
 
-interface RecommendationsSectionProps {
+interface OtherProducts {
   props?: any;
-  recommendations: Array<Product>;
+  data: Array<Product>;
 }
 
-const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
-  props,
-  recommendations,
-}) => {
+const OtherProducts: React.FC<OtherProducts> = ({ props, data }) => {
   const router = useRouter();
   return (
-    <View style={styles.recommendations}>
-      <Text style={styles.title}>Đề Xuất Cho Bạn</Text>
-      <View style={styles.recommendationsList}>
-        {recommendations.map((item: any, index) => (
+    <View style={styles.data}>
+      <View style={styles.dataList}>
+        {data.map((item: any, index) => (
           <Pressable
             key={index}
             onPress={() => {
@@ -64,7 +60,7 @@ const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
   );
 };
 
-export default RecommendationsSection;
+export default OtherProducts;
 
 const styles = StyleSheet.create({
   container: {
@@ -85,12 +81,12 @@ const styles = StyleSheet.create({
     fontSize: SIZES.medium,
     fontFamily: "mon-sb",
   },
-  recommendations: {
+  data: {
     paddingHorizontal: 10,
     minHeight: 200,
     backgroundColor: "transparent",
   },
-  recommendationsList: {
+  dataList: {
     paddingVertical: 10,
     paddingBottom: 35,
     display: "flex",

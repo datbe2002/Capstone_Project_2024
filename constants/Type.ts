@@ -20,6 +20,16 @@ export interface Product {
   createBy: string;
 }
 
+export interface FilterParams {
+  name?: string;
+  category?: string;
+  subCategory?: string;
+  color?: string;
+  size?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
 export interface Brand {
   name: string;
   id: number;

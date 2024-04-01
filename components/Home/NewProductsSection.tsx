@@ -36,7 +36,9 @@ const NewProductSection: React.FC<NewProductProps> = ({
             console.log("more new item");
           }}
         >
-          <Text style={styles.secondaryTitle}>Xem tất cả</Text>
+          <Pressable onPress={() => router.push("/(tabs)/(home)/products")}>
+            <Text style={styles.secondaryTitle}>Xem tất cả</Text>
+          </Pressable>
           <FontAwesome5
             name="arrow-circle-right"
             size={20}
