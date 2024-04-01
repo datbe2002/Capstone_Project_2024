@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import Background from "../../../components/BackGround";
 import CategoriesSection from "../../../components/Home/CategoriesSection";
 import NewProductSection from "../../../components/Home/NewProductsSection";
-import RecommendationsSection from "../../../components/Home/Recommendations";
+import OtherProducts from "../../../components/Home/OtherProducts";
 import TopProductsSection from "../../../components/Home/TopProductsSection";
 import instance from "../../context/axiosConfig";
 import {
@@ -58,7 +58,7 @@ export default function HomepageScreen() {
   };
 
   const productsQuery = useQuery({
-    queryKey: ["products"],
+    queryKey: ["recommendProducts"],
     queryFn: () => getProducts(6),
   });
 
@@ -107,11 +107,10 @@ export default function HomepageScreen() {
           ) : null}
 
           {/* recommendations */}
+          <Text style={styles.title}>Đề Xuất Cho Bạn</Text>
           {productsQuery.isLoading ? <ActivityIndicator /> : null}
           {productsQuery.isSuccess ? (
-            <RecommendationsSection
-              recommendations={productsQuery.data.items}
-            />
+            <OtherProducts data={productsQuery.data.items} />
           ) : null}
         </ScrollView>
       </Background>
