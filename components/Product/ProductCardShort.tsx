@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Pressable, Text, StyleSheet, Image } from "react-native";
-import { Products } from "../../constants/Type";
+import { Product } from "../../constants/Type";
 import { SHADOWS, SIZES } from "../../assets";
 
 interface Props {
-  data: Products;
+  data: Product;
   variant: any;
 }
 

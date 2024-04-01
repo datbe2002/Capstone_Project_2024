@@ -11,13 +11,13 @@ import {
   View,
 } from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
-import { Products } from "../../constants/Type";
+import { Product } from "../../constants/Type";
 // import { categories } from "../../app/(tabs)/exampledata";
 const { height, width } = Dimensions.get("window");
 
 interface TopProductsProps {
   props?: any;
-  topProducts: Array<Products>;
+  topProducts: Array<Product>;
 }
 
 const TopProductsSection: React.FC<TopProductsProps> = ({
@@ -30,7 +30,7 @@ const TopProductsSection: React.FC<TopProductsProps> = ({
     <View style={styles.topProducts}>
       <Text style={styles.title}>Bán chạy nhất</Text>
       <View style={styles.topProductsList}>
-        {topProducts.map((item: Products, index) => (
+        {topProducts.map((item: Product, index) => (
           <Pressable
             key={index}
             onPress={() => {
