@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { Button, Modal, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import AddressChosen from '../../../components/Address/AddressChosen'
 import ItemCardPayment from '../../../components/Payment/ItemCardPayment'
 import NoteForShop from '../../../components/Payment/NoteForShop'
@@ -14,6 +14,8 @@ import VoucherChosen from '../../../components/Payment/VoucherChosen'
 import { getAddress } from '../../context/addressApi'
 import { useAddressChange, useAfterVoucher, useOrderItems, useUserIDStore } from '../../store/store'
 import { router } from 'expo-router'
+import AddressModal from './addaddress'
+import { useIsFocused } from '@react-navigation/native'
 
 const Payment = () => {
     const { userId } = useUserIDStore()
@@ -23,7 +25,7 @@ const Payment = () => {
     const [shippingFeePrice, setShippingFeePrice] = useState<any | null>(null)
     const [order] = useState<any | null>(orderItems.items)
     const { itemVoucher, setItemVoucher } = useAfterVoucher()
-
+    const [visible, setVisible] = useState<boolean>(false)
     const totalAmount = orderItems.totalQuantityProd
     const totalPrice = orderItems.total
     const totalVoucher = itemVoucher.totalVoucherMoney || 0
@@ -33,12 +35,21 @@ const Payment = () => {
         queryKey: ["address", userId],
         queryFn: () => getAddress(userId),
     });
+
     useEffect(() => {
         if (getUserAddress?.isSuccess && getUserAddress?.data) {
-            const data1 = getUserAddress?.data?.data?.find((data1: any) => data1.isDefault === true);
-            setSelectedAddress(data1);
+            if (getUserAddress?.data?.data?.length > 0) {
+                const data1 = getUserAddress?.data?.data?.find((data1: any) => data1.isDefault === true);
+                setSelectedAddress(data1);
+            } else {
+                setTimeout(() => {
+                    router.push('/addaddress')
+                }, 300)
+            }
         }
     }, [getUserAddress?.isSuccess, getUserAddress?.data?.data]);
+
+    console.log(getUserAddress?.data?.data)
 
     //reset voucher if total price changed
     useEffect(() => {
@@ -71,7 +82,6 @@ const Payment = () => {
         console.log('orderPad', orderPad)
         router.push('/success_payment')
     }
-
 
     return (
         <View style={styles.mainContainer}>

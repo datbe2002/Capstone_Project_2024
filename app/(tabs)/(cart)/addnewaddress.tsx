@@ -5,7 +5,7 @@ import {
     View
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { usePutAddress } from '../../store/store';
+import { usePostAddress, usePutAddress } from '../../store/store';
 import { COLORS } from '../../../assets';
 import CustomButton from '../../../components/Button';
 interface Province {
@@ -22,7 +22,7 @@ interface Ward {
     value: string
 }
 
-const EditAddressComponent = () => {
+const AddAddressComponent = () => {
     const [provinceData, setProvinceData] = useState<Province[]>([]);
     const [districtData, setDistrictData] = useState<District[]>([])
     const [wardData, setWardData] = useState<Ward[]>([])
@@ -31,7 +31,7 @@ const EditAddressComponent = () => {
     const [isFocusWard, setIsFocusWard] = useState(false);
     // const { selectedValues, setSelectedValues } = useRegisterStore()
 
-    const { selectedPutAddress, setSelectedPutAddress } = usePutAddress()
+    const { selectedPostAddress, setSelectedPostAddress } = usePostAddress()
 
     useEffect(() => {
         var config = {
@@ -104,7 +104,7 @@ const EditAddressComponent = () => {
     }
 
     const handleCheck = () => {
-        console.log(selectedPutAddress)
+        console.log(selectedPostAddress)
     }
 
     return (
@@ -124,11 +124,11 @@ const EditAddressComponent = () => {
                     valueField="value"
                     placeholder={!isFocusProv ? 'Chọn tỉnh' : '...'}
                     searchPlaceholder="Tìm kiếm..."
-                    value={selectedPutAddress.provinceId}
+                    value={selectedPostAddress.provinceId}
                     onFocus={() => setIsFocusProv(true)}
                     onBlur={() => setIsFocusProv(false)}
                     onChange={item => {
-                        setSelectedPutAddress({
+                        setSelectedPostAddress({
                             province: item.label,
                             provinceId: item.value
                         })
@@ -150,11 +150,11 @@ const EditAddressComponent = () => {
                     valueField="value"
                     placeholder={!isFocusDist ? 'Chọn quận' : '...'}
                     searchPlaceholder="Tìm kiếm..."
-                    value={selectedPutAddress.districtId}
+                    value={selectedPostAddress.districtId}
                     onFocus={() => setIsFocusDist(true)}
                     onBlur={() => setIsFocusDist(false)}
                     onChange={item => {
-                        setSelectedPutAddress({
+                        setSelectedPostAddress({
                             district: item.label,
                             districtId: item.value
                         })
@@ -176,11 +176,11 @@ const EditAddressComponent = () => {
                     valueField="value"
                     placeholder={!isFocusWard ? 'Chọn phường' : '...'}
                     searchPlaceholder="Search..."
-                    value={selectedPutAddress.wardCode}
+                    value={selectedPostAddress.wardCode}
                     onFocus={() => setIsFocusWard(true)}
                     onBlur={() => setIsFocusWard(false)}
                     onChange={item => {
-                        setSelectedPutAddress({
+                        setSelectedPostAddress({
                             ward: item.label,
                             wardCode: item.value
                         })
@@ -195,7 +195,7 @@ const EditAddressComponent = () => {
     )
 }
 
-export default EditAddressComponent
+export default AddAddressComponent
 
 const styles = StyleSheet.create({
     container: {

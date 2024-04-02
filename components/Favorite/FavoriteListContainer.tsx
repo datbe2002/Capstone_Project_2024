@@ -2,12 +2,13 @@ import { Dimensions, ImageBackground, Pressable, StyleSheet, Text, TouchableOpac
 import React, { useCallback, useRef } from 'react'
 import MasonryList from '@react-native-seoul/masonry-list';
 import { COLORS } from '../../assets';
-import { Entypo, Ionicons } from '@expo/vector-icons';
+import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { Image } from 'react-native';
 import { Link, router } from 'expo-router';
 import { useFavouriteId } from '../../app/store/store';
+import EmptyComponentCustom from '../EmptyComponentCustom';
 
-const { height, width } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 
 interface FavouriteListContainerProps {
@@ -53,7 +54,6 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
                         borderTopLeftRadius: 10,
                         borderTopRightRadius: 10
                     }}
-                // imageStyle={{ borderRadius: 16 }}
                 >
                     <View
                         style={{
@@ -72,12 +72,12 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
                             <Text style={styles.totalSoldPrice}>Đã bán {item.totalSold}</Text>
                         </View>
                     </View>
-                    <View style={styles.mainHandle}>
-                        <View style={styles.threeDot}>
-                            <Entypo name="dots-three-horizontal" size={24} color={COLORS.darkGray} onPress={() =>
-                                handleOpenBottom(item.id)
-                            } />
-                        </View>
+                    <View style={styles.mainHandle} >
+                        <Pressable style={styles.threeDot} onPress={() =>
+                            handleOpenBottom(item.id)
+                        }>
+                            <Entypo name="dots-three-horizontal" size={24} color={COLORS.darkGray} />
+                        </Pressable>
                         <TouchableOpacity style={styles.buyProd}>
                             <View>
                                 <Ionicons name="cart" size={20} color={COLORS.white} />
@@ -89,19 +89,6 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
             </Pressable>
         </Link>
 
-    )
-}
-
-
-const ListEmptyComponent = () => {
-    return (
-        <View style={styles.emptyList}>
-            <Image style={styles.imageWL} source={require('../../assets/images/wishlistempty.png')} />
-            <Text style={{ fontFamily: 'mon', color: COLORS.black, fontSize: 18 }}>Bạn chưa chọn thích sản phẩm nào</Text>
-            <Pressable style={{ backgroundColor: COLORS.primary, padding: 15, borderRadius: 2 }} onPress={() => router.push('/(tabs)/(home)/homepage')}>
-                <Text style={{ fontFamily: 'mon-sb', color: COLORS.white, fontSize: 16 }}>Mua sắm ngay!</Text>
-            </Pressable>
-        </View>
     )
 }
 
@@ -130,7 +117,7 @@ const FavoriteListContainer: React.FC<FavouriteListContainerProps> = ({ favorite
                         />
                     )}
                     onEndReachedThreshold={0.1}
-                    ListEmptyComponent={ListEmptyComponent}
+                    ListEmptyComponent={<EmptyComponentCustom icon={<FontAwesome name="tasks" size={45} color={COLORS.white} />} text={'Bạn chưa chọn thích sản phẩm nào'} option={'Mua sắm ngay !'} />}
                 />
             </View>
 

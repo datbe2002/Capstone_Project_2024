@@ -40,7 +40,7 @@ const AddressCard = ({ addressUnique, setLoadding }: any) => {
             </View>
             <View style={styles.rightContainer}>
                 <View style={styles.nameNphone}>
-                    <Text style={{ fontFamily: 'mon-b', fontSize: 18 }}>{addressUnique.recipientName.toUpperCase()}</Text>
+                    <Text style={{ fontFamily: 'mon-b', fontSize: 18 }}>{addressUnique?.recipientName.toUpperCase() || "Tên khách hàng"}</Text>
                     <Text style={{ fontFamily: 'mon-sb', fontSize: 18, color: COLORS.darkGray }}>{addressUnique.recipientPhone}</Text>
                 </View>
                 <View style={styles.addressInfo}>
