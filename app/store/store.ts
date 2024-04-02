@@ -88,6 +88,37 @@ export const useRegisterStore = create((set: any) => ({
       selectedValues: { ...state.selectedValues, ...values },
     })),
 }));
+export const usePutAddress = create((set: any) => ({
+  selectedPutAddress: {
+    province: null,
+    provinceId: null,
+    district: null,
+    districtId: null,
+    ward: null,
+    wardCode: null,
+  },
+  setSelectedPutAddress: (values: any) =>
+    set((state: any) => ({
+      selectedPutAddress: { ...state.selectedPutAddress, ...values },
+    })),
+}));
+export const usePostAddress = create((set: any) => ({
+  selectedPostAddress: {
+    province: null,
+    provinceId: null,
+    district: null,
+    districtId: null,
+    ward: null,
+    wardCode: null,
+    recipientName: null,
+    recipientPhone: null,
+    street: null,
+  },
+  setSelectedPostAddress: (values: any) =>
+    set((state: any) => ({
+      selectedPostAddress: { ...state.selectedPostAddress, ...values },
+    })),
+}));
 
 export const useAddressChange = create((set: any) => ({
   selectedAddress: {
