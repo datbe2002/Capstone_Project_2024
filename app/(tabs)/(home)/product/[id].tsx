@@ -18,7 +18,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { addToCart, getProductById } from "../../../context/productsApi";
 import { useUserIDStore, useUserStore, useWardove } from "../../../store/store";
 import { CartData, Product } from "../../../../constants/Type";
-import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
 import VariantSection from "../../../../components/Product/VariantSelector";
 import ProductCardShort from "../../../../components/Product/ProductCardShort";
@@ -49,7 +52,7 @@ const ProductDetail = () => {
       setAlert({ title: "Xong", msg: "Đã thêm vào giỏ hàng của bạn!" });
     },
     onError: (error) => {
-      console.log(error);
+      // console.log(error);
       setAlert({ title: "Lỗi", msg: "Thêm thất bại! Vui lòng thử lại sau!" });
     },
   });
@@ -91,7 +94,7 @@ const ProductDetail = () => {
   };
 
   const handleAddToWardrove = () => {
-    console.log("product ", productQuery.data.data);
+    // console.log("product ", productQuery.data.data);
 
     // Check if the item already exists in the wardroveItems
     if (
@@ -123,7 +126,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const getCart = async () => {
       try {
-        console.log("first 1");
+        // console.log("first 1");
         const userCart = await instance.get("/api/cart/" + userId);
         let userData: any = {
           ...userState,
@@ -161,6 +164,7 @@ const ProductDetail = () => {
               route.canGoBack()
                 ? route.back()
                 : route.push("/(tabs)/(home)/homepage");
+              // route.back();
             }}
           />
         </View>
@@ -196,11 +200,11 @@ const ProductDetail = () => {
                       />
                     </View>
                   )}
-                  <MaterialCommunityIcons
+                  {/* <MaterialCommunityIcons
                     name="share-circle"
                     size={SIZES.xxLarge}
                     color={COLORS.primary}
-                  />
+                  /> */}
                 </View>
               </View>
 
@@ -294,14 +298,17 @@ const ProductDetail = () => {
                 data={productQuery.data.data}
                 variant={mySelectedItem}
               />
-
-              <VariantSection
-                data={productQuery.data.data.productVariants}
-                onPress={(item) => {
-                  setMySelectedItem(item);
-                }}
-                selectedItem={mySelectedItem}
-              />
+              <BottomSheetScrollView style={{ marginBottom: 120 }}>
+                <View style={{ height: 200 }}>
+                  <VariantSection
+                    data={productQuery.data.data.productVariants}
+                    onPress={(item) => {
+                      setMySelectedItem(item);
+                    }}
+                    selectedItem={mySelectedItem}
+                  />
+                </View>
+              </BottomSheetScrollView>
               <QuantitySelector
                 style={{ position: "absolute", bottom: 75 }}
                 initialQuantity={quantity}

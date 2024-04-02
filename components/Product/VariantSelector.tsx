@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 });
 
 const VariantSection: React.FC<Props> = ({ data, onPress, selectedItem }) => (
-  <ScrollView style={styles.variantContaner}>
+  <View style={styles.variantContaner}>
     <Text style={styles.secondaryTitle}>Các loại có sẵn</Text>
     <View style={styles.variantItemList}>
       {data.map((item, index) => (
@@ -80,7 +80,7 @@ const VariantSection: React.FC<Props> = ({ data, onPress, selectedItem }) => (
         </Pressable>
       ))}
     </View>
-  </ScrollView>
+  </View>
 );
 
 export default VariantSection;

@@ -166,8 +166,6 @@ export const useOrderItems = create((set: any) => ({
 //     })),
 // }));
 
-type SetWardroveItems = React.Dispatch<React.SetStateAction<Product[]>>;
-
 export const useWardove = create((set: any) => ({
   wardroveItems: [] as Product[],
   setWardroveItems: (
@@ -179,4 +177,22 @@ export const useWardove = create((set: any) => ({
           ? values(state.wardroveItems)
           : [...state.wardroveItems, ...values],
     })),
+}));
+
+export const useCategoriesStore = create((set: any) => ({
+  categories: [{ id: -1, name: "Tất cả", subCategories: [] }],
+  setCategories: (categories: any) =>
+    set((state: any) => ({ categories: [...state.categories, ...categories] })),
+}));
+
+export const useSizeStore = create((set: any) => ({
+  sizes: [{ id: -1, value: "Tất cả" }],
+  setSies: (sizes: any) =>
+    set((state: any) => ({ sizes: [...state.sizes, ...sizes] })),
+}));
+
+export const useColorsStore = create((set: any) => ({
+  colors: [],
+  setColors: (colors: any) =>
+    set((state: any) => ({ colors: [...state.colors, ...colors] })),
 }));

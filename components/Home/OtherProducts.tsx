@@ -22,9 +22,10 @@ interface OtherProducts {
 
 const OtherProducts: React.FC<OtherProducts> = ({ props, data }) => {
   const router = useRouter();
+  const isOdd = data.length % 2 !== 0;
   return (
     <View style={styles.data}>
-      <View style={styles.dataList}>
+      <View style={[styles.dataList, isOdd && styles.odd]}>
         {data.map((item: any, index) => (
           <Pressable
             key={index}
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     minHeight: 200,
     backgroundColor: "transparent",
+    width: "100%",
   },
   dataList: {
     paddingVertical: 10,
@@ -94,6 +96,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-evenly",
     gap: 5,
+  },
+  odd: {
+    justifyContent: "flex-start",
   },
   recommendCard: {
     width: width / 2.15,
@@ -109,7 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: COLORS.gray1,
   },
   recommendImg: {
     width: width / 2.3,

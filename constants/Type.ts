@@ -21,13 +21,13 @@ export interface Product {
 }
 
 export interface FilterParams {
-  name?: string | null;
-  category?: string | null;
-  subCategory?: string | null;
-  color?: string | null;
-  size?: string | null;
-  minPrice?: number | null;
-  maxPrice?: number | null;
+  name?: any;
+  category?: any;
+  subCategory?: any;
+  color?: any;
+  size?: any;
+  minPrice?: any;
+  maxPrice?: any;
 }
 
 export interface Brand {
