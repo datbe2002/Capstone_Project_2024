@@ -4,13 +4,14 @@ import { CartData, FilterParams } from "../../constants/Type";
 
 export const getProductsFiltered = async (params: FilterParams) => {
   // Construct the query string
-  console.log(params);
+  console.log("api ==== ", params);
 
   let queryString = Object.keys(params)
     .filter(
       (key) =>
         params[key as keyof FilterParams] !== undefined &&
-        params[key as keyof FilterParams] !== null
+        params[key as keyof FilterParams] !== null &&
+        params[key as keyof FilterParams] !== "Tất cả"
     )
     .map((key) => `${key}=${params[key as keyof FilterParams]}`)
     .join("&");
@@ -58,5 +59,10 @@ export const getCartById = async (id: any) => {
 
 export const updateCart = async (id: any, data: any) => {
   const response = await instance.put("/api/cart/" + id, data);
+  return response.data;
+};
+
+export const getCategories = async () => {
+  const response = await instance.get("/api/category");
   return response.data;
 };

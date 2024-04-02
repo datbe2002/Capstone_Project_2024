@@ -30,6 +30,14 @@ const CategoriesSection: React.FC<CategoriesProps> = ({
   categories,
 }) => {
   const router = useRouter();
+
+  const handleSearch = (item: any) => {
+    router.push({
+      pathname: "/(tabs)/(home)/products",
+      params: { cateParam: item.name },
+    });
+  };
+
   return (
     <View style={styles.categories}>
       <View style={[styles.horizWrapper, styles.cateTitleWrapper]}>
@@ -37,8 +45,7 @@ const CategoriesSection: React.FC<CategoriesProps> = ({
         <Pressable
           style={styles.horizWrapper}
           onPress={() => {
-            console.log("more cate");
-            router.push("/categories");
+            router.push("/(tabs)/(home)/products");
           }}
         >
           <Text style={styles.secondaryTitle}>Xem tất cả</Text>
@@ -55,7 +62,7 @@ const CategoriesSection: React.FC<CategoriesProps> = ({
           <Pressable
             key={index}
             onPress={() => {
-              console.log("cate " + index);
+              handleSearch(item);
             }}
           >
             <View style={[styles.cateCard, SHADOWS.medium]}>

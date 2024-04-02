@@ -1,7 +1,12 @@
-import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../../assets";
@@ -15,33 +20,55 @@ import OtherProducts from "../../../components/Home/OtherProducts";
 import TopProductsSection from "../../../components/Home/TopProductsSection";
 import instance from "../../context/axiosConfig";
 import {
+  getCategories,
   getNewProduct,
   getProducts,
   getTopProducts,
 } from "../../context/productsApi";
 import {
   useAddressChange,
+  useCategoriesStore,
+  useColorsStore,
   useOrderItems,
+  useSizeStore,
   useUserIDStore,
   useUserStore,
 } from "../../store/store";
-import { categories } from "../exampledata";
+import { categorie } from "../exampledata";
 
 export default function HomepageScreen() {
-  const homeCategories = categories.slice(0, 4);
   const { userId } = useUserIDStore();
   const [searchValue, setSearchValue] = useState<string>("");
   const { userState, setUserState } = useUserStore();
+  const { categories, setCategories } = useCategoriesStore();
+  const { sizes, setSies } = useSizeStore();
+  const { colors, setColors } = useColorsStore();
+
   useEffect(() => {
-    const getCart = async () => {
+    const initCall = async () => {
       try {
-        console.log("first");
         const userCart = await instance.get("/api/cart/" + userId);
+
+        let callCategories = await instance.get("/api/category");
+        let callColors = await instance.get("/api/color");
+        let callSizes = await instance.get("/api/size");
         let userData: any = {
           ...userState,
           userCartId: userCart.data.data.id,
         };
+        // console.log("categories", categories.data.data);
+        // console.log("colors", colors.data.data);
+        // console.log("sizes", sizes.data.data);
         setUserState(userData);
+        if (categories.length < 2) {
+          setCategories(callCategories.data.data);
+        }
+        if (colors.length < 1) {
+          setColors(callColors.data.data);
+        }
+        if (sizes.length < 2) {
+          setSies(callSizes.data.data);
+        }
       } catch (error: any) {
         console.log(error.response.data.Message);
         if (error.response.data.Message === "Cart not found") {
@@ -51,10 +78,14 @@ export default function HomepageScreen() {
         }
       }
     };
-    getCart();
+    initCall();
   }, []);
-  const handleSearch = (text: string) => {
-    setSearchValue(text);
+
+  const handleSearch = () => {
+    router.push({
+      pathname: "/(tabs)/(home)/products",
+      params: { paramSearch: searchValue },
+    });
   };
 
   const productsQuery = useQuery({
@@ -72,6 +103,13 @@ export default function HomepageScreen() {
     queryFn: () => getTopProducts(5),
   });
 
+  const getRandomItems = (items: any[], count: number): any[] => {
+    const shuffled = items.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+  const temp = categories.filter((x) => x.id !== -1);
+  const homeCategories: any[] = getRandomItems(temp, 4);
+
   return (
     <SafeAreaView style={styles.container}>
       <Background imageKey={"i6"}>
@@ -81,11 +119,17 @@ export default function HomepageScreen() {
           <View style={{ backgroundColor: "transparent" }}>
             <CustomInput
               placeholder="Tìm kiếm..."
-              onChangeText={handleSearch}
+              onChangeText={(text: any) => setSearchValue(text)}
               value={searchValue}
               style={styles.searchInput}
               elementAfter={
-                <FontAwesome5 name="search" size={22} color={COLORS.primary} />
+                <Pressable onPress={handleSearch}>
+                  <FontAwesome5
+                    name="search"
+                    size={22}
+                    color={COLORS.primary}
+                  />
+                </Pressable>
               }
             />
           </View>
