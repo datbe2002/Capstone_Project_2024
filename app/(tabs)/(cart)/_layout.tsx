@@ -31,6 +31,28 @@ const CartLayout = () => {
         },
         headerTintColor: COLORS.primary,
       }} />
+      <Stack.Screen name="addaddress" options={{
+        headerShown: true,
+        title: 'Thêm địa chỉ để thanh toán',
+        headerTitleAlign: 'center',
+        headerLeft: () => { return <View></View> },
+        headerTitleStyle: {
+          fontFamily: 'mon-b',
+          fontSize: 25
+        },
+        headerTintColor: COLORS.primary,
+      }} />
+      <Stack.Screen name="addnewaddress" options={{
+        headerShown: true,
+        title: 'Thêm địa chỉ',
+        headerTitleAlign: 'center',
+        headerLeft: BackButton,
+        headerTitleStyle: {
+          fontFamily: 'mon-b',
+          fontSize: 25
+        },
+        headerTintColor: COLORS.primary,
+      }} />
       <Stack.Screen name="voucher" options={{
         headerShown: true,
         title: 'Chọn mã giảm giá',

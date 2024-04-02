@@ -2,8 +2,9 @@ import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpac
 import React from 'react'
 import { AddressSetting } from '../../constants/types/normal'
 import { COLORS } from '../../assets'
-import { Feather, Ionicons } from '@expo/vector-icons'
+import { Feather, FontAwesome5, Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import EmptyComponentCustom from '../EmptyComponentCustom'
 
 interface AddressConfigProps {
     address: Array<any>
@@ -18,7 +19,7 @@ const AddressCard = ({ addressUnique }: any) => {
         </View>
         <View style={styles.addressInfo}>
             <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.darkGray }}>{addressUnique.street}</Text>
-            <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.darkGray }}>{addressUnique.ward}, {addressUnique.district},{addressUnique.province} </Text>
+            <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.darkGray }}>{addressUnique.ward}, {addressUnique.district}, {addressUnique.province} </Text>
         </View>
         <View style={{ paddingTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             {addressUnique.isDefault ? <Text style={{ color: COLORS.primary, borderColor: COLORS.primary, borderWidth: 1, padding: 5, height: 30, fontFamily: 'mon-b', textAlign: 'center' }}>
@@ -27,26 +28,12 @@ const AddressCard = ({ addressUnique }: any) => {
                 <Text style={{ padding: 5, height: 30, fontFamily: 'mon-b', textAlign: 'center' }}>
                 </Text>
             }
-            <TouchableOpacity onPress={() => router.push({ pathname: '/(tabs)/(menu)/editaddress', params: { item: JSON.stringify(addressUnique) } })} style={{ backgroundColor: COLORS.primary, borderRadius: 50, padding: 8, justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => router.push({ pathname: '/(tabs)/(menu)/editcontact', params: { item: JSON.stringify(addressUnique) } })} style={{ backgroundColor: COLORS.primary, borderRadius: 50, padding: 8, justifyContent: 'center', alignItems: 'center' }}>
                 <Feather name="edit-2" size={20} color={COLORS.white} />
             </TouchableOpacity>
         </View>
     </View>
 }
-
-
-const ListEmptyAddress = () => {
-    return <View>
-        <View style={styles.emptyList}>
-            <Image style={styles.imageWL} source={require('../../assets/images/emptyAddress.png')} />
-            <Text style={{ fontFamily: 'mon', color: COLORS.black, fontSize: 18 }}>Bạn chưa có địa chỉ mặc định</Text>
-            <TouchableOpacity style={{ backgroundColor: COLORS.primary, padding: 15, borderRadius: 2 }} >
-                <Text style={{ fontFamily: 'mon-sb', color: COLORS.white, fontSize: 16 }}>Thêm một để có thể đặt hàng ngay!</Text>
-            </TouchableOpacity>
-        </View>
-    </View>
-}
-
 
 const AddressConfig: React.FC<AddressConfigProps> = ({ address }) => {
     return (
@@ -59,7 +46,7 @@ const AddressConfig: React.FC<AddressConfigProps> = ({ address }) => {
                     data={address}
                     renderItem={({ item }) => <AddressCard addressUnique={item} />}
                     keyExtractor={item => item.id}
-                    ListEmptyComponent={<ListEmptyAddress />}
+                    ListEmptyComponent={<EmptyComponentCustom onPress={() => router.push('/(tabs)/(home)/homepage')} text={"Bạn chưa có địa chỉ mặc định"} option={"Thêm một để có thể đặt hàng ngay!"} icon={<FontAwesome5 name="address-card" size={40} color="white" />} />}
                 />
 
             </View>

@@ -1,19 +1,27 @@
 import React, { ReactNode } from 'react';
-import { View, StyleSheet, TextStyle, ViewStyle, Text } from 'react-native';
+import { View, StyleSheet, TextStyle, ViewStyle, Text, Pressable } from 'react-native';
 import { COLORS } from '../assets';
+import { router } from 'expo-router';
 
 interface Props {
     icon: ReactNode;
     text: string | null;
+    option?: string | null;
+    onPress: () => void;
 }
 
-const EmptyComponentCustom: React.FC<Props> = ({ icon, text }) => {
+const EmptyComponentCustom: React.FC<Props> = ({ icon, text, option, onPress }) => {
     return (
         <View style={styles.container}>
             <View style={styles.iconContainer}>
                 {icon}
             </View>
             <Text style={styles.text}>{text}</Text>
+            {option &&
+                <Pressable style={{ backgroundColor: COLORS.primary, padding: 15, borderRadius: 2 }} onPress={onPress}>
+                    <Text style={{ fontFamily: 'mon-sb', color: COLORS.white, fontSize: 16 }}>{option}</Text>
+                </Pressable>
+            }
         </View>
     );
 };
@@ -21,7 +29,7 @@ const EmptyComponentCustom: React.FC<Props> = ({ icon, text }) => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: 250,
+        height: 300,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -36,7 +44,7 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: 'mon-sb',
         fontSize: 15,
-        marginTop: 20,
+        marginVertical: 20,
     },
 });
 

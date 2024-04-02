@@ -15,12 +15,12 @@ const Address = () => {
         queryFn: () => getAddress(userId),
     });
 
-
-
+    const addressReal = getUserAddress?.data?.data.filter((address: any) => address.isDeleted === false)
+    console.log(addressReal)
     return (
         <View style={styles.container}>
             {getUserAddress.isLoading ? <LoadingComponent /> : <AddressConfig
-                address={getUserAddress.data.data}
+                address={addressReal}
             />}
         </View>
     )
