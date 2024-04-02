@@ -40,7 +40,7 @@ const TopProductsSection: React.FC<TopProductsProps> = ({
               });
             }}
           >
-            <View style={[styles.topProductItem, SHADOWS.small]}>
+            <View style={[styles.topProductItem, SHADOWS.medium]}>
               <Image
                 style={styles.topProductImg}
                 source={
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-    backgroundColor: "white",
+    backgroundColor: COLORS.gray1,
   },
   topProductImg: {
     width: width / 6.4,

@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: COLORS.gray1,
   },
   itemImg: {
     width: width / 3.8,
