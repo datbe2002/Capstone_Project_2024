@@ -1,4 +1,4 @@
-import { Alert, Keyboard, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from 'react-native-elements'
@@ -43,7 +43,9 @@ const AddressModal = () => {
                 recipientPhone: null,
                 street: null,
             })
-            router.replace('/(tabs)/(cart)/payment');
+            setTimeout(() => {
+                router.replace('/(tabs)/(cart)/payment');
+            }, 500)
         },
         onError: (error) => {
             console.log(error);
@@ -199,7 +201,7 @@ const AddressModal = () => {
                     {errors.street && <Text style={styles.errFunc}>{errors.street}</Text>}
                 </View>
                 <Pressable onPress={validate} style={styles.confirmBtn}>
-                    <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>Hoàn tất</Text>
+                    <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{isPending ? <ActivityIndicator size={25} color={COLORS.primary} /> : 'Hoàn tất'}</Text>
                 </Pressable>
             </ScrollView>
         </SafeAreaView>

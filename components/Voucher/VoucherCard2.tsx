@@ -5,6 +5,7 @@ import { useAfterVoucher } from "../../app/store/store";
 import { COLORS } from '../../assets';
 import moment from 'moment';
 import { Feather } from '@expo/vector-icons';
+import { transNumberFormatter } from '../Payment/ShippingFee';
 
 
 const dateConvert = (date: string | null) => {
@@ -20,7 +21,7 @@ const VoucherCard2 = ({ item }: any) => {
             <View style={styles.upperPart}>
                 <View style={styles.couponPercent}>
                     <Text style={styles.percentText}>- {item.percent}%</Text>
-                    <Text style={styles.match}>Trên {item.minTotalValue}đ</Text>
+                    <Text style={styles.match}>Trên {transNumberFormatter(item.minTotalValue)}đ</Text>
                 </View>
                 <View style={styles.checkboxChosen}>
                 </View>
@@ -94,7 +95,8 @@ const styles = StyleSheet.create({
         color: COLORS.primary
     },
     lowerPart: {
-        padding: 10
+        padding: 10,
+        opacity: 0.4
     },
     itemText: {
         fontFamily: 'mon-sb',

@@ -28,66 +28,64 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
     let isEven = index % 2 == 0;
 
     return (
-        <Link asChild
-            href={{
+
+        <Pressable
+            onPress={() => router.replace({
                 pathname: "/(tabs)/(home)/product/[id]",
                 params: { id: item.id },
+            })}
+            style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 15,
+                paddingTop: index === 1 ? 10 : 0,
+                paddingLeft: isEven ? 0 : 8,
+                paddingRight: isEven ? 8 : 0,
             }}
         >
-            <Pressable
+            <ImageBackground
+                source={item.defaultImage ? { uri: item.defaultImage } : require("../../assets/images/default.png")}
                 style={{
                     width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    marginTop: 15,
-                    paddingTop: index === 1 ? 10 : 0,
-                    paddingLeft: isEven ? 0 : 8,
-                    paddingRight: isEven ? 8 : 0,
+                    height: index % 3 == 0 ? 180 : 260,
+                    alignItems: "flex-end",
+                    borderTopLeftRadius: 10,
+                    borderTopRightRadius: 10
                 }}
             >
-                <ImageBackground
-                    source={item.defaultImage ? { uri: item.defaultImage } : require("../../assets/images/default.png")}
+                <View
                     style={{
-                        width: "100%",
-                        height: index % 3 == 0 ? 180 : 260,
-                        alignItems: "flex-end",
-                        borderTopLeftRadius: 10,
-                        borderTopRightRadius: 10
+                        paddingTop: 10,
                     }}
                 >
-                    <View
-                        style={{
-                            paddingTop: 10,
-                        }}
-                    >
-                    </View>
-                </ImageBackground>
-                <View style={styles.allContainer}>
-                    <View style={styles.mainInfo}>
-                        <Text style={styles.mainNameText}>
-                            {item.name}
-                        </Text>
-                        <View style={styles.priceNTotalCon}>
-                            <Text style={styles.textPrice}><Text style={styles.vndText}>đ</Text>{item.productVariants[0].price}</Text>
-                            <Text style={styles.totalSoldPrice}>Đã bán {item.totalSold}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.mainHandle} >
-                        <Pressable style={styles.threeDot} onPress={() =>
-                            handleOpenBottom(item.id)
-                        }>
-                            <Entypo name="dots-three-horizontal" size={24} color={COLORS.darkGray} />
-                        </Pressable>
-                        <TouchableOpacity style={styles.buyProd}>
-                            <View>
-                                <Ionicons name="cart" size={20} color={COLORS.white} />
-                            </View>
-                        </TouchableOpacity>
+                </View>
+            </ImageBackground>
+            <View style={styles.allContainer}>
+                <View style={styles.mainInfo}>
+                    <Text style={styles.mainNameText}>
+                        {item.name}
+                    </Text>
+                    <View style={styles.priceNTotalCon}>
+                        <Text style={styles.textPrice}><Text style={styles.vndText}>đ</Text>{item.productVariants[0].price}</Text>
+                        <Text style={styles.totalSoldPrice}>Đã bán {item.totalSold}</Text>
                     </View>
                 </View>
+                <View style={styles.mainHandle} >
+                    <Pressable style={styles.threeDot} onPress={() =>
+                        handleOpenBottom(item.id)
+                    }>
+                        <Entypo name="dots-three-horizontal" size={24} color={COLORS.darkGray} />
+                    </Pressable>
+                    <TouchableOpacity style={styles.buyProd}>
+                        <View>
+                            <Ionicons name="cart" size={20} color={COLORS.white} />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
 
-            </Pressable>
-        </Link>
+        </Pressable>
 
     )
 }
