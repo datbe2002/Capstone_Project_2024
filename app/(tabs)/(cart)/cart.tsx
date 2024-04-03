@@ -307,6 +307,12 @@ const Cart: React.FC<Props> = ({}) => {
                   { opacity: selectedItems.length === 0 ? 0.6 : 1 },
                 ]}
                 onPress={() => {
+                  // console.log({
+                  //   items: selectedItems,
+                  //   total,
+                  //   totalQuantityProd,
+                  // });
+
                   setOrderItems({
                     items: selectedItems,
                     total,

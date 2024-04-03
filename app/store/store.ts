@@ -148,7 +148,7 @@ export const useAddressChange = create((set: any) => ({
 
 export const useOrderItems = create((set: any) => ({
   orderItems: {
-    items: [null],
+    items: [],
     total: null,
     totalQuantityProd: null,
   },

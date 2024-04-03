@@ -10,14 +10,19 @@ import {
   Text,
   View,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { router, useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import Carousel from "../../../../components/Carousel";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { addToCart, getProductById } from "../../../context/productsApi";
-import { useUserIDStore, useUserStore, useWardove } from "../../../store/store";
-import { CartData, Product } from "../../../../constants/Type";
+import {
+  useOrderItems,
+  useUserIDStore,
+  useUserStore,
+  useWardove,
+} from "../../../store/store";
+import { CartData, CartItem, Product } from "../../../../constants/Type";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView,
@@ -40,7 +45,7 @@ const ProductDetail = () => {
   const { userId } = useUserIDStore();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [alert, setAlert] = useState<any>(null);
-
+  const { orderItems, setOrderItems } = useOrderItems();
   const productQuery = useQuery({
     queryKey: ["product"],
     queryFn: () => getProductById(id),
@@ -275,10 +280,27 @@ const ProductDetail = () => {
               { backgroundColor: COLORS.primary, color: COLORS.white },
             ]}
             onPress={() => {
-              setAlert({
-                title: "Lỗi",
-                msg: "Thêm thất bại! Vui lòng thử lại sau!",
+              const obj: CartItem = {
+                cartId: userState?.userCartId,
+                color:
+                  productQuery.data.data.productVariants[0].color.colorCode,
+                price: productQuery.data.data.productVariants[0].price,
+                product: productQuery.data.data,
+                productId: productQuery.data.data.id,
+                quantity: 1,
+                size: productQuery.data.data.productVariants[0].size.value,
+              };
+              // console.log({
+              //   items: [obj],
+              //   total: obj.price,
+              //   totalQuantityProd: 1,
+              // });
+              setOrderItems({
+                items: [obj],
+                total: obj.price,
+                totalQuantityProd: 1,
               });
+              router.push("/(tabs)/(cart)/payment");
             }}
           >
             Mua ngay
@@ -348,12 +370,28 @@ const ProductDetail = () => {
                   { opacity: mySelectedItem ? 1 : 0.7 },
                 ]}
                 onPress={() => {
-                  if (mySelectedItem) {
-                    setAlert({
-                      title: "Lỗi",
-                      msg: "Thêm thất bại! Vui lòng thử lại sau!",
-                    });
-                  }
+                  const obj: CartItem = {
+                    // userId: userState?.id,
+                    cartId: userState?.userCartId,
+                    color: mySelectedItem.color.colorCode,
+                    price: mySelectedItem.price,
+                    product: productQuery.data.data,
+                    productId: productQuery.data.data.id,
+                    quantity: quantity,
+                    size: mySelectedItem.size.value,
+                  };
+
+                  // console.log({
+                  //   items: [obj],
+                  //   total: obj.price * obj.quantity,
+                  //   totalQuantityProd: obj.quantity,
+                  // });
+                  setOrderItems({
+                    items: [obj],
+                    total: obj.price * obj.quantity,
+                    totalQuantityProd: obj.quantity,
+                  });
+                  router.push("/(tabs)/(cart)/payment");
                 }}
               >
                 Mua ngay
