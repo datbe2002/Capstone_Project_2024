@@ -62,7 +62,7 @@ export interface CartData {
 }
 
 export interface CartItem {
-  cartId: number;
+  cartId: any;
   productId: number;
   color: string;
   size: string;
