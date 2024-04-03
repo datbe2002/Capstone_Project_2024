@@ -300,7 +300,6 @@ const ProductDetail = () => {
                 total: obj.price,
                 totalQuantityProd: 1,
               });
-
               router.push("/(tabs)/(cart)/payment");
             }}
           >
