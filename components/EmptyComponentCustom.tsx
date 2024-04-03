@@ -7,7 +7,7 @@ interface Props {
     icon: ReactNode;
     text: string | null;
     option?: string | null;
-    onPress: () => void;
+    onPress?: () => void;
 }
 
 const EmptyComponentCustom: React.FC<Props> = ({ icon, text, option, onPress }) => {

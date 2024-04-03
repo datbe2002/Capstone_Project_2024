@@ -87,6 +87,17 @@ const MenuLayout = () => {
                 },
                 headerTintColor: COLORS.primary,
             }} />
+            <Stack.Screen name='order' options={{
+                headerShown: true,
+                title: 'Đơn đặt hàng',
+                headerTitleAlign: 'center',
+                headerLeft: BackButton,
+                headerTitleStyle: {
+                    fontFamily: 'mon-b',
+                    fontSize: 25
+                },
+                headerTintColor: COLORS.primary,
+            }} />
         </Stack>
     )
 }
