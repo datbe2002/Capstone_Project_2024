@@ -5,8 +5,9 @@ import { COLORS } from '../../assets';
 import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { Image } from 'react-native';
 import { Link, router } from 'expo-router';
-import { useFavouriteId } from '../../app/store/store';
+import { useFavouriteId, useOrderItems, useUserStore } from '../../app/store/store';
 import EmptyComponentCustom from '../EmptyComponentCustom';
+import { CartItem } from '../../constants/Type';
 
 const { width } = Dimensions.get("window");
 
@@ -26,6 +27,8 @@ interface FavoriteListCardProps {
 
 const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handleOpenBottom }) => {
     let isEven = index % 2 == 0;
+    const { orderItems, setOrderItems } = useOrderItems();
+    const { userState } = useUserStore()
 
     return (
 
@@ -77,7 +80,27 @@ const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handle
                     }>
                         <Entypo name="dots-three-horizontal" size={24} color={COLORS.darkGray} />
                     </Pressable>
-                    <TouchableOpacity style={styles.buyProd}>
+                    <TouchableOpacity style={styles.buyProd} onPress={() => {
+                        const obj: CartItem = {
+                            // userId: userState?.id,
+                            cartId: userState?.userCartId,
+                            color:
+                                item.productVariants[0].color.colorCode,
+                            price: item.productVariants[0].price,
+                            product: item,
+                            productId: item.id,
+                            quantity: 1,
+                            size: item.productVariants[0].size.value,
+                        };
+                        setOrderItems({
+                            items: [obj],
+                            total: obj.price,
+                            totalQuantityProd: 1,
+                        });
+                        setTimeout(() => {
+                            router.push("/(tabs)/(cart)/payment");
+                        }, 1000)
+                    }}>
                         <View>
                             <Ionicons name="cart" size={20} color={COLORS.white} />
                         </View>

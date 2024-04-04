@@ -1,10 +1,9 @@
 import { Tab, TabView } from '@rneui/themed';
+import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { COLORS } from '../../../assets';
-import AvailableVouchers from '../../../components/Voucher/AvailableVouchers';
-import UnavailableVoucher from '../../../components/Voucher/UnavailableVoucher';
-import { useLocalSearchParams } from 'expo-router';
+import DeliveredList from '../../../components/Order/DeliveredList';
 const Order = () => {
 
     const { indexInitial } = useLocalSearchParams()
@@ -61,8 +60,8 @@ const Order = () => {
                 <TabView.Item style={{ backgroundColor: 'white', width: '100%' }}>
                     <Text>delivering</Text>
                 </TabView.Item>
-                <TabView.Item style={{ backgroundColor: 'white', width: '100%' }}>
-                    <Text>delivered</Text>
+                <TabView.Item style={{ width: '100%' }}>
+                    <DeliveredList />
                 </TabView.Item>
 
             </TabView>
