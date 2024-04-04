@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import {
+    ActivityIndicator,
     StyleSheet,
     View
 } from 'react-native';
@@ -8,6 +9,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { usePostAddress, usePutAddress } from '../../store/store';
 import { COLORS } from '../../../assets';
 import CustomButton from '../../../components/Button';
+import { router } from 'expo-router';
 interface Province {
     label: string
     value: string
@@ -32,7 +34,7 @@ const AddAddressComponent = () => {
     // const { selectedValues, setSelectedValues } = useRegisterStore()
 
     const { selectedPostAddress, setSelectedPostAddress } = usePostAddress()
-
+    const [loading, setLoading] = useState<boolean>(false)
     useEffect(() => {
         var config = {
             method: 'get',
@@ -105,6 +107,12 @@ const AddAddressComponent = () => {
 
     const handleCheck = () => {
         console.log(selectedPostAddress)
+        setLoading(true)
+        setTimeout(() => {
+            setLoading(false)
+            router.back()
+
+        }, 1000)
     }
 
     return (
@@ -189,7 +197,7 @@ const AddAddressComponent = () => {
                 />
             </View>
             <View>
-                <CustomButton buttonText={"Xác nhận"} onPress={handleCheck} />
+                <CustomButton buttonText={loading ? <ActivityIndicator size={25} color={COLORS.white} /> : "Xác nhận"} onPress={handleCheck} />
             </View>
         </View>
     )

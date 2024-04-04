@@ -8,6 +8,7 @@ import { Link, router } from 'expo-router';
 import { useFavouriteId, useOrderItems, useUserStore } from '../../app/store/store';
 import EmptyComponentCustom from '../EmptyComponentCustom';
 import { CartItem } from '../../constants/Type';
+import MaybeUCanLike from '../../app/MaybeUCanLike';
 
 const { width } = Dimensions.get("window");
 
@@ -25,7 +26,7 @@ interface FavoriteListCardProps {
 
 
 
-const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handleOpenBottom }) => {
+export const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index, handleOpenBottom }) => {
     let isEven = index % 2 == 0;
     const { orderItems, setOrderItems } = useOrderItems();
     const { userState } = useUserStore()
@@ -138,6 +139,7 @@ const FavoriteListContainer: React.FC<FavouriteListContainerProps> = ({ favorite
                         />
                     )}
                     onEndReachedThreshold={0.1}
+                    ListFooterComponent={<MaybeUCanLike mainstading={'favourite'} />}
                     ListEmptyComponent={<EmptyComponentCustom icon={<FontAwesome name="tasks" size={45} color={COLORS.white} />} text={'Bạn chưa chọn thích sản phẩm nào'} option={'Mua sắm ngay !'} />}
                 />
             </View>

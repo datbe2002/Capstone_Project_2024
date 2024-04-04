@@ -9,11 +9,13 @@ import TotalAmountPrice from '../../../components/Payment/TotalAmountPrice'
 import TotalConfirmCheckout from '../../../components/Payment/TotalConfirmCheckout'
 import TotalPriceComponent from '../../../components/Payment/TotalPriceComponent'
 import VoucherChosen from '../../../components/Payment/VoucherChosen'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { router } from 'expo-router'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { Linking, ScrollView, StyleSheet, View } from 'react-native'
 import { getAddress } from '../../context/addressApi'
 import { useAddressChange, useAfterVoucher, useOrderItems, useUserIDStore } from '../../store/store'
+import { checkoutCart } from '../../context/checkoutApi'
+import { Alert } from 'react-native'
 
 const Payment = () => {
     const { userId } = useUserIDStore()
@@ -65,20 +67,33 @@ const Payment = () => {
         }
     });
 
+    const { mutate, isPending } = useMutation({
+        mutationFn: (data: any) => checkoutCart(data),
+        onSuccess: (response: any) => {
+            const { paymentUrl } = response.data;
+            Alert.alert("Thông báo", "Bạn hãy chọn OK để thanh toán", [
 
-    const handleCheckout = () => {
+                { text: "OK", onPress: () => Linking.openURL(paymentUrl) },
+            ]);
+        },
+        onError: (err) => {
+            console.error('Checkout error:', err);
+        },
+    });
+
+    const handleCheckout = async () => {
         const orderPad = {
             userId,
             note: note,
             totalAmount,
             shippingFee: shippingFeePrice,
-            promotionCode: "string",
+            promotionCode: itemVoucher.code,
             paymentMethod: 1,
             addressId: selectedAddress.id,
             orderItems: transformedArray
         }
-        console.log('orderPad', orderPad)
-        router.push('/success_payment')
+        await mutate(orderPad)
+        // router.push('/success_payment')
     }
 
     return (

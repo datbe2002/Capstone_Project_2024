@@ -1,17 +1,23 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useUserStore } from '../../app/store/store'
 import OrderComponent from './OrderComponent'
+import MaybeUCanLike from '../../app/MaybeUCanLike'
+import TopThings from './TopThings'
 
+const { height, width } = Dimensions.get('window')
 const MainSection = () => {
     const { userState } = useUserStore()
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.top}>
                 <Text style={styles.nameUser}>Chào, {userState?.fullName}</Text>
             </View>
             <OrderComponent />
-        </View>
+            <TopThings />
+            <MaybeUCanLike mainstading={'menu'} />
+
+        </ScrollView>
     )
 }
 
@@ -19,7 +25,7 @@ export default MainSection
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        height: height,
     },
     top: {
         height: 50,

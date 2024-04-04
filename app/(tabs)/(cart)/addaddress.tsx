@@ -201,7 +201,7 @@ const AddressModal = () => {
                     {errors.street && <Text style={styles.errFunc}>{errors.street}</Text>}
                 </View>
                 <Pressable onPress={validate} style={styles.confirmBtn}>
-                    <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{isPending ? <ActivityIndicator size={25} color={COLORS.primary} /> : 'Hoàn tất'}</Text>
+                    <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{isPending ? <ActivityIndicator size={25} color={COLORS.white} /> : 'Hoàn tất'}</Text>
                 </Pressable>
             </ScrollView>
         </SafeAreaView>
