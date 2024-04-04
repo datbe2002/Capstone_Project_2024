@@ -1,6 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
 import React, { useEffect, useState } from 'react'
-import { Button, Modal, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 import AddressChosen from '../../../components/Address/AddressChosen'
 import ItemCardPayment from '../../../components/Payment/ItemCardPayment'
 import NoteForShop from '../../../components/Payment/NoteForShop'
@@ -11,45 +9,43 @@ import TotalAmountPrice from '../../../components/Payment/TotalAmountPrice'
 import TotalConfirmCheckout from '../../../components/Payment/TotalConfirmCheckout'
 import TotalPriceComponent from '../../../components/Payment/TotalPriceComponent'
 import VoucherChosen from '../../../components/Payment/VoucherChosen'
+import { useQuery } from '@tanstack/react-query'
+import { router } from 'expo-router'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { getAddress } from '../../context/addressApi'
 import { useAddressChange, useAfterVoucher, useOrderItems, useUserIDStore } from '../../store/store'
-import { router } from 'expo-router'
-import AddressModal from './addaddress'
-import { useIsFocused } from '@react-navigation/native'
 
 const Payment = () => {
     const { userId } = useUserIDStore()
-    const { orderItems } = useOrderItems();
+    const { orderItems, setOrderItems } = useOrderItems();
     const { setSelectedAddress, selectedAddress } = useAddressChange()
     const [note, setNote] = useState<string | null>(null)
     const [shippingFeePrice, setShippingFeePrice] = useState<any | null>(null)
     const [order] = useState<any | null>(orderItems.items)
     const { itemVoucher, setItemVoucher } = useAfterVoucher()
-    const [visible, setVisible] = useState<boolean>(false)
     const totalAmount = orderItems.totalQuantityProd
     const totalPrice = orderItems.total
     const totalVoucher = itemVoucher.totalVoucherMoney || 0
-
     const totalPay = totalPrice + shippingFeePrice - totalVoucher
     const getUserAddress = useQuery({
         queryKey: ["address", userId],
         queryFn: () => getAddress(userId),
     });
+    const currAddress = getUserAddress?.data?.data.filter((add: any) => add.isDeleted === false)
 
     useEffect(() => {
         if (getUserAddress?.isSuccess && getUserAddress?.data) {
-            if (getUserAddress?.data?.data?.length > 0) {
-                const data1 = getUserAddress?.data?.data?.find((data1: any) => data1.isDefault === true);
-                setSelectedAddress(data1);
-            } else {
-                setTimeout(() => {
+            setTimeout(() => {
+                if (currAddress.length > 0) {
+                    const data1 = currAddress.find((data1: any) => data1.isDefault === true);
+                    setSelectedAddress(data1);
+                } else {
                     router.push('/addaddress')
-                }, 300)
-            }
+                }
+            }, 300)
         }
     }, [getUserAddress?.isSuccess, getUserAddress?.data?.data]);
 
-    console.log(getUserAddress?.data?.data)
 
     //reset voucher if total price changed
     useEffect(() => {
@@ -68,6 +64,8 @@ const Payment = () => {
             color: item.color
         }
     });
+
+
     const handleCheckout = () => {
         const orderPad = {
             userId,

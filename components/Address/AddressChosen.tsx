@@ -10,7 +10,7 @@ const AddressChosen = ({ addressData }: any) => {
         <View>
             <Pressable onPress={() => router.push('/(tabs)/(cart)/addresspayment')}>
                 <View style={styles.defaultAddressContainer}>
-                    {addressData.recipientName !== null ? <View style={styles.infoDefault}>
+                    {addressData?.recipientName !== null ? <View style={styles.infoDefault}>
                         <Fontisto name="map-marker-alt" size={24} color={COLORS.primary} />
                         <View style={styles.rightContainer}>
                             <Text style={{ fontFamily: 'mon-sb', fontSize: 18 }}>
