@@ -5,26 +5,55 @@ import { transNumberFormatter } from '../Payment/ShippingFee';
 import { Feather } from '@expo/vector-icons';
 
 const { height, width } = Dimensions.get("window");
+interface OrderStatusDetail {
+    message: string;
+    color: string;
+    trans: string;
+}
 
+// Define a type for the map including all possible statuses as keys
+type OrderStatusMap = {
+    [key: number]: OrderStatusDetail;
+    default: OrderStatusDetail;
+};
 const DeliveredCard = ({ item }: any) => {
-    const getOrderStatusMessageSwitch = (status: string) => {
-        switch (status) {
-            case 'Hoàn thành':
-                return 'Đơn hàng đã được giao thành công';
-            case 'Đang giao':
-                return 'Đơn hàng đang được giao';
-            case 'Đang xử lý':
-                return 'Đơn hàng đang được xử lý';
-            case 'Đợi duyệt':
-                return 'Đơn hàng đang đợi duyệt';
-            default:
-                return 'Trạng thái đơn hàng không xác định';
-        }
+    const orderStatusDetails: OrderStatusMap = {
+        1: {
+            message: 'Đơn hàng đang được xử lý',
+            color: '#FFD700',
+            trans: 'Đang xử lý',
+        },
+        4: {
+            message: 'Đơn hàng đang đợi duyệt',
+            color: '#007BFF',
+            trans: 'Đợi duyệt',
+        },
+        5: {
+            message: 'Đơn hàng đang được giao',
+            color: '#FFA500',
+            trans: 'Đang giao',
+        },
+        6: {
+            message: 'Đơn hàng đã được giao thành công',
+            color: '#20AC02',
+            trans: 'Đã vận chuyển',
+        },
+        default: {
+            message: 'Trạng thái đơn hàng không xác định',
+            color: '#FF0000',
+            trans: 'Không xác định',
+        },
     };
+
+    const getStatusDetails = (status: number) => {
+        return orderStatusDetails[status] || orderStatusDetails.default;
+    };
+
+    const { color, message, trans } = getStatusDetails(item.status)
 
     return <View style={styles.mainCard}>
         <View style={styles.status}>
-            <Text style={styles.statusText}>{item.status}</Text>
+            <Text style={styles.statusText}>{trans}</Text>
         </View>
         <View style={styles.card}>
             <View style={styles.imgWrapper}>
@@ -36,9 +65,9 @@ const DeliveredCard = ({ item }: any) => {
             </View>
             <View style={styles.info}>
                 <View style={styles.vertiWrapper}>
-                    <Text style={styles.name}>{item?.items[0]?.name}</Text>
+                    <Text style={styles.name}>{item?.orderItems[0]?.name}</Text>
                     <Text style={styles.description} numberOfLines={2}>
-                        Size: {item?.items[0].size}
+                        Size: {item?.orderItems[0].size}
                     </Text>
                     <View
                         style={[
@@ -54,37 +83,34 @@ const DeliveredCard = ({ item }: any) => {
                             {/* {order?.color} */}
                         </Text>
                         <View
-                            style={{ borderRadius: 50, borderWidth: 1, borderColor: COLORS.darkGray, height: 20, width: 20, backgroundColor: item?.items[0].color }}
+                            style={{ borderRadius: 50, borderWidth: 1, borderColor: COLORS.darkGray, height: 20, width: 20, backgroundColor: item?.orderItems[0].color }}
                         ></View>
                     </View>
                 </View>
                 <View style={styles.horizWrapper}>
                     <Text style={[styles.price, {
                         color: COLORS.primary,
-                    }]}>đ {transNumberFormatter(item?.items[0].price)}</Text>
+                    }]}>đ {transNumberFormatter(item?.orderItems[0].price)}</Text>
                     <View style={styles.quantityWrapper}>
-                        <Text style={styles.price}>x{item?.items[0]?.quantity}</Text>
+                        <Text style={styles.price}>x{item?.orderItems[0]?.quantity}</Text>
                     </View>
                 </View>
             </View>
         </View>
         <View style={styles.midd}>
             <View>
-                <Text style={styles.textTotalProd}>{item.totalQuantityProd} sản phẩm</Text>
+                <Text style={styles.textTotalProd}>{item.totalQuantityProd || 'Chua co'} sản phẩm</Text>
             </View>
             <View>
-                <Text style={styles.textTotalProd}>Thành tiền:<Text style={{ fontFamily: 'mon-b', color: COLORS.primary }}> {transNumberFormatter(item.total)}đ</Text> </Text>
+                <Text style={styles.textTotalProd}>Thành tiền:<Text style={{ fontFamily: 'mon-b', color: COLORS.primary }}> {transNumberFormatter(item.totalAmount)}đ</Text> </Text>
             </View>
         </View>
         <View style={styles.midd}>
             <View style={{ display: 'flex', flexDirection: 'row', gap: 10 }}>
-                <Feather name='truck' size={25} color={"#20AC02"} />
-                <Text style={styles.textConfirm}>
-                    {getOrderStatusMessageSwitch(item.status)}
+                <Feather name='truck' size={25} color={color} />
+                <Text style={[styles.textConfirm, { color: color }]}>
+                    {message}
                 </Text>
-            </View>
-            <View>
-
             </View>
         </View>
     </View>
@@ -92,61 +118,10 @@ const DeliveredCard = ({ item }: any) => {
 
 
 
-const DeliveredList = () => {
-    const data = [{
-        id: 1,
-        items: [
-            {
-                name: 'áo bà ba',
-                color: "#FF9966",
-                price: 130000,
-                quantity: 5,
-                size: "M",
-                defaultImage: "https://i.pinimg.com/564x/48/8f/5c/488f5c68300d3c7ad9182616cf4a5c20.jpg"
-            },
-            {
-                name: 'áo si đa',
-                color: "#FF9966",
-                price: 120000,
-                quantity: 1,
-                size: "M",
-                defaultImage: "https://i.pinimg.com/564x/48/8f/5c/488f5c68300d3c7ad9182616cf4a5c20.jpg"
-            }
-        ],
-        total: 770000,
-        totalQuantityProd: 6,
-        status: 'Hoàn thành'
-    },
-    {
-        id: 2,
-        items: [
-            {
-                name: 'áo si đa',
-                color: "#FF9966",
-                price: 130000,
-                quantity: 5,
-                size: "M",
-                defaultImage: "https://i.pinimg.com/564x/48/8f/5c/488f5c68300d3c7ad9182616cf4a5c20.jpg"
-            },
-            {
-                color: "#FF9966",
-                price: 120000,
-                quantity: 1,
-                size: "M",
-                defaultImage: "https://i.pinimg.com/564x/48/8f/5c/488f5c68300d3c7ad9182616cf4a5c20.jpg"
-            }
-        ],
-        total: 770000,
-        totalQuantityProd: 6,
-        status: 'Hoàn thành'
-    },
-    ]
-
-
-
+const DeliveredList = ({ data }: any) => {
 
     return (
-        <View>
+        <View style={{ marginTop: 10 }}>
             <FlatList
                 data={data}
                 renderItem={({ item }) => <DeliveredCard item={item} />}

@@ -1,20 +1,31 @@
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { router, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, SHADOWS, SIZES } from "../../../../assets";
 import {
   ActivityIndicator,
-  Alert,
   Dimensions,
   Image,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
-import { router, useLocalSearchParams, useRouter } from "expo-router";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS, SHADOWS, SIZES } from "../../../../assets";
+import CustomAlert from "../../../../components/Arlert";
+import Background from "../../../../components/BackGround";
 import Carousel from "../../../../components/Carousel";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
+import ProductCardShort from "../../../../components/Product/ProductCardShort";
+import QuantitySelector from "../../../../components/Product/QuantitySelector";
+import VariantSection from "../../../../components/Product/VariantSelector";
+import { CartData, CartItem } from "../../../../constants/Type";
+import instance from "../../../context/axiosConfig";
 import { addToCart, getProductById } from "../../../context/productsApi";
 import {
   useOrderItems,
@@ -22,18 +33,6 @@ import {
   useUserStore,
   useWardove,
 } from "../../../store/store";
-import { CartData, CartItem, Product } from "../../../../constants/Type";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
-import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
-import VariantSection from "../../../../components/Product/VariantSelector";
-import ProductCardShort from "../../../../components/Product/ProductCardShort";
-import QuantitySelector from "../../../../components/Product/QuantitySelector";
-import CustomAlert from "../../../../components/Arlert";
-import Background from "../../../../components/BackGround";
-import instance from "../../../context/axiosConfig";
 const { height, width } = Dimensions.get("window");
 
 const ProductDetail = () => {
@@ -122,7 +121,7 @@ const ProductDetail = () => {
         source={
           item.imageUrl
             ? { uri: item.imageUrl }
-            : require("../../../../assets/images/default.png")
+            : require(".../../../../assets/images/default.png")
         }
       />
     );
@@ -300,7 +299,7 @@ const ProductDetail = () => {
                 total: obj.price,
                 totalQuantityProd: 1,
               });
-              router.push("/(tabs)/(cart)/payment");
+              router.push("/payment");
             }}
           >
             Mua ngay
@@ -391,7 +390,7 @@ const ProductDetail = () => {
                     total: obj.price * obj.quantity,
                     totalQuantityProd: obj.quantity,
                   });
-                  router.push("/(tabs)/(cart)/payment");
+                  router.push("/payment");
                 }}
               >
                 Mua ngay

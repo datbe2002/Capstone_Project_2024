@@ -1,13 +1,12 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
 import MasonryList from '@react-native-seoul/masonry-list';
-import { FavoriteListCard } from '../components/Favorite/FavoriteListContainer';
 import { useQuery } from '@tanstack/react-query';
-import { getProducts } from './context/productsApi';
-import { useFocusEffect } from 'expo-router';
-import { COLORS } from '../assets';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { getProducts } from '../../app/context/productsApi';
+import { COLORS } from '../../assets';
+import { FavoriteListCard } from './FavoriteListCard';
 
-const MaybeUCanLike = ({ mainstading }: any) => {
+const MaybeUCanLike = () => {
     const handleOpenBottom = () => {
         console.log('open')
     }
@@ -23,17 +22,14 @@ const MaybeUCanLike = ({ mainstading }: any) => {
             setData(queryData.items);
         }
     }, [queryData]);
-    if (data.length < 1) {
-        return <View>
-            <ActivityIndicator size={25} color={COLORS.primary} />
-        </View>;
-    }
     return (
         <View style={styles.container}>
             <View style={styles.mainHeader}>
                 <Text style={styles.mainHeaderText}> Có thể bạn sẽ thích </Text>
             </View>
-            {!isLoading && <View style={{ height: '100%' }}>
+            {isLoading ? <View>
+                <ActivityIndicator size={25} color={COLORS.primary} />
+            </View> : <View style={{ height: '100%' }}>
                 <MasonryList
                     style={{
                         alignSelf: "stretch",

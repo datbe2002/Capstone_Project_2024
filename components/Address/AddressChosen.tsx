@@ -8,7 +8,9 @@ import { ActivityIndicator } from 'react-native';
 const AddressChosen = ({ addressData }: any) => {
     return (
         <View>
-            <Pressable onPress={() => router.push('/(tabs)/(cart)/addresspayment')}>
+            <Pressable onPress={() => {
+                router.push('/addresspayment')
+            }}>
                 <View style={styles.defaultAddressContainer}>
                     {addressData?.recipientName !== null ? <View style={styles.infoDefault}>
                         <Fontisto name="map-marker-alt" size={24} color={COLORS.primary} />

@@ -8,7 +8,7 @@ import { router } from 'expo-router'
 const RenderStatusOrder = ({ name, text, id, value }: any) => {
     return <Pressable style={styles.renderItemContainer} key={id} onPress={() => {
         router.push({
-            pathname: "/(tabs)/(menu)/order",
+            pathname: "/order",
             params: { indexInitial: id },
         })
     }}>
@@ -34,7 +34,10 @@ const OrderComponent = () => {
         <View style={styles.orderContainer}>
             <View style={styles.topCon}>
                 <Text style={styles.textCon}>Đơn hàng của tôi</Text>
-                <Pressable onPress={() => router.push('/(tabs)/(menu)/order')}>
+                <Pressable onPress={() => router.push({
+                    pathname: "/order",
+                    params: { indexInitial: 0 },
+                })}>
                     <Text style={styles.press}>{'Xem tất cả'}</Text>
                 </Pressable>
             </View>

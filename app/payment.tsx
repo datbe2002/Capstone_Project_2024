@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from "react";
-import AddressChosen from "../../../components/Address/AddressChosen";
-import ItemCardPayment from "../../../components/Payment/ItemCardPayment";
-import NoteForShop from "../../../components/Payment/NoteForShop";
-import PaymentMethodChosen from "../../../components/Payment/PaymentMethodChosen";
-import ShippingFee from "../../../components/Payment/ShippingFee";
-import TermPurchase from "../../../components/Payment/TermPurchase";
-import TotalAmountPrice from "../../../components/Payment/TotalAmountPrice";
-import TotalConfirmCheckout from "../../../components/Payment/TotalConfirmCheckout";
-import TotalPriceComponent from "../../../components/Payment/TotalPriceComponent";
-import VoucherChosen from "../../../components/Payment/VoucherChosen";
+import ShippingFee from "../components/Payment/ShippingFee";
+import TermPurchase from "../components/Payment/TermPurchase";
+import TotalAmountPrice from "../components/Payment/TotalAmountPrice";
+import TotalConfirmCheckout from "../components/Payment/TotalConfirmCheckout";
+import TotalPriceComponent from "../components/Payment/TotalPriceComponent";
+import VoucherChosen from "../components/Payment/VoucherChosen";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
-import { getAddress } from "../../context/addressApi";
+import { getAddress } from "./context/addressApi";
 import {
   useAddressChange,
   useAfterVoucher,
   useOrderItems,
   useUserIDStore,
-} from "../../store/store";
-import { checkoutCart } from "../../context/checkoutApi";
+} from "./store/store";
+import { checkoutCart } from "./context/checkoutApi";
 import { Alert } from "react-native";
+import AddressChosen from "../components/Address/AddressChosen";
+import ItemCardPayment from "../components/Payment/ItemCardPayment";
+import NoteForShop from "../components/Payment/NoteForShop";
+import PaymentMethodChosen from "../components/Payment/PaymentMethodChosen";
 
 const Payment = () => {
   const { userId } = useUserIDStore();
@@ -44,16 +44,14 @@ const Payment = () => {
 
   useEffect(() => {
     if (getUserAddress?.isSuccess && getUserAddress?.data) {
-      setTimeout(() => {
-        if (currAddress.length > 0) {
-          const data1 = currAddress.find(
-            (data1: any) => data1.isDefault === true
-          );
-          setSelectedAddress(data1);
-        } else {
-          router.push("/addaddress");
-        }
-      }, 300);
+      if (currAddress.length > 0) {
+        const data1 = currAddress.find(
+          (data1: any) => data1.isDefault === true
+        );
+        setSelectedAddress(data1);
+      } else {
+        router.push("/addaddress");
+      }
     }
   }, [getUserAddress?.isSuccess, getUserAddress?.data?.data]);
 

@@ -25,7 +25,7 @@ const VoucherChosen = ({ totalPrice }: any) => {
 
             </View>
             <Pressable style={styles.voucherBox} onPress={() => router.push({
-                pathname: "/(tabs)/(cart)/voucher",
+                pathname: "/voucher",
                 params: { totalPrice: totalPrice },
             })}>
                 {itemVoucher?.code != null ? <Text style={styles.moneyVoucher}>-{transNumberFormatter(itemVoucher.totalVoucherMoney)}đ</Text> : <Text style={styles.voucherText}>Chọn FTai Voucher</Text>}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
@@ -6,14 +7,15 @@ import {
     View
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { usePostAddress, usePutAddress } from '../../store/store';
-import { COLORS } from '../../../assets';
-import CustomButton from '../../../components/Button';
-import { router } from 'expo-router';
+import { COLORS } from '../assets';
+import CustomButton from '../components/Button';
+import { usePostAddress } from './store/store';
 interface Province {
     label: string
     value: string
 }
+
+
 
 interface District {
     label: string

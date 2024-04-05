@@ -1,15 +1,13 @@
-import { ActivityIndicator, Alert, Keyboard, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { Button } from 'react-native-elements'
-import { router } from 'expo-router'
-import { AntDesign, Ionicons } from '@expo/vector-icons'
-import { COLORS } from '../../../assets'
-import CustomButton from '../../../components/Button'
-import { usePostAddress, useUserStore } from '../../store/store'
-import PhoneInput from 'react-native-phone-number-input'
+import { AntDesign } from '@expo/vector-icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addAddressApi } from '../../context/addressApi'
+import { router } from 'expo-router'
+import React, { useRef, useState } from 'react'
+import { ActivityIndicator, Alert, Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import PhoneInput from 'react-native-phone-number-input'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { COLORS } from '../assets'
+import { addAddressApi } from './context/addressApi'
+import { usePostAddress, useUserStore } from './store/store'
 interface ErrorState {
     recipientName?: string,
     recipientPhone?: string,
@@ -43,9 +41,7 @@ const AddressModal = () => {
                 recipientPhone: null,
                 street: null,
             })
-            setTimeout(() => {
-                router.replace('/(tabs)/(cart)/payment');
-            }, 500)
+            router.back();
         },
         onError: (error) => {
             console.log(error);
@@ -78,7 +74,6 @@ const AddressModal = () => {
     const validate = async () => {
         Keyboard.dismiss();
         let isValid = true;
-        console.log('hi')
 
         if (!addressState.recipientName) {
             handleError('Không được để trống ô này', 'recipientName');
@@ -141,7 +136,7 @@ const AddressModal = () => {
 
 
     const handleAddNewAddress = () => {
-        router.push('/(tabs)/(cart)/addnewaddress')
+        router.push('/addnewaddress')
         handleError(null, 'address')
     }
 

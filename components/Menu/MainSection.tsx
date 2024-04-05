@@ -2,7 +2,7 @@ import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useUserStore } from '../../app/store/store'
 import OrderComponent from './OrderComponent'
-import MaybeUCanLike from '../../app/MaybeUCanLike'
+import MaybeUCanLike from '../Favorite/MaybeUCanLike'
 import TopThings from './TopThings'
 
 const { height, width } = Dimensions.get('window')
@@ -15,7 +15,7 @@ const MainSection = () => {
             </View>
             <OrderComponent />
             <TopThings />
-            <MaybeUCanLike mainstading={'menu'} />
+            <MaybeUCanLike />
 
         </ScrollView>
     )

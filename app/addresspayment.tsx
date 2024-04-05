@@ -2,12 +2,12 @@ import { Dimensions, FlatList, Image, Pressable, ScrollView, StyleSheet, Text, T
 import React, { useState } from 'react'
 import { Feather, Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import { COLORS } from '../../../assets'
-import { useAddressChange, useUserIDStore } from '../../store/store'
-import { useQuery } from '@tanstack/react-query'
-import { getAddress } from '../../context/addressApi'
-import LoadingComponent from '../../../components/LoadingComponent'
+import LoadingComponent from '../components/LoadingComponent'
 import { CheckBox } from 'react-native-elements'
+import { useAddressChange, useUserIDStore } from './store/store'
+import { COLORS } from '../assets'
+import { useQuery } from '@tanstack/react-query'
+import { getAddress } from './context/addressApi'
 
 const { width } = Dimensions.get("window");
 
@@ -61,7 +61,7 @@ const AddressCard = ({ addressUnique, setLoadding }: any) => {
 const ListEmptyAddress = () => {
     return <View>
         <View style={styles.emptyList}>
-            <Image style={styles.imageWL} source={require('../../../assets/images/emptyAddress.png')} />
+            <Image style={styles.imageWL} source={require('../assets/images/emptyAddress.png')} />
             <Text style={{ fontFamily: 'mon', color: COLORS.black, fontSize: 18 }}>Bạn chưa có địa chỉ mặc định</Text>
             <TouchableOpacity style={{ backgroundColor: COLORS.primary, padding: 15, borderRadius: 2 }} >
                 <Text style={{ fontFamily: 'mon-sb', color: COLORS.white, fontSize: 16 }}>Thêm một để có thể đặt hàng ngay!</Text>
@@ -101,7 +101,7 @@ const AddressPaymentList: React.FC<AddressPaymentListProps> = () => {
                 />
 
             </View>
-            {getUserAddress.data.data.length > 0 && <Pressable style={styles.addNewAddress} onPress={() => console.log('add')}>
+            {getUserAddress.data.data.length > 0 && <Pressable style={styles.addNewAddress} onPress={() => router.push('/addaddress')}>
                 <Ionicons name="add-circle-outline" size={28} color={COLORS.primary} />
                 <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.primary }}>Thêm Địa Chỉ Mới</Text>
             </Pressable>}

@@ -1,12 +1,12 @@
 import { Tab, TabView } from '@rneui/themed';
 import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { getVoucher } from './context/voucherApi';
+import { COLORS } from '../assets';
+import AvailableVouchers from '../components/Voucher/AvailableVouchers';
+import UnavailableVoucher from '../components/Voucher/UnavailableVoucher';
 import { StyleSheet } from 'react-native';
-import { COLORS } from '../../../assets';
-import AvailableVouchers from '../../../components/Voucher/AvailableVouchers';
-import UnavailableVoucher from '../../../components/Voucher/UnavailableVoucher';
-import { getVoucher } from '../../context/voucherApi';
 const Voucher = () => {
     const [index, setIndex] = useState(0);
     const { totalPrice } = useLocalSearchParams()

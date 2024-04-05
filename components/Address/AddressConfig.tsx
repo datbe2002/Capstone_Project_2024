@@ -50,7 +50,7 @@ const AddressConfig: React.FC<AddressConfigProps> = ({ address }) => {
                 />
 
             </View>
-            {address.length > 0 && <Pressable style={styles.addNewAddress} onPress={() => console.log('add')}>
+            {address.length > 0 && <Pressable style={styles.addNewAddress} onPress={() => router.push('/addaddress')}>
                 <Ionicons name="add-circle-outline" size={28} color={COLORS.primary} />
                 <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.primary }}>Thêm Địa Chỉ Mới</Text>
             </Pressable>}

@@ -318,7 +318,7 @@ const Cart: React.FC<Props> = ({ }) => {
                     total,
                     totalQuantityProd,
                   });
-                  router.push("/(tabs)/(cart)/payment");
+                  router.push("/payment");
                 }}
                 disabled={selectedItems.length === 0}
               >

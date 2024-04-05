@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CenterSection from '../../../components/Menu/CenterSection';
 import UserSection from '../../../components/Menu/UserSection';
 import VerifyAlert from '../../../components/Setting/VerifyAlert';
-import MaybeUCanLike from '../../MaybeUCanLike';
+import MaybeUCanLike from '../../../components/Favorite/MaybeUCanLike';
 
 export type ActiveProps = 'main' | 'noti' | 'ticket'
 

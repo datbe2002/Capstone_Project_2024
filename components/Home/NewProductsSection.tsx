@@ -4,12 +4,11 @@ import React from "react";
 import {
   Dimensions,
   Image,
-  ListRenderItem,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
 import { Product } from "../../constants/Type";
