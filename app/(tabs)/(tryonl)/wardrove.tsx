@@ -5,24 +5,18 @@ import {
   Image,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, SHADOWS, SIZES } from "../../../assets";
+import { COLORS, SHADOWS } from "../../../assets";
 import Background from "../../../components/BackGround";
 import { useWardove } from "../../store/store";
-import { router } from "expo-router";
 import { Product } from "../../../constants/Type";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getModels, tryOn } from "../../context/wardroveApi";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView,
-  TouchableWithoutFeedback,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 const { height, width } = Dimensions.get("window");
 
 const wardrove = () => {
@@ -34,14 +28,12 @@ const wardrove = () => {
   const mutation = useMutation({
     mutationFn: (data: any) => tryOn(data),
     onSuccess: (data) => {
-      setImageSrc(data);
+      setImageSrc(data.result);
     },
   });
 
   const { wardroveItems, setWardroveItems } = useWardove();
-  const [selectedModel, setSelectedModel] = React.useState<any>(
-    modelsQuery?.data?.data[0] || null
-  );
+  const [selectedModel, setSelectedModel] = React.useState<any>(null);
   const [imageSrc, setImageSrc] = useState<any>(null);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -57,39 +49,31 @@ const wardrove = () => {
 
   const wardroveRenderItem = ({ item }: { item: Product }) => (
     <Pressable
+      style={styles.itemCard}
       onPress={() => {
-        router.push({
-          pathname: "/(tabs)/(home)/product/[id]",
-          params: { id: item.id },
-        });
+        handleChangeImg(item);
       }}
     >
-      <Pressable
-        style={styles.itemCard}
-        onPress={() => {
-          handleChangeImg(item);
-        }}
-      >
-        <View style={[styles.itemImgContainer, SHADOWS.medium]}>
-          <Image
-            style={styles.itemImg}
-            source={
-              item.defaultImage
-                ? { uri: item.defaultImage }
-                : require("../../../assets/images/default.png")
-            }
-          />
+      <View style={[styles.itemImgContainer, SHADOWS.medium]}>
+        <Image
+          style={styles.itemImg}
+          source={
+            item.defaultImage
+              ? { uri: item.defaultImage }
+              : require("../../../assets/images/default.png")
+          }
+        />
+        <View style={styles.removeIcon}>
           <Ionicons
             name="trash-outline"
             size={24}
             color={COLORS.errorColor}
-            style={styles.removeIcon} // Add this
             onPress={() => {
               handleRemoveItem(item);
             }}
           />
         </View>
-      </Pressable>
+      </View>
     </Pressable>
   );
 
@@ -99,36 +83,26 @@ const wardrove = () => {
       link_cloth: item.tryOnImage,
       link_edge: item.edgeImage,
     };
-    // mutation.mutate({
-    //   link_image: "https://firebasestorage.googleapis.com/v0/b/fsvton-18ce5.appspot.com/o/FSVTON%2Ftest_img%2F000143_0.jpg?alt=media&token=7f20f20d-9658-4426-91bf-a8bc98720c53",
-    //   link_cloth: "https://firebasestorage.googleapis.com/v0/b/fsvton-18ce5.appspot.com/o/FSVTON%2Ftest_clothes%2F000028_1.jpg?alt=media&token=7c8c98a3-d17e-4698-bfa0-69fdab723a0c",
-    //   link_edge: "https://firebasestorage.googleapis.com/v0/b/fsvton-18ce5.appspot.com/o/FSVTON%2Ftest_edge%2F000028_1.jpg?alt=media&token=8ba10a17-1fe9-4884-97d4-f9443c16ba37"
-    // })
-    console.log("item ===", item);
-    console.log("obj ===", obj);
+    mutation.mutate(obj);
   };
 
   useEffect(() => {
-    setImageSrc(selectedModel.imageUrl);
+    setSelectedModel(modelsQuery?.data?.data[0]);
+  }, [modelsQuery.isSuccess]);
+
+  useEffect(() => {
+    setImageSrc(selectedModel?.imageUrl);
   }, [selectedModel]);
-  // console.log(imageSrc);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Background imageKey={"i4"}>
+      <Background imageKey={"i5"}>
         <View style={styles.wrapper}>
           <View style={styles.tryon}>
-            <View style={styles.imageWrapper}>
-              {mutation.isPending && <ActivityIndicator />}
+            <View style={[styles.imageWrapper, SHADOWS.medium]}>
               {selectedModel && (
                 <Image
-                  style={[
-                    styles.img,
-                    // {
-                    //   height: 400, width: 200,
-                    //   objectFit: "contain",
-                    // },
-                  ]}
+                  style={[styles.img]}
                   source={
                     imageSrc
                       ? { uri: imageSrc }
@@ -136,7 +110,36 @@ const wardrove = () => {
                   }
                 />
               )}
+              {mutation.isPending && (
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "rgba(255,255,255,0.6)",
+                  }}
+                />
+              )}
+              {mutation.isPending && (
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    backgroundColor: "rgba(255,255,255,0.6)",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <ActivityIndicator size={"large"} />
+                </View>
+              )}
             </View>
+
             {modelsQuery.isSuccess && (
               <Pressable
                 style={[styles.modelSelector, SHADOWS.medium]}
@@ -144,8 +147,13 @@ const wardrove = () => {
               >
                 <Image
                   style={[
-                    { width: 78, height: 78, borderRadius: 8 },
                     styles.img,
+                    {
+                      width: 72,
+                      height: 72,
+                      borderRadius: 8,
+                      objectFit: "scale-down",
+                    },
                   ]}
                   source={
                     selectedModel?.imageUrl
@@ -220,6 +228,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: "transparent",
   },
   tryon: {
     height: height * 0.7,
@@ -237,28 +246,27 @@ const styles = StyleSheet.create({
   img: {
     width: "100%",
     height: "100%",
+    borderRadius: 10,
     objectFit: "cover",
   },
   modelSelector: {
     height: 80,
     width: 80,
-    right: 5,
+    right: 10,
     top: 10,
     padding: 3,
     position: "absolute",
     borderRadius: 10,
     borderWidth: 1,
     borderColor: COLORS.primary,
-    backgroundColor: COLORS.primary,
   },
   products: {
-    paddingBottom: 25,
-    height: 130,
+    height: 110,
     width: width - 20,
-    borderWidth: 1,
-    borderRadius: 10,
+    borderWidth: 0.5,
+    borderRadius: 5,
     backgroundColor: COLORS.inputBackgroundColor,
-    elevation: 2,
+    marginBottom: 20,
   },
 
   itemsList: {
@@ -280,7 +288,7 @@ const styles = StyleSheet.create({
   itemImgContainer: {
     width: width / 4.5,
     height: 85,
-    borderRadius: 7,
+    borderRadius: 9,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
@@ -288,12 +296,22 @@ const styles = StyleSheet.create({
   itemImg: {
     width: width / 4.7,
     height: 80,
-    borderRadius: 9,
-    objectFit: "cover",
+    borderRadius: 7,
+    objectFit: "scale-down",
+    borderWidth: 1,
+    borderColor: COLORS.blue1,
   },
   removeIcon: {
     position: "absolute",
-    top: 5, // Adjust as needed
-    right: 5, // Adjust as needed
+    top: 5,
+    right: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 30,
+    width: 30,
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor: COLORS.blue1,
+    borderRadius: 15,
   },
 });

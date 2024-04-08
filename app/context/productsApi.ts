@@ -11,6 +11,7 @@ export const getProductsFiltered = async (params: FilterParams) => {
       (key) =>
         params[key as keyof FilterParams] !== undefined &&
         params[key as keyof FilterParams] !== null &&
+        params[key as keyof FilterParams] !== "" &&
         params[key as keyof FilterParams] !== "Tất cả"
     )
     .map((key) => `${key}=${params[key as keyof FilterParams]}`)
