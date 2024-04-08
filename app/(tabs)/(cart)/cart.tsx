@@ -25,9 +25,9 @@ import CustomAlert from "../../../components/Arlert";
 
 const { height, width } = Dimensions.get("window");
 
-interface Props { }
+interface Props {}
 
-const Cart: React.FC<Props> = ({ }) => {
+const Cart: React.FC<Props> = ({}) => {
   const [isAdjust, setIsAdjust] = useState(false);
   const [isSelectAll, setSelectAll] = useState(false);
   const { userState } = useUserStore();
@@ -77,8 +77,8 @@ const Cart: React.FC<Props> = ({ }) => {
     // update cart items
     const updatedCartItems = cartItems.map((item) =>
       item.productId === updatedItem.productId &&
-        item.color === updatedItem.color &&
-        item.size === updatedItem.size
+      item.color === updatedItem.color &&
+      item.size === updatedItem.size
         ? updatedItem
         : item
     );
@@ -86,8 +86,8 @@ const Cart: React.FC<Props> = ({ }) => {
     // update selected items
     const updatedSelectedItems = selectedItems.map((item) =>
       item.productId === updatedItem.productId &&
-        item.color === updatedItem.color &&
-        item.size === updatedItem.size
+      item.color === updatedItem.color &&
+      item.size === updatedItem.size
         ? updatedItem
         : item
     );
@@ -165,7 +165,7 @@ const Cart: React.FC<Props> = ({ }) => {
   useEffect(() => {
     setSelectAll(
       cartItems.length > 0 &&
-      cartItems.every((item) => selectedItems.includes(item))
+        cartItems.every((item) => selectedItems.includes(item))
     );
   }, [selectedItems, cartItems]);
 
@@ -212,11 +212,11 @@ const Cart: React.FC<Props> = ({ }) => {
             </Text>
           </Pressable>
         </View>
-
         {/* cart item */}
         {cartQuery.isLoading && <ActivityIndicator size={20} />}
         {cartQuery.isSuccess ? (
           <FlatList
+            style={{ marginBottom: 80 }}
             data={cartItems}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
@@ -235,30 +235,7 @@ const Cart: React.FC<Props> = ({ }) => {
               </View>
             )}
           />
-        ) : // <ScrollView style={{ marginBottom: 80 }}>
-          //   {/* {cartQuery.isLoading ? (
-          //     <ListEmptyComponent />
-          //   ) : (
-          //     <ActivityIndicator />
-          //   )} */}
-          //   {cartItems.map((item: any, index: any) => (
-          //     <View key={index}>
-          //       <ItemCard
-          //         item={item}
-          //         isChecked={selectedItems.some(
-          //           (x) =>
-          //             x.productId === item.productId &&
-          //             x.color === item.color &&
-          //             x.size === item.size
-          //         )}
-          //         handleCheck={() => handleSelected(item)}
-          //         handleQuantityChange={(i) => handleQuantityChange(i)}
-          //       />
-          //     </View>
-          //   ))}
-          // </ScrollView>
-          null}
-
+        ) : null}
         {/* total and check out */}
         <View style={styles.summary}>
           <View style={styles.checkBox}>
