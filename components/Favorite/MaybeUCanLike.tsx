@@ -31,6 +31,7 @@ const MaybeUCanLike = () => {
                 <ActivityIndicator size={25} color={COLORS.primary} />
             </View> : <View style={{ height: '100%' }}>
                 <MasonryList
+                    nestedScrollEnabled
                     style={{
                         alignSelf: "stretch",
                     }}

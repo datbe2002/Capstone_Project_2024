@@ -1,14 +1,11 @@
-import { Button, Keyboard, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import InputV2 from '../../../components/InputV2'
-import { COLORS } from '../../../assets'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { useAuth } from '../../context/auth'
+import { StyleSheet, Text, View } from 'react-native'
 import CustomButton from '../../../components/Button'
 import MyAccount from '../../../components/Setting/MyAccount'
-import SettingAccount from '../../../components/Setting/SettingAccount'
 import SupportAccount from '../../../components/Setting/SupportAccount'
 import VerifyAlert from '../../../components/Setting/VerifyAlert'
+import { useAuth } from '../../context/auth'
+import { COLORS } from '../../../assets'
 
 const Setting = () => {
 
@@ -21,9 +18,12 @@ const Setting = () => {
             </View>
             <View style={styles.componentFull}>
                 <MyAccount />
-                <SettingAccount />
                 <SupportAccount />
-                <CustomButton onPress={signOut} buttonText='Đăng xuất' buttonColor='errorColor' ></CustomButton>
+
+                <CustomButton onPress={signOut} buttonText='Đăng xuất' buttonColor='errorColor' style={{ marginTop: 20 }}></CustomButton>
+                <View style={styles.version}>
+                    <Text style={styles.versionText}>Phiên bản v2.0.0</Text>
+                </View>
             </View>
         </View>
     )
@@ -35,5 +35,14 @@ const styles = StyleSheet.create({
     componentFull: {
         flex: 1,
         marginHorizontal: 10
+    },
+    version: {
+        height: 50,
+        justifyContent: 'center'
+    },
+    versionText: {
+        fontFamily: 'mon-sb',
+        textAlign: 'center',
+        color: COLORS.darkGray
     }
 })

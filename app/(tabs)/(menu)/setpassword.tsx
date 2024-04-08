@@ -129,8 +129,9 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     inputCo: {
-        // justifyContent: "center",
-        // alignItems: "center",
+        marginTop: 20,
+        display: 'flex',
+        gap: 20,
     },
     mainText: {
         fontSize: 18,

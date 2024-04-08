@@ -17,6 +17,7 @@ type OrderStatusMap = {
     default: OrderStatusDetail;
 };
 const DeliveredCard = ({ item }: any) => {
+    const totalQuantity = item.orderItems.reduce((total: number, item: any) => total + item.quantity, 0);
     const orderStatusDetails: OrderStatusMap = {
         1: {
             message: 'Đơn hàng đang được xử lý',
@@ -59,7 +60,12 @@ const DeliveredCard = ({ item }: any) => {
             <View style={styles.imgWrapper}>
                 <Image
                     style={styles.img}
-                    source={require("../../assets/images/default.png")
+                    // source={require("../../assets/images/default.png")
+                    // }
+                    source={
+                        item?.orderItems[0]?.product.defaultImage
+                            ? { uri: item?.orderItems[0]?.product.defaultImage }
+                            : require("../../assets/images/default.png")
                     }
                 />
             </View>
@@ -99,7 +105,7 @@ const DeliveredCard = ({ item }: any) => {
         </View>
         <View style={styles.midd}>
             <View>
-                <Text style={styles.textTotalProd}>{item.totalQuantityProd || 'Chua co'} sản phẩm</Text>
+                <Text style={styles.textTotalProd}>{totalQuantity || 'Chua co'} sản phẩm</Text>
             </View>
             <View>
                 <Text style={styles.textTotalProd}>Thành tiền:<Text style={{ fontFamily: 'mon-b', color: COLORS.primary }}> {transNumberFormatter(item.totalAmount)}đ</Text> </Text>

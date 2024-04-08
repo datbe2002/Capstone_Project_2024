@@ -42,7 +42,7 @@ const OrderComponent = () => {
                 </Pressable>
             </View>
             <FlatList
-                contentContainerStyle={{ display: 'flex', height: 80, gap: 25, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                style={{ display: 'flex', height: 80, gap: 25, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
                 data={data}
                 renderItem={({ item }) => <RenderStatusOrder name={item.name} text={item.text} id={item.id} />}
                 keyExtractor={(item: any) => item.id}>

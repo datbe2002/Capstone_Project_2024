@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     },
     mainText: {
         color: COLORS.black,
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: 'mon-sb',
     },
     secondText: {

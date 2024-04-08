@@ -7,6 +7,7 @@ import { putAddressApi } from '../../app/context/addressApi'
 import { usePutAddress } from '../../app/store/store'
 import { COLORS } from '../../assets'
 import CustomButton from '../Button'
+import { Switch } from 'react-native-elements'
 
 const CustomerInfo = ({ itemParse, handlePress }: any) => {
     const { selectedPutAddress, setSelectedPutAddress } = usePutAddress()
@@ -94,7 +95,7 @@ const CustomerInfo = ({ itemParse, handlePress }: any) => {
             }, 800)
         }
     };
-
+    const [checked, setChecked] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -129,6 +130,15 @@ const CustomerInfo = ({ itemParse, handlePress }: any) => {
                     style={styles.func}
                     onChangeText={(text) => setItemParseState({ ...itemParseState, street: text })}
                     value={itemParseState.street} />
+            </View>
+            <View style={[styles.func, { marginTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+                <Text style={styles.funcText2}>Đặt làm địa chỉ mặc định</Text>
+                <Switch
+                    trackColor={{ false: COLORS.darkGray, true: COLORS.blue1 }}
+                    thumbColor={COLORS.primary}
+                    value={checked}
+                    onValueChange={(value) => setChecked(value)}
+                />
             </View>
             <Pressable style={styles.buttonDelete} onPress={handlePress}>
                 <Text style={styles.deleteText}>Xóa địa chỉ</Text>

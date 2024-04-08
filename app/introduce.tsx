@@ -26,7 +26,7 @@ const IntroducePage = () => {
           style={styles.accountHad}
           onPress={() => router.push("/(auth)/login")}
         >
-          <Text>Tôi đã có tài khoản</Text>
+          <Text style={{ fontFamily: 'mon-sb', fontSize: 18 }}>Tôi đã có tài khoản</Text>
           <AntDesign name="rightcircle" size={24} color={COLORS.primary} />
         </Pressable>
       </View>

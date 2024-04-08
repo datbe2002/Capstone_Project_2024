@@ -8,6 +8,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { usePutAddress } from '../../store/store';
 import { COLORS } from '../../../assets';
 import CustomButton from '../../../components/Button';
+import { router } from 'expo-router';
 interface Province {
     label: string
     value: string
@@ -105,6 +106,7 @@ const EditAddressComponent = () => {
 
     const handleCheck = () => {
         console.log(selectedPutAddress)
+        router.back()
     }
 
     return (

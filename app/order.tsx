@@ -19,14 +19,14 @@ const Order = () => {
     }, [initialIndex]);
 
     const { data } = useQuery({
-        queryKey: ["address"],
+        queryKey: ["order", userId],
         queryFn: () => getOrderByUserId(userId),
         enabled: userId !== null,
     });
-    const pendingData = data.data.filter((fix: any) => fix.status === 1)
-    const waitingData = data.data.filter((fix: any) => fix.status === 4)
-    const deliveringData = data.data.filter((fix: any) => fix.status === 5)
-    const deliveredData = data.data.filter((fix: any) => fix.status === 6)
+    const pendingData = data?.data?.filter((fix: any) => fix.status === 1)
+    const waitingData = data?.data?.filter((fix: any) => fix.status === 4)
+    const deliveringData = data?.data?.filter((fix: any) => fix.status === 5)
+    const deliveredData = data?.data?.filter((fix: any) => fix.status === 6)
 
     return (
         <>
@@ -65,7 +65,7 @@ const Order = () => {
 
             <TabView value={index} onChange={setIndex} >
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList data={data.data} />
+                    <DeliveredList data={data?.data} />
 
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%' }}>

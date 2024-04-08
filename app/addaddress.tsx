@@ -2,7 +2,7 @@ import { AntDesign } from '@expo/vector-icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import React, { useRef, useState } from 'react'
-import { ActivityIndicator, Alert, Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
 import PhoneInput from 'react-native-phone-number-input'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { COLORS } from '../assets'
@@ -129,6 +129,7 @@ const AddressModal = () => {
                 ward: selectedPostAddress.ward,
                 wardCode: selectedPostAddress.wardCode,
                 street: addressState.street,
+                isDefault: checked
             }
             await mutate(dataPost)
         }
@@ -139,6 +140,7 @@ const AddressModal = () => {
         router.push('/addnewaddress')
         handleError(null, 'address')
     }
+    const [checked, setChecked] = useState(false);
 
     return (
         <SafeAreaView style={styles.modalComponent}>
@@ -194,6 +196,16 @@ const AddressModal = () => {
                         onFocus={() => handleError(null, 'street')}
                         value={addressState.street} />
                     {errors.street && <Text style={styles.errFunc}>{errors.street}</Text>}
+                </View>
+
+                <View style={[styles.func, { marginTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}>
+                    <Text style={styles.funcText2}>Đặt làm địa chỉ mặc định</Text>
+                    <Switch
+                        trackColor={{ false: COLORS.darkGray, true: COLORS.blue1 }}
+                        thumbColor={COLORS.primary}
+                        value={checked}
+                        onValueChange={(value) => setChecked(value)}
+                    />
                 </View>
                 <Pressable onPress={validate} style={styles.confirmBtn}>
                     <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{isPending ? <ActivityIndicator size={25} color={COLORS.white} /> : 'Hoàn tất'}</Text>

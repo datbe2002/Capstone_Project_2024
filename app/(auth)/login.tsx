@@ -1,5 +1,6 @@
 import {
   AntDesign,
+  FontAwesome5,
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
@@ -8,12 +9,13 @@ import {
   Dimensions,
   Keyboard,
   KeyboardAvoidingView,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { COLORS } from "../../assets";
+import { COLORS, SIZES } from "../../assets";
 import CustomButton from "../../components/Button";
 import InputV2 from "../../components/InputV2";
 import SpaceBet from "../../components/SpaceBet";
@@ -36,6 +38,7 @@ import { useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
 import { ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { UserData } from "../../constants/types/normal";
+import Background from "../../components/BackGround";
 
 GoogleSignin.configure({
   webClientId:
@@ -97,114 +100,133 @@ const LoginPage = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={-30}
-      style={styles.loginContainer}
-    >
-      {loading ? (
-        <View style={styles.activityLoading}>
-          <ActivityIndicator
-            color={COLORS.primary}
-            size={50}
-          ></ActivityIndicator>
-        </View>
-      ) : (
-        <View style={styles.loginForm}>
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>Đăng nhập</Text>
-            <Text style={styles.des}>Chào mừng trở lại!</Text>
-            <Text style={styles.des}>Hãy bắt đầu mua sắm nào.</Text>
+    <Background imageKey="i5">
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={-30}
+        style={styles.loginContainer}
+      >
+        {loading ? (
+          <View style={styles.activityLoading}>
+            <ActivityIndicator
+              color={COLORS.primary}
+              size={50}
+            ></ActivityIndicator>
           </View>
-          <View style={styles.inputCo}>
-            <InputV2
-              onChangeText={(text) => handleOnchange(text, "email")}
-              onFocus={() => handleError(null, "email")}
-              error={errors.email}
-              placeholder="Email"
-              label="Email"
-              iconPlace={
-                <MaterialCommunityIcons
-                  name="email-outline"
-                  size={24}
-                  color={COLORS.black}
-                />
-              }
-            />
-            <SpaceBet height={10} />
+        ) : (
+          <View style={styles.loginForm}>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>Đăng nhập</Text>
+              <Text style={styles.des}>Chào mừng trở lại!</Text>
+              <Text style={styles.des}>Hãy bắt đầu mua sắm nào.</Text>
+            </View>
+            <View style={styles.inputCo}>
+              <InputV2
+                onChangeText={(text) => handleOnchange(text, "email")}
+                onFocus={() => handleError(null, "email")}
+                error={errors.email}
+                placeholder="Email"
+                label="Email"
+                iconPlace={
+                  <MaterialCommunityIcons
+                    name="email-outline"
+                    size={24}
+                    color={COLORS.black}
+                  />
+                }
+              />
+              <SpaceBet height={10} />
 
-            <InputV2
-              onChangeText={(text) => handleOnchange(text, "password")}
-              onFocus={() => handleError(null, "password")}
-              error={errors.password}
-              placeholder="Mật khẩu"
-              password
-              label="Mật khẩu"
-              iconPlace={
-                <MaterialCommunityIcons
-                  name="lock-outline"
-                  size={24}
-                  color={COLORS.black}
-                />
-              }
-            />
-            <SpaceBet height={20} />
-            <CustomButton
-              buttonText="Đăng nhập"
-              style={{ width: "100%" }}
-              onPress={validate}
-            />
-            <SpaceBet height={20} />
-            <CustomButton
-              buttonText="Đăng nhập với Google"
-              buttonColor="secondary"
-              style={{ width: "100%" }}
-              onPress={() =>
-                onGoogleButtonPress()
-                  .then((result) => {
-                    console.log(result);
-                    setLoadingState(true);
-                    const { uid, email, displayName, photoURL } = result.user;
-                    instance
-                      .post(`/api/auth/login-with-google?userId=${uid}`, {
-                        email: email,
-                        name: displayName,
-                        imageUrl: photoURL,
-                      })
-                      .then(async (response) => {
-                        const token = response.data.data.accessToken;
-                        const decoded = decodeJWT(token);
-                        const userID = decoded.UserId;
+              <InputV2
+                onChangeText={(text) => handleOnchange(text, "password")}
+                onFocus={() => handleError(null, "password")}
+                error={errors.password}
+                placeholder="Mật khẩu"
+                password
+                label="Mật khẩu"
+                iconPlace={
+                  <MaterialCommunityIcons
+                    name="lock-outline"
+                    size={24}
+                    color={COLORS.black}
+                  />
+                }
+              />
+              <SpaceBet height={20} />
+              <CustomButton
+                buttonText="Đăng nhập"
+                style={{ width: "100%" }}
+                onPress={validate}
+              />
+              <SpaceBet height={20} />
+              <Pressable style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 10,
+                borderRadius: 16,
+                minHeight: 60,
+                minWidth: 120,
+                paddingHorizontal: 10,
+                borderWidth: 1,
+                borderColor: COLORS.darkGray
+              }}
+                onPress={() =>
+                  onGoogleButtonPress()
+                    .then((result) => {
+                      console.log(result);
+                      setLoadingState(true);
+                      const { uid, email, displayName, photoURL } = result.user;
+                      instance
+                        .post(`/api/auth/login-with-google?userId=${uid}`, {
+                          email: email,
+                          name: displayName,
+                          imageUrl: photoURL,
+                        })
+                        .then(async (response) => {
+                          const token = response.data.data.accessToken;
+                          const decoded = decodeJWT(token);
+                          const userID = decoded.UserId;
 
-                        const secondRes = await instance.get(
-                          `/api/user/profile/${userID}`
-                        );
-                        const userData = secondRes.data.data;
-                        setUserId(userID);
-                        setLoadingState(false);
-                        setUserState(userData);
-                        setUserAuthToken(token);
-                      })
-                      .catch((apiError) => {
-                        console.error("API call failed:", apiError);
-                      });
-                  })
-                  .catch((e) => {
-                    console.log(e);
-                  })
-              }
-            />
-            <SpaceBet height={20} />
-            <TouchableOpacity
-              style={styles.bottomTextContainer}
-              onPress={() => router.push("/(auth)/register")}
-            >
-              <Text style={styles.bottomText}>Chưa có tài khoản ? Tạo mới</Text>
-            </TouchableOpacity>
+                          const secondRes = await instance.get(
+                            `/api/user/profile/${userID}`
+                          );
+                          const userData = secondRes.data.data;
+                          setUserId(userID);
+                          setLoadingState(false);
+                          setUserState(userData);
+                          setUserAuthToken(token);
+                        })
+                        .catch((apiError) => {
+                          console.error("API call failed:", apiError);
+                        });
+                    })
+                    .catch((e) => {
+                      console.log(e);
+                    })
+                }
+              >
+                <FontAwesome5 name="google" size={24} color="black" />
+                <Text style={{
+                  fontSize: SIZES.large,
+                  fontFamily: "mon-sb",
+                  color: COLORS.black,
+                  textAlign: "center",
+                }}>Đăng nhập với Google</Text>
+              </Pressable>
+              <SpaceBet height={20} />
+              <TouchableOpacity
+                style={styles.bottomTextContainer}
+                onPress={() => router.push("/(auth)/register")}
+              >
+                <Text style={styles.bottomText}>Chưa có tài khoản ? Tạo mới</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      )}
-    </KeyboardAvoidingView>
+        )}
+      </KeyboardAvoidingView>
+    </Background>
   );
 };
 
@@ -215,7 +237,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 20,
     justifyContent: "flex-end",
-    backgroundColor: "white",
+    backgroundColor: 'transparent',
     alignItems: "center",
   },
   activityLoading: {
