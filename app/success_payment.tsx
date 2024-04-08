@@ -18,32 +18,34 @@ const SuccessPayment = () => {
     }
 
     return (
-        <View style={styles.container}>
-            {/* <Button title='check url' onPress={handleCheckUrl} /> */}
-            <View style={styles.main3}>
-                <View style={styles.main2}>
-                    <View style={styles.main}>
-                        <AntDesign name="checkcircle" size={100} color={"#2CD076"} />
+        <Background imageKey="i3">
+            <View style={styles.container}>
+                {/* <Button title='check url' onPress={handleCheckUrl} /> */}
+                <View style={styles.main3}>
+                    <View style={styles.main2}>
+                        <View style={styles.main}>
+                            <AntDesign name="checkcircle" size={100} color={"#2CD076"} />
+                        </View>
                     </View>
                 </View>
-            </View>
-            <View style={styles.box}>
+                <View style={styles.box}>
 
-                <Text style={styles.successText}>Thanh toán thành công</Text>
-                <Text style={styles.addText}>Cảm ơn quý khách đã tin tưởng</Text>
-                <View style={styles.information}>
-                    <View style={styles.line1}>
-                        <Text style={styles.leftText}>Tổng thanh toán: </Text>
-                        <Text style={styles.rightText}>{transNumberFormatter(180000)}đ </Text>
+                    <Text style={styles.successText}>Thanh toán thành công</Text>
+                    <Text style={styles.addText}>Cảm ơn quý khách đã tin tưởng</Text>
+                    <View style={styles.information}>
+                        <View style={styles.line1}>
+                            <Text style={styles.leftText}>Tổng thanh toán: </Text>
+                            <Text style={styles.rightText}>{transNumberFormatter(180000)}đ </Text>
+                        </View>
+                        <View style={styles.line1}>
+                            <Text style={styles.leftText}>Thanh toán bằng: </Text>
+                            <Text style={styles.rightText}>Zalo Pay </Text>
+                        </View>
                     </View>
-                    <View style={styles.line1}>
-                        <Text style={styles.leftText}>Thanh toán bằng: </Text>
-                        <Text style={styles.rightText}>Zalo Pay </Text>
-                    </View>
+                    <CustomButton buttonText={"Trở về trang chủ"} onPress={() => router.replace('/(tabs)/(home)/homepage')} />
                 </View>
-                <CustomButton buttonText={"Trở về trang chủ"} onPress={() => router.replace('/(tabs)/(home)/homepage')} />
             </View>
-        </View>
+        </Background>
     )
 }
 
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: COLORS.primary
+        backgroundColor: 'transparent',
     },
     main: {
         backgroundColor: COLORS.white,

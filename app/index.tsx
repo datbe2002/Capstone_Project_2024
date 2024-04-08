@@ -4,7 +4,7 @@ import { Redirect, Stack } from 'expo-router'
 
 const First = () => {
     return (
-        <Redirect href={'/success_payment'} />
+        <Redirect href={'/introduce'} />
     )
 }
 
