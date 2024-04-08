@@ -110,7 +110,7 @@ const AddressComponent = () => {
     }
     return (
         <View style={styles.container}>
-            <View style={{ backgroundColor: '#fff', borderRadius: 15 }}>
+            <View style={{ backgroundColor: 'transparent', borderRadius: 15 }}>
                 <Dropdown
                     style={[styles.dropdown, isFocusProv && { borderColor: COLORS.black }]}
                     placeholderStyle={styles.placeholderStyle}

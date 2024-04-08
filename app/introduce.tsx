@@ -16,15 +16,14 @@ const IntroducePage = () => {
           <Text style={styles.shopName}>FTAI</Text>
         </View>
         <View style={styles.textComponent}>
-          {/* <Text style={styles.introduceText}>Beautiful eCommerce UI Kit for your online store</Text> */}
         </View>
         <CustomButton
           buttonText="Bắt đầu."
-          onPress={() => router.push("/(auth)/register")}
+          onPress={() => router.replace("/(auth)/register")}
         />
         <Pressable
           style={styles.accountHad}
-          onPress={() => router.push("/(auth)/login")}
+          onPress={() => router.replace("/(auth)/login")}
         >
           <Text style={{ fontFamily: 'mon-sb', fontSize: 18 }}>Tôi đã có tài khoản</Text>
           <AntDesign name="rightcircle" size={24} color={COLORS.primary} />

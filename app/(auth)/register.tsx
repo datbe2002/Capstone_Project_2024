@@ -365,7 +365,7 @@ const RegisterPage = () => {
                                     fontFamily: "mon-sb",
                                     color: COLORS.black,
                                     textAlign: "center",
-                                }}>Đăng nhập với Google</Text>
+                                }}>Đăng kí với Google</Text>
                             </Pressable>
                             <SpaceBet height={20} />
                             <TouchableOpacity style={styles.bottomTextContainer} onPress={() => router.replace('/(auth)/login')}>
@@ -459,6 +459,7 @@ const styles = StyleSheet.create({
     },
     containerStyle: {
         width: '100%',
+        backgroundColor: 'transparent',
     },
     acceptTerm: {
         justifyContent: 'center',

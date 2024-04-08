@@ -1,8 +1,9 @@
-import { Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { COLORS, SIZES } from '../../assets'
 import { transNumberFormatter } from '../Payment/ShippingFee';
-import { Feather } from '@expo/vector-icons';
+import { Feather, Fontisto } from '@expo/vector-icons';
+import EmptyComponentCustom from '../EmptyComponentCustom';
 
 const { height, width } = Dimensions.get("window");
 interface OrderStatusDetail {
@@ -86,7 +87,6 @@ const DeliveredCard = ({ item }: any) => {
                     >
                         <Text style={[styles.description, { width: "auto" }]}>
                             Màu:
-                            {/* {order?.color} */}
                         </Text>
                         <View
                             style={{ borderRadius: 50, borderWidth: 1, borderColor: COLORS.darkGray, height: 20, width: 20, backgroundColor: item?.orderItems[0].color }}
@@ -124,15 +124,23 @@ const DeliveredCard = ({ item }: any) => {
 
 
 
-const DeliveredList = ({ data }: any) => {
+const DeliveredList = ({ data, loading }: any) => {
 
     return (
         <View style={{ marginTop: 10 }}>
-            <FlatList
-                data={data}
-                renderItem={({ item }) => <DeliveredCard item={item} />}
-                keyExtractor={(item: any) => item.id}
-            />
+            {loading ? <View style={{
+                height: height, justifyContent: 'center', alignItems: 'center'
+            }}>
+                <ActivityIndicator color={COLORS.primary} size={30} />
+            </View> :
+                <FlatList
+                    ListEmptyComponent={<EmptyComponentCustom icon={<Fontisto name="justify" size={35} color={COLORS.white} />} text={'Bạn chưa có đơn hàng nào'} />}
+                    data={data}
+                    renderItem={({ item }) => <DeliveredCard item={item} />}
+                    keyExtractor={(item: any) => item.id}
+                />
+            }
+
         </View>
     )
 }

@@ -1,9 +1,11 @@
 import React from 'react'
-import { Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { COLORS } from '../../../assets'
 import CustomButton from '../../../components/Button'
 import InputV2 from '../../../components/InputV2'
 import SpaceBet from '../../../components/SpaceBet'
+import { useUserStore } from '../../store/store'
+import useChangePassword from '../../context/changePasswordMutation'
 const SetPassword = () => {
 
     interface ErrorState {
@@ -27,7 +29,9 @@ const SetPassword = () => {
         setErrors(prevState => ({ ...prevState, [input]: error }));
     };
 
-    const validate = () => {
+    const { userState } = useUserStore()
+    const { changePassword, changePasswordPending } = useChangePassword()
+    const validate = async () => {
         Keyboard.dismiss();
         let isValid = true;
 
@@ -57,7 +61,13 @@ const SetPassword = () => {
 
 
         if (isValid) {
-            //   loginTest({ test: inputs?.user });
+            const dataToPass = {
+                oldPassword: inputs.curPassword,
+                newPassword: inputs.newPassword,
+                confirmPassword: inputs.retypeNewPassword,
+                userId: userState?.id,
+            }
+            await changePassword(dataToPass)
         }
     };
 
@@ -99,7 +109,7 @@ const SetPassword = () => {
                     <SpaceBet height={30} />
 
                     <CustomButton
-                        buttonText="Đổi mật khẩu"
+                        buttonText={changePasswordPending ? <ActivityIndicator color={COLORS.white} size={25} /> : "Đổi mật khẩu"}
                         style={{ width: "100%" }}
                         onPress={validate}
                     />
