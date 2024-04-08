@@ -61,6 +61,8 @@ function RootLayoutNav() {
       <Stack.Screen name="success_payment" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/register" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)/forgot_password" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)/change_password" options={{ headerShown: false }} />
       <Stack.Screen name="payment" options={{
         headerShown: true,
         title: 'Thanh toán',

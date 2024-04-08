@@ -2,20 +2,16 @@ import { useMutation } from "@tanstack/react-query"
 import { Alert } from "react-native"
 import instance from "./axiosConfig"
 import { router } from "expo-router"
-
-export interface VerificationConfig {
-    code: number | null,
-    email: string | null
-}
+import { VerificationConfig } from "./verifyCodeMutation"
 
 const verifyCodeQuery = async (data: VerificationConfig) => {
-    const emails = String(data.email)
+    const email = String(data.email)
     const codes = data.code
-    const encodedEmail = encodeURIComponent(emails);
+    const encodedEmail = encodeURIComponent(email);
     try {
-        const response = await instance.post(`/api/auth/verify-email?email=${encodedEmail}&code=${codes}`)
+        const response = await instance.post(`/api/auth/verify-code?email=${encodedEmail}&code=${codes}`)
         if (response.status === 200) {
-            return { msg: 'Xác thực thành công' }
+            return { msg: 'Xác thực thành công', email: email }
         } else {
             throw new Error('Có lỗi khi xác thực')
         }
@@ -29,13 +25,14 @@ const verifyCodeQuery = async (data: VerificationConfig) => {
     }
 }
 
-function useVerifyCodeHook() {
+function useVerifyPasswordCodeHook() {
     const verifyCode = useMutation({
         mutationFn: verifyCodeQuery,
         onSuccess: (res) => {
-            Alert.alert('Thành công', res.msg, [
-                { text: 'OK', onPress: () => router.replace('/(auth)/login') },
-            ])
+            router.push({
+                pathname: '/(auth)/change_password',
+                params: { email: res.email }
+            })
         },
         onError: (error) => {
             Alert.alert('Lỗi', String(error))
@@ -43,9 +40,9 @@ function useVerifyCodeHook() {
     })
 
     return {
-        verify: verifyCode.mutate,
-        isVerifyLoading: verifyCode.isPending,
+        verifyPasswordCode: verifyCode.mutate,
+        isVerifyPasswordCodePending: verifyCode.isPending,
     }
 }
 
-export default useVerifyCodeHook
+export default useVerifyPasswordCodeHook

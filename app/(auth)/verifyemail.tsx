@@ -50,12 +50,9 @@ const VerifyEmail = () => {
                 <Text style={styles.explainText}>{status ? 'Chúng tôi đã gửi mã code 4 số trong email của bạn' : 'Đang gửi...'}</Text>
             </View>
 
-
-            {/* <Text style={styles.title}>Verification</Text> */}
             <CodeField
                 ref={ref}
                 {...props}
-                // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
                 value={value}
                 onChangeText={setValue}
                 cellCount={CELL_COUNT}
@@ -71,7 +68,7 @@ const VerifyEmail = () => {
                     </Text>
                 )}
             />
-            <CustomButton buttonText={'Gửi'} style={{ paddingHorizontal: 150, marginTop: 50 }} onPress={onSubmitCode} />
+            <CustomButton buttonText={isVerifyLoading ? 'Đang xác thực...' : 'Gửi'} style={{ paddingHorizontal: 150, marginTop: 50 }} onPress={onSubmitCode} />
         </SafeAreaView>
     )
 }

@@ -1,10 +1,8 @@
 import {
-  AntDesign,
   FontAwesome5,
-  Ionicons,
-  MaterialCommunityIcons,
+  MaterialCommunityIcons
 } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 import {
   Dimensions,
   Keyboard,
@@ -26,19 +24,16 @@ interface ErrorState {
   password?: string;
 }
 
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
-import instance from "../context/axiosConfig";
-import { setUserAuthToken } from "../context/authService";
-import { useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
-import { ActivityIndicator } from "react-native";
+import {
+  GoogleSignin
+} from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
-import { UserData } from "../../constants/types/normal";
+import { ActivityIndicator } from "react-native";
 import Background from "../../components/BackGround";
+import { setUserAuthToken } from "../context/authService";
+import instance from "../context/axiosConfig";
+import { useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
 
 GoogleSignin.configure({
   webClientId:
@@ -152,7 +147,11 @@ const LoginPage = () => {
                   />
                 }
               />
-              <SpaceBet height={20} />
+              <SpaceBet height={10} />
+              <Pressable style={styles.forgotContainer} onPress={() => router.push('/(auth)/forgot_password')}>
+                <Text style={styles.bottomText}>Quên mật khẩu</Text>
+              </Pressable>
+              <SpaceBet height={10} />
               <CustomButton
                 buttonText="Đăng nhập"
                 style={{ width: "100%" }}
@@ -271,6 +270,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.inputBackgroundColor,
     borderColor: COLORS.inputBackgroundColor,
     elevation: 2,
+  },
+  forgotContainer: {
+    alignItems: 'flex-end'
   },
   inputCo: {
     backgroundColor: "transparent",
