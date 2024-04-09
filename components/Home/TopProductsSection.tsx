@@ -35,7 +35,7 @@ const TopProductsSection: React.FC<TopProductsProps> = ({
             key={index}
             onPress={() => {
               router.push({
-                pathname: "/(tabs)/(home)/product/[id]",
+                pathname: "/product/[id]",
                 params: { id: item.id },
               });
             }}

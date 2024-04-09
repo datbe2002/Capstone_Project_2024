@@ -15,25 +15,25 @@ import {
   View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, SHADOWS, SIZES } from "../../../../assets";
-import CustomAlert from "../../../../components/Arlert";
-import Background from "../../../../components/BackGround";
-import Carousel from "../../../../components/Carousel";
-import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
-import ProductCardShort from "../../../../components/Product/ProductCardShort";
-import QuantitySelector from "../../../../components/Product/QuantitySelector";
-import VariantSection from "../../../../components/Product/VariantSelector";
-import { CartData, CartItem } from "../../../../constants/Type";
-import instance from "../../../context/axiosConfig";
-import { addToCart, getProductById } from "../../../context/productsApi";
+import CustomAlert from "../../components/Arlert";
+import Background from "../../components/BackGround";
+import Carousel from "../../components/Carousel";
+import FavoriteLogic from "../../components/Home/FavoriteLogic";
+import ProductCardShort from "../../components/Product/ProductCardShort";
+import QuantitySelector from "../../components/Product/QuantitySelector";
+import VariantSection from "../../components/Product/VariantSelector";
+import { CartData, CartItem } from "../../constants/Type";
+import instance from "../context/axiosConfig";
+import { addToCart, getProductById } from "../context/productsApi";
 import {
   useOrderItems,
   useUserIDStore,
   useUserStore,
   useWardove,
-} from "../../../store/store";
-import FeedbackSection from "../../../../components/Home/FeedbackSection";
+} from "../store/store";
+import FeedbackSection from "../../components/Home/FeedbackSection";
 import { ScrollView } from "react-native-virtualized-view";
+import { COLORS, SHADOWS, SIZES } from "../../assets";
 const { height, width } = Dimensions.get("window");
 
 const ProductDetail = () => {
@@ -123,7 +123,7 @@ const ProductDetail = () => {
         source={
           item.imageUrl
             ? { uri: item.imageUrl }
-            : require("../../../../assets/images/default.png")
+            : require("../../assets/images/default.png")
         }
       />
     );

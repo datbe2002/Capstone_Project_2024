@@ -22,8 +22,8 @@ export const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index,
     return (
 
         <Pressable
-            onPress={() => router.replace({
-                pathname: "/(tabs)/(home)/product/[id]",
+            onPress={() => router.push({
+                pathname: "/product/[id]",
                 params: { id: item.id },
             })}
             style={{

@@ -49,7 +49,7 @@ const NewProductSection: React.FC<NewProductProps> = ({
             key={index}
             onPress={() => {
               router.push({
-                pathname: "/(tabs)/(home)/product/[id]",
+                pathname: "/product/[id]",
                 params: { id: item.id },
               });
             }}

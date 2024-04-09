@@ -154,6 +154,10 @@ function RootLayoutNav() {
           headerTintColor: COLORS.primary,
         }}
       />
+      <Stack.Screen
+        name="product/[id]"
+        options={{ headerShown: false }}
+      />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );
