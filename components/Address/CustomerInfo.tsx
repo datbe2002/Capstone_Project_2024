@@ -10,6 +10,7 @@ import CustomButton from '../Button'
 import { Switch } from 'react-native-elements'
 
 const CustomerInfo = ({ itemParse, handlePress }: any) => {
+    console.log('itemParse', itemParse)
     const { selectedPutAddress, setSelectedPutAddress } = usePutAddress()
     const [itemParseState, setItemParseState] = useState(itemParse)
     const [loadingWait, setLoadingWait] = useState<boolean>(false)
@@ -80,9 +81,10 @@ const CustomerInfo = ({ itemParse, handlePress }: any) => {
         ward: selectedPutAddress.ward || itemParse.ward,
         wardCode: selectedPutAddress.wardCode || itemParse.wardCode,
         street: itemParseState.street,
-        isDefault: itemParse.isDefault,
+        isDefault: itemParseState.isDefault,
     }
     const handleSubmit = async () => {
+        console.log(putAddress)
         if (hasFormChanged()) {
             console.log("Changes detected, calling API...");
             await mutate(putAddress)
@@ -136,8 +138,8 @@ const CustomerInfo = ({ itemParse, handlePress }: any) => {
                 <Switch
                     trackColor={{ false: COLORS.darkGray, true: COLORS.blue1 }}
                     thumbColor={COLORS.primary}
-                    value={checked}
-                    onValueChange={(value) => setChecked(value)}
+                    value={itemParseState.isDefault}
+                    onValueChange={(value) => setItemParseState({ ...itemParseState, isDefault: value })}
                 />
             </View>
             <Pressable style={styles.buttonDelete} onPress={handlePress}>

@@ -1,9 +1,10 @@
-import { ActivityIndicator, Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Dimensions, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { COLORS, SIZES } from '../../assets'
 import { transNumberFormatter } from '../Payment/ShippingFee';
 import { Feather, Fontisto } from '@expo/vector-icons';
 import EmptyComponentCustom from '../EmptyComponentCustom';
+import { router } from 'expo-router';
 
 const { height, width } = Dimensions.get("window");
 interface OrderStatusDetail {
@@ -18,7 +19,7 @@ type OrderStatusMap = {
     default: OrderStatusDetail;
 };
 const DeliveredCard = ({ item }: any) => {
-    const totalQuantity = item.orderItems.reduce((total: number, item: any) => total + item.quantity, 0);
+    const totalQuantity = item?.orderItems?.reduce((total: number, item: any) => total + item.quantity, 0);
     const orderStatusDetails: OrderStatusMap = {
         1: {
             message: 'Đơn hàng đang được xử lý',
@@ -53,73 +54,75 @@ const DeliveredCard = ({ item }: any) => {
 
     const { color, message, trans } = getStatusDetails(item.status)
 
-    return <View style={styles.mainCard}>
-        <View style={styles.status}>
-            <Text style={styles.statusText}>{trans}</Text>
-        </View>
-        <View style={styles.card}>
-            <View style={styles.imgWrapper}>
-                <Image
-                    style={styles.img}
-                    // source={require("../../assets/images/default.png")
-                    // }
-                    source={
-                        item?.orderItems[0]?.product.defaultImage
-                            ? { uri: item?.orderItems[0]?.product.defaultImage }
-                            : require("../../assets/images/default.png")
-                    }
-                />
+    return (
+        <Pressable style={styles.mainCard} onPress={() => router.push({
+            pathname: '/order_detail',
+            params: { orderId: item.id }
+        })}>
+            <View style={styles.status}>
+                <Text style={styles.statusText}>{trans}</Text>
             </View>
-            <View style={styles.info}>
-                <View style={styles.vertiWrapper}>
-                    <Text style={styles.name}>{item?.orderItems[0]?.name}</Text>
-                    <Text style={styles.description} numberOfLines={2}>
-                        Size: {item?.orderItems[0].size}
-                    </Text>
-                    <View
-                        style={[
-                            styles.horizWrapper,
-                            {
-                                width: "100%",
-                                justifyContent: "flex-start",
-                            },
-                        ]}
-                    >
-                        <Text style={[styles.description, { width: "auto" }]}>
-                            Màu:
+            <View style={styles.card}>
+                <View style={styles.imgWrapper}>
+                    <Image
+                        style={styles.img}
+                        source={
+                            item?.orderItems[0]?.product.defaultImage
+                                ? { uri: item?.orderItems[0]?.product.defaultImage }
+                                : require("../../assets/images/default.png")
+                        }
+                    />
+                </View>
+                <View style={styles.info}>
+                    <View style={styles.vertiWrapper}>
+                        <Text style={styles.name}>{item?.orderItems[0]?.name}</Text>
+                        <Text style={styles.description} numberOfLines={2}>
+                            Size: {item?.orderItems[0].size}
                         </Text>
                         <View
-                            style={{ borderRadius: 50, borderWidth: 1, borderColor: COLORS.darkGray, height: 20, width: 20, backgroundColor: item?.orderItems[0].color }}
-                        ></View>
+                            style={[
+                                styles.horizWrapper,
+                                {
+                                    width: "100%",
+                                    justifyContent: "flex-start",
+                                },
+                            ]}
+                        >
+                            <Text style={[styles.description, { width: "auto" }]}>
+                                Màu:
+                            </Text>
+                            <View
+                                style={{ borderRadius: 50, borderWidth: 1, borderColor: COLORS.darkGray, height: 20, width: 20, backgroundColor: item?.orderItems[0].color }}
+                            ></View>
+                        </View>
+                    </View>
+                    <View style={styles.horizWrapper}>
+                        <Text style={[styles.price, {
+                            color: COLORS.primary,
+                        }]}>đ {transNumberFormatter(item?.orderItems[0].price)}</Text>
+                        <View style={styles.quantityWrapper}>
+                            <Text style={styles.price}>x{item?.orderItems[0]?.quantity}</Text>
+                        </View>
                     </View>
                 </View>
-                <View style={styles.horizWrapper}>
-                    <Text style={[styles.price, {
-                        color: COLORS.primary,
-                    }]}>đ {transNumberFormatter(item?.orderItems[0].price)}</Text>
-                    <View style={styles.quantityWrapper}>
-                        <Text style={styles.price}>x{item?.orderItems[0]?.quantity}</Text>
-                    </View>
+            </View>
+            <View style={styles.midd}>
+                <View>
+                    <Text style={styles.textTotalProd}>{totalQuantity || 'Chua co'} sản phẩm</Text>
+                </View>
+                <View>
+                    <Text style={styles.textTotalProd}>Thành tiền:<Text style={{ fontFamily: 'mon-b', color: COLORS.primary }}> {transNumberFormatter(item.totalAmount)}đ</Text> </Text>
                 </View>
             </View>
-        </View>
-        <View style={styles.midd}>
-            <View>
-                <Text style={styles.textTotalProd}>{totalQuantity || 'Chua co'} sản phẩm</Text>
+            <View style={styles.midd}>
+                <View style={{ display: 'flex', flexDirection: 'row', gap: 10 }}>
+                    <Feather name='truck' size={25} color={color} />
+                    <Text style={[styles.textConfirm, { color: color }]}>
+                        {message}
+                    </Text>
+                </View>
             </View>
-            <View>
-                <Text style={styles.textTotalProd}>Thành tiền:<Text style={{ fontFamily: 'mon-b', color: COLORS.primary }}> {transNumberFormatter(item.totalAmount)}đ</Text> </Text>
-            </View>
-        </View>
-        <View style={styles.midd}>
-            <View style={{ display: 'flex', flexDirection: 'row', gap: 10 }}>
-                <Feather name='truck' size={25} color={color} />
-                <Text style={[styles.textConfirm, { color: color }]}>
-                    {message}
-                </Text>
-            </View>
-        </View>
-    </View>
+        </Pressable>)
 }
 
 

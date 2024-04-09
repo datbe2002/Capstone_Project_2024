@@ -12,7 +12,10 @@ const Setting = () => {
     const { signOut } = useAuth()
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{
+            flex: 1,
+            position: 'relative',
+        }}>
             <View>
                 <VerifyAlert />
             </View>
@@ -20,7 +23,9 @@ const Setting = () => {
                 <MyAccount />
                 <SupportAccount />
 
-                <CustomButton onPress={signOut} buttonText='Đăng xuất' buttonColor='errorColor' style={{ marginTop: 20 }}></CustomButton>
+            </View>
+            <View style={styles.bottom}>
+                <CustomButton onPress={signOut} buttonText='Đăng xuất' buttonColor='errorColor' ></CustomButton>
                 <View style={styles.version}>
                     <Text style={styles.versionText}>Phiên bản v2.0.0</Text>
                 </View>
@@ -34,7 +39,7 @@ export default Setting
 const styles = StyleSheet.create({
     componentFull: {
         flex: 1,
-        marginHorizontal: 10
+        marginHorizontal: 10,
     },
     version: {
         height: 50,
@@ -44,5 +49,14 @@ const styles = StyleSheet.create({
         fontFamily: 'mon-sb',
         textAlign: 'center',
         color: COLORS.darkGray
+    },
+    bottom: {
+        position: 'absolute',
+        borderTopWidth: 1,
+        borderTopColor: COLORS.gray,
+        left: 0,
+        right: 0,
+        bottom: 10,
+        padding: 10,
     }
 })

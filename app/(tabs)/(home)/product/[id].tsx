@@ -46,8 +46,9 @@ const ProductDetail = () => {
   const [alert, setAlert] = useState<any>(null);
   const { orderItems, setOrderItems } = useOrderItems();
   const productQuery = useQuery({
-    queryKey: ["product"],
+    queryKey: ["product", id],
     queryFn: () => getProductById(id),
+    enabled: id !== null
   });
 
   const mutation = useMutation({
@@ -121,7 +122,7 @@ const ProductDetail = () => {
         source={
           item.imageUrl
             ? { uri: item.imageUrl }
-            : require(".../../../../assets/images/default.png")
+            : require("../../../../assets/images/default.png")
         }
       />
     );
@@ -130,7 +131,6 @@ const ProductDetail = () => {
   useEffect(() => {
     const getCart = async () => {
       try {
-        // console.log("first 1");
         const userCart = await instance.get("/api/cart/" + userId);
         let userData: any = {
           ...userState,
@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
     fontFamily: "mon-b",
   },
   secondaryTitle: {
-    fontSize: SIZES.medium,
+    fontSize: 20,
     fontFamily: "mon-sb",
   },
   main: {
@@ -460,7 +460,9 @@ const styles = StyleSheet.create({
   itemDes: {
     width: "100%",
     textAlign: "left",
-    fontFamily: "mon",
+    fontFamily: "mon-sb",
+    fontSize: 16,
+    color: COLORS.darkGray,
     textAlignVertical: "top",
   },
   bottom: {
@@ -476,6 +478,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: width,
+    borderTopColor: COLORS.gray,
+    borderTopWidth: 1
   },
   button: {
     height: 50,
@@ -497,6 +501,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     borderRadius: 5,
     borderWidth: 1,
+    borderColor: COLORS.gray,
     backgroundColor: COLORS.white,
   },
   detailBox: {

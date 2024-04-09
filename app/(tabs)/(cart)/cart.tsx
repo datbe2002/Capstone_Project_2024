@@ -22,6 +22,8 @@ import { router } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
 
 import CustomAlert from "../../../components/Arlert";
+import EmptyComponentCustom from "../../../components/EmptyComponentCustom";
+import { Fontisto } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("window");
 
@@ -219,6 +221,7 @@ const Cart: React.FC<Props> = ({ }) => {
           <FlatList
             data={cartItems}
             keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={<EmptyComponentCustom text={'Giỏ hàng rỗng'} icon={<Fontisto name="shopping-basket" size={40} color={COLORS.white} />} option={'Mua sắm ngay !'} onPress={() => router.push('/(tabs)/(home)/homepage')} />}
             renderItem={({ item }) => (
               <View>
                 <ItemCard

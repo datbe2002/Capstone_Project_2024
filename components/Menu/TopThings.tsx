@@ -11,7 +11,7 @@ const TopThings = () => {
                 <MaterialCommunityIcons name="cards-heart-outline" size={24} color={COLORS.errorColor} />
                 <Text style={styles.textLine}>Yêu thích</Text>
             </Pressable>
-            <Pressable style={[styles.firstLine, { borderBottomWidth: 1, borderBottomColor: COLORS.gray }]}>
+            <Pressable style={[styles.firstLine, { borderBottomWidth: 1, borderBottomColor: COLORS.gray }]} onPress={() => router.push('/(tabs)/(menu)/feedback')}>
                 <MaterialCommunityIcons name="comment-processing-outline" size={24} color={COLORS.primary} />
                 <Text style={styles.textLine}>Đánh giá</Text>
             </Pressable>

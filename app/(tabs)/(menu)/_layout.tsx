@@ -32,6 +32,17 @@ const MenuLayout = () => {
                 },
                 headerTintColor: COLORS.primary,
             }} />
+            <Stack.Screen name='feedback' options={{
+                headerShown: true,
+                title: 'Đánh giá của bạn',
+                headerTitleAlign: 'center',
+                headerLeft: BackButton,
+                headerTitleStyle: {
+                    fontFamily: 'mon-b',
+                    fontSize: 25
+                },
+                headerTintColor: COLORS.primary,
+            }} />
             <Stack.Screen name='setpassword' options={{
                 headerShown: true,
                 title: 'Thay đổi mật khẩu',

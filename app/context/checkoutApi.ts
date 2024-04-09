@@ -13,3 +13,12 @@ export const getOrderByUserId = async (userId?: string | null) => {
   );
   return response.data;
 };
+
+
+export const getOrderByOrderId = async (orderId?: number | null) => {
+  const response = await instance.get(
+    `/api/order/${orderId}`
+  );
+  return response.data;
+};
+
