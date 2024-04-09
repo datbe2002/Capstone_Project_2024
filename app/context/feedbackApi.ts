@@ -12,3 +12,11 @@ export const getFeedbackByUserId = async (userId?: string | null) => {
     return response.data;
 };
 
+export const getFeedbackByProdId = async (productId?: number | null) => {
+    const response = await instance.get(
+        `/api/feedbacks/product/${productId}`
+    );
+    return response.data;
+};
+
+

@@ -14,7 +14,6 @@ import {
   Text,
   View
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../../assets";
 import CustomAlert from "../../../../components/Arlert";
@@ -33,6 +32,8 @@ import {
   useUserStore,
   useWardove,
 } from "../../../store/store";
+import FeedbackSection from "../../../../components/Home/FeedbackSection";
+import { ScrollView } from "react-native-virtualized-view";
 const { height, width } = Dimensions.get("window");
 
 const ProductDetail = () => {
@@ -244,23 +245,20 @@ const ProductDetail = () => {
                   )}
                 </View>
               </View>
+              <FeedbackSection productId={productQuery.data.data.id} />
             </View>
           </ScrollView>
         ) : (
-          <ActivityIndicator />
+          <ActivityIndicator color={COLORS.primary} size={50} />
         )}
-        {/* ============================ */}
-        <View style={[styles.bottom, SHADOWS.medium]}>
-          {/* <AntDesign name={"heart"} size={30} color={"red"} onPress={() => console.log('favourite')} /> */}
-          {/* ====================================== */}
-          {productQuery.isSuccess && (
-            <FavoriteLogic
-              setIsFavourite={setIsFavourite}
-              isFavourite={isFavourite}
-              item={productQuery.data.data}
-            />
-          )}
-          {/* ====================================== */}
+        {productQuery.isSuccess && (<View style={[styles.bottom, SHADOWS.medium]}>
+
+          <FavoriteLogic
+            setIsFavourite={setIsFavourite}
+            isFavourite={isFavourite}
+            item={productQuery.data.data}
+          />
+
 
           <Text
             style={[
@@ -304,7 +302,7 @@ const ProductDetail = () => {
           >
             Mua ngay
           </Text>
-        </View>
+        </View>)}
         {/* bottom sheet */}
         {productQuery.isSuccess && (
           <BottomSheet
@@ -379,12 +377,6 @@ const ProductDetail = () => {
                     quantity: quantity,
                     size: mySelectedItem.size.value,
                   };
-
-                  // console.log({
-                  //   items: [obj],
-                  //   total: obj.price * obj.quantity,
-                  //   totalQuantityProd: obj.quantity,
-                  // });
                   setOrderItems({
                     items: [obj],
                     total: obj.price * obj.quantity,

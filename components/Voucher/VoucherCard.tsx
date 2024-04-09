@@ -6,7 +6,7 @@ import { COLORS } from '../../assets';
 import moment from 'moment';
 
 
-const dateConvert = (date: string | null) => {
+export const dateConvert = (date: string | null) => {
     const originalDateTime = moment(date);
     const formattedDateTime = originalDateTime.format('DD/MM/YYYY hh:mm');
     return formattedDateTime
