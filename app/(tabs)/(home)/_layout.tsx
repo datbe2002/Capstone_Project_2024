@@ -7,9 +7,6 @@ const HomeLayout = () => {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="homepage" />
       <Stack.Screen name="categories" />
-      <Stack.Screen
-        name="product/[id]"
-      />
       <Stack.Screen name="products" />
     </Stack>
   );

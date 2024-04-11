@@ -82,7 +82,6 @@ const favorite = () => {
         bsRef.current?.expand()
     }
     const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, [])
-    console.log(itemId)
     const handleCheck = () => {
         if (itemId !== null) {
             setLoadingState(true)

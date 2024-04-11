@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Pressable, Text, StyleSheet, Image } from "react-native";
 import { Product } from "../../constants/Type";
-import { SHADOWS, SIZES } from "../../assets";
+import { COLORS, SHADOWS, SIZES } from "../../assets";
 
 interface Props {
   data: Product;
@@ -27,15 +27,17 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: SIZES.medium,
-    fontWeight: "bold",
+    fontFamily: 'mon-b'
   },
   description: {
     fontSize: 14,
+    fontFamily: 'mon-sb',
+    color: COLORS.darkGray,
     height: 50,
   },
   price: {
     fontSize: SIZES.medium,
-    fontWeight: "bold",
+    fontFamily: 'mon-b'
   },
 });
 

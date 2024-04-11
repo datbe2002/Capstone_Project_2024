@@ -23,11 +23,13 @@ const Order = () => {
         queryFn: () => getOrderByUserId(userId),
         enabled: userId !== null,
     });
-    const pendingData = data?.data?.filter((fix: any) => fix.status === 1)
-    const waitingData = data?.data?.filter((fix: any) => fix.status === 4)
-    const deliveringData = data?.data?.filter((fix: any) => fix.status === 5)
-    const deliveredData = data?.data?.filter((fix: any) => fix.status === 6)
-    console.log(data?.data)
+    const filteredData = {
+        all: data?.data,
+        pending: data?.data?.filter((order: any) => order.status === 1),
+        waiting: data?.data?.filter((order: any) => order.status === 4),
+        delivering: data?.data?.filter((order: any) => order.status === 5),
+        delivered: data?.data?.filter((order: any) => order.status === 6),
+    };
     return (
         <>
             <Tab
@@ -65,19 +67,19 @@ const Order = () => {
 
             <TabView value={index} onChange={setIndex} >
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList data={data?.data} />
+                    <DeliveredList data={filteredData.all} loading={isFetching} />
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList data={pendingData} />
+                    <DeliveredList data={filteredData.pending} loading={isFetching} />
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList data={waitingData} />
+                    <DeliveredList data={filteredData.waiting} loading={isFetching} />
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList data={deliveringData} />
+                    <DeliveredList data={filteredData.delivering} loading={isFetching} />
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList data={deliveredData} loading={isFetching} />
+                    <DeliveredList data={filteredData.delivered} loading={isFetching} />
                 </TabView.Item>
 
             </TabView>

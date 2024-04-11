@@ -35,19 +35,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    borderWidth: 1.5,
-    borderColor: COLORS.blue1,
+    borderWidth: 1,
+    borderColor: COLORS.gray,
     backgroundColor: COLORS.white,
     borderRadius: 8,
   },
   variantText: {
     width: "auto",
-    fontFamily: "mon",
+    fontFamily: "mon-sb",
     fontSize: SIZES.medium,
-    color: COLORS.primary,
+    color: COLORS.darkGray,
     padding: 0,
     margin: 0,
   },
+  variantTextPressed: {
+    width: "auto",
+    fontFamily: "mon-sb",
+    fontSize: SIZES.medium,
+    color: COLORS.white,
+    padding: 0,
+    margin: 0,
+  },
+
   variantContaner: {
     marginTop: 10,
     paddingHorizontal: 10,
@@ -58,7 +67,9 @@ const styles = StyleSheet.create({
     fontFamily: "mon-sb",
   },
   variantItemPressed: {
-    backgroundColor: COLORS.pink,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    backgroundColor: COLORS.primary
   },
 });
 
@@ -75,8 +86,8 @@ const VariantSection: React.FC<Props> = ({ data, onPress, selectedItem }) => (
           ]}
           onPress={() => onPress(item)}
         >
-          <Text style={[styles.variantText]}>{item.size.value.trim()}</Text>
-          <Text style={[styles.variantText]}>{item.color.name.trim()}</Text>
+          <Text style={[styles.variantText, item === selectedItem ? styles.variantTextPressed : null,]}>{item.size.value.trim()}</Text>
+          <Text style={[styles.variantText, item === selectedItem ? styles.variantTextPressed : null,]}>{item.color.name.trim()}</Text>
         </Pressable>
       ))}
     </View>

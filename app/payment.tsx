@@ -99,7 +99,6 @@ const Payment = () => {
       orderItems: transformedArray,
     };
     await mutate(orderPad);
-    // router.push('/success_payment')
   };
 
   return (

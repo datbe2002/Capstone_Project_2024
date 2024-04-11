@@ -47,10 +47,6 @@ const AddressChosen = ({ addressData }: any) => {
 export default AddressChosen
 
 const styles = StyleSheet.create({
-    container: {
-        flexGrow: 1,
-        padding: 20
-    },
     title: {
         fontSize: 18,
         fontWeight: 'bold',

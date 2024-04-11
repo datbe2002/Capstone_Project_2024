@@ -34,7 +34,7 @@ const QuantitySelector: React.FC<Props> = ({
 
   return (
     <View style={[styles.container, style]}>
-      <Text>Số lượng:</Text>
+      <Text style={styles.Text}>Số lượng:</Text>
       <View style={styles.buttonGroup}>
         <Pressable
           style={[
@@ -54,7 +54,8 @@ const QuantitySelector: React.FC<Props> = ({
             textAlignVertical: "center",
             borderTopWidth: 1,
             borderBottomWidth: 1,
-            borderColor: COLORS.primary,
+            borderColor: COLORS.darkGray,
+            fontFamily: 'mon-b'
           }}
         >
           {quantity}
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 5,
     borderTopWidth: 1,
-    borderColor: COLORS.darkGray,
+    borderColor: COLORS.gray,
   },
   buttonGroup: {
     display: "flex",
@@ -101,6 +102,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderColor: COLORS.primary,
+    borderColor: COLORS.darkGray,
   },
+  Text: {
+    fontFamily: 'mon-sb',
+    fontSize: 16
+  }
 });

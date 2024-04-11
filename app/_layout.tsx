@@ -119,6 +119,17 @@ function RootLayoutNav() {
         },
         headerTintColor: COLORS.primary,
       }} />
+      <Stack.Screen name='order_detail' options={{
+        headerShown: true,
+        title: 'Thông tin đơn hàng',
+        headerTitleAlign: 'center',
+        headerLeft: BackButton,
+        headerTitleStyle: {
+          fontFamily: 'mon-b',
+          fontSize: 25
+        },
+        headerTintColor: COLORS.primary,
+      }} />
       <Stack.Screen name="addnewaddress" options={{
         headerShown: true,
         title: 'Thêm địa chỉ',
@@ -142,6 +153,10 @@ function RootLayoutNav() {
           },
           headerTintColor: COLORS.primary,
         }}
+      />
+      <Stack.Screen
+        name="product/[id]"
+        options={{ headerShown: false }}
       />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>

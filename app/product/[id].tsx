@@ -14,25 +14,26 @@ import {
   Text,
   View,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, SHADOWS, SIZES } from "../../../../assets";
-import CustomAlert from "../../../../components/Arlert";
-import Background from "../../../../components/BackGround";
-import Carousel from "../../../../components/Carousel";
-import FavoriteLogic from "../../../../components/Home/FavoriteLogic";
-import ProductCardShort from "../../../../components/Product/ProductCardShort";
-import QuantitySelector from "../../../../components/Product/QuantitySelector";
-import VariantSection from "../../../../components/Product/VariantSelector";
-import { CartData, CartItem } from "../../../../constants/Type";
-import instance from "../../../context/axiosConfig";
-import { addToCart, getProductById } from "../../../context/productsApi";
+import CustomAlert from "../../components/Arlert";
+import Background from "../../components/BackGround";
+import Carousel from "../../components/Carousel";
+import FavoriteLogic from "../../components/Home/FavoriteLogic";
+import ProductCardShort from "../../components/Product/ProductCardShort";
+import QuantitySelector from "../../components/Product/QuantitySelector";
+import VariantSection from "../../components/Product/VariantSelector";
+import { CartData, CartItem } from "../../constants/Type";
+import instance from "../context/axiosConfig";
+import { addToCart, getProductById } from "../context/productsApi";
 import {
   useOrderItems,
   useUserIDStore,
   useUserStore,
   useWardove,
-} from "../../../store/store";
+} from "../store/store";
+import FeedbackSection from "../../components/Home/FeedbackSection";
+import { ScrollView } from "react-native-virtualized-view";
+import { COLORS, SHADOWS, SIZES } from "../../assets";
 const { height, width } = Dimensions.get("window");
 
 const ProductDetail = () => {
@@ -46,8 +47,9 @@ const ProductDetail = () => {
   const [alert, setAlert] = useState<any>(null);
   const { orderItems, setOrderItems } = useOrderItems();
   const productQuery = useQuery({
-    queryKey: ["product"],
+    queryKey: ["product", id],
     queryFn: () => getProductById(id),
+    enabled: id !== null
   });
 
   const mutation = useMutation({
@@ -121,7 +123,7 @@ const ProductDetail = () => {
         source={
           item.imageUrl
             ? { uri: item.imageUrl }
-            : require(".../../../../assets/images/default.png")
+            : require("../../assets/images/default.png")
         }
       />
     );
@@ -130,7 +132,6 @@ const ProductDetail = () => {
   useEffect(() => {
     const getCart = async () => {
       try {
-        // console.log("first 1");
         const userCart = await instance.get("/api/cart/" + userId);
         let userData: any = {
           ...userState,
@@ -244,23 +245,20 @@ const ProductDetail = () => {
                   )}
                 </View>
               </View>
+              <FeedbackSection productId={productQuery.data.data.id} />
             </View>
           </ScrollView>
         ) : (
-          <ActivityIndicator />
+          <ActivityIndicator color={COLORS.primary} size={50} />
         )}
-        {/* ============================ */}
-        <View style={[styles.bottom, SHADOWS.medium]}>
-          {/* <AntDesign name={"heart"} size={30} color={"red"} onPress={() => console.log('favourite')} /> */}
-          {/* ====================================== */}
-          {productQuery.isSuccess && (
-            <FavoriteLogic
-              setIsFavourite={setIsFavourite}
-              isFavourite={isFavourite}
-              item={productQuery.data.data}
-            />
-          )}
-          {/* ====================================== */}
+        {productQuery.isSuccess && (<View style={[styles.bottom, SHADOWS.medium]}>
+
+          <FavoriteLogic
+            setIsFavourite={setIsFavourite}
+            isFavourite={isFavourite}
+            item={productQuery.data.data}
+          />
+
 
           <Text
             style={[
@@ -304,7 +302,7 @@ const ProductDetail = () => {
           >
             Mua ngay
           </Text>
-        </View>
+        </View>)}
         {/* bottom sheet */}
         {productQuery.isSuccess && (
           <BottomSheet
@@ -379,12 +377,6 @@ const ProductDetail = () => {
                     quantity: quantity,
                     size: mySelectedItem.size.value,
                   };
-
-                  // console.log({
-                  //   items: [obj],
-                  //   total: obj.price * obj.quantity,
-                  //   totalQuantityProd: obj.quantity,
-                  // });
                   setOrderItems({
                     items: [obj],
                     total: obj.price * obj.quantity,
@@ -433,7 +425,7 @@ const styles = StyleSheet.create({
     fontFamily: "mon-b",
   },
   secondaryTitle: {
-    fontSize: SIZES.medium,
+    fontSize: 20,
     fontFamily: "mon-sb",
   },
   main: {
@@ -460,7 +452,9 @@ const styles = StyleSheet.create({
   itemDes: {
     width: "100%",
     textAlign: "left",
-    fontFamily: "mon",
+    fontFamily: "mon-sb",
+    fontSize: 16,
+    color: COLORS.darkGray,
     textAlignVertical: "top",
   },
   bottom: {
@@ -476,6 +470,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: width,
+    borderTopColor: COLORS.gray,
+    borderTopWidth: 1
   },
   button: {
     height: 50,
@@ -497,6 +493,7 @@ const styles = StyleSheet.create({
     elevation: 1,
     borderRadius: 5,
     borderWidth: 1,
+    borderColor: COLORS.gray,
     backgroundColor: COLORS.white,
   },
   detailBox: {
