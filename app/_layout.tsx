@@ -101,7 +101,7 @@ function RootLayoutNav() {
         headerShown: true,
         title: 'Thêm địa chỉ',
         headerTitleAlign: 'center',
-        headerLeft: BackButton,
+        headerLeft: () => { return (<View></View>) },
         headerTitleStyle: {
           fontFamily: 'mon-b',
           fontSize: 25

@@ -12,7 +12,7 @@ const MainSection = () => {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.top}>
-                <Text style={styles.nameUser}>Chào bạn, {userState?.fullName}</Text>
+                <Text style={styles.nameUser}>Chào, {userState?.fullName}</Text>
             </View>
             <OrderComponent />
             <TopThings />
@@ -29,8 +29,7 @@ const styles = StyleSheet.create({
         height: height,
     },
     top: {
-        height: 50,
-        paddingHorizontal: 10
+        padding: 10
     },
     nameUser: {
         fontFamily: 'mon-b',
