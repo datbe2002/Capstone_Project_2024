@@ -6,22 +6,22 @@ import { AntDesign } from '@expo/vector-icons'
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking'
 const SupportAccount = () => {
-    const [result, setResult] = useState<any>(null);
-    const url1 = Linking.useURL()
+    // const [result, setResult] = useState<any>(null);
+    // const url1 = Linking.useURL()
 
-    if (url1) {
-        const { hostname, path, queryParams } = Linking.parse(url1)
-        console.log(hostname)
-        console.log(path)
-        console.log(queryParams)
-    }
+    // if (url1) {
+    //     const { hostname, path, queryParams } = Linking.parse(url1)
+    //     console.log(hostname)
+    //     console.log(path)
+    //     console.log(queryParams)
+    // }
 
-    const handleNav = async () => {
-        const url = 'https://qcgateway.zalopay.vn/openinapp?order=eyJ6cHRyYW5zdG9rZW4iOiJBQ2djNzB4SXRGNVBReVJ1TDQyZzduZ3ciLCJhcHBpZCI6NTUzfQ=='
-        let result1 = await WebBrowser.openAuthSessionAsync(url)
-        setResult(result1);
-        // router.push('/success_payment')
-    }
+    // const handleNav = async () => {
+    //     const url = 'https://qcgateway.zalopay.vn/openinapp?order=eyJ6cHRyYW5zdG9rZW4iOiJBQ2djNzB4SXRGNVBReVJ1TDQyZzduZ3ciLCJhcHBpZCI6NTUzfQ=='
+    //     let result1 = await WebBrowser.openAuthSessionAsync(url)
+    //     setResult(result1);
+    //     // router.push('/success_payment')
+    // }
 
     return (
         <View>
@@ -29,7 +29,7 @@ const SupportAccount = () => {
                 <Text style={styles.syntaxText}>Hỗ trợ</Text>
             </View>
             <View style={styles.lineFunc}>
-                <Pressable style={styles.accountId} onPress={() => router.push('/(tabs)/(menu)/profile')}>
+                <Pressable style={styles.accountId} >
                     <Text style={styles.mainText}>
                         Tiêu chuẩn cộng đồng
                     </Text>
@@ -39,7 +39,7 @@ const SupportAccount = () => {
                         </View>
                     </View>
                 </Pressable>
-                <Pressable style={styles.threeComp} onPress={() => router.push('/(tabs)/(menu)/address')}>
+                <Pressable style={styles.threeComp}>
                     <Text style={styles.mainText}>
                         Điều khoản FTai
                     </Text>
@@ -49,9 +49,9 @@ const SupportAccount = () => {
                         </View>
                     </View>
                 </Pressable>
-                <Pressable style={styles.threeComp} onPress={handleNav}>
+                <Pressable style={styles.threeComp}>
                     <Text style={styles.mainText}>
-                        {url1}
+                        Hỗ trợ
                     </Text>
                     <View style={styles.changeComp} >
                         <View>
