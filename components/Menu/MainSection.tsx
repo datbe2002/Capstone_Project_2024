@@ -29,8 +29,7 @@ const styles = StyleSheet.create({
         height: height,
     },
     top: {
-        height: 50,
-        paddingHorizontal: 10
+        padding: 10
     },
     nameUser: {
         fontFamily: 'mon-b',

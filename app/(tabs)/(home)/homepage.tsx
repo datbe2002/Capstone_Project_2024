@@ -34,7 +34,6 @@ import {
   useUserIDStore,
   useUserStore,
 } from "../../store/store";
-import { categorie } from "../exampledata";
 
 export default function HomepageScreen() {
   const { userId } = useUserIDStore();

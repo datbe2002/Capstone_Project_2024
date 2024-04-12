@@ -11,7 +11,6 @@ import {
   View,
 } from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
-// import { categories } from "../../app/(tabs)/exampledata";
 const { height, width } = Dimensions.get("window");
 
 interface CategoriesProps {

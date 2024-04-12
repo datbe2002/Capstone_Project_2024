@@ -1,4 +1,4 @@
-import { Fontisto, Ionicons } from '@expo/vector-icons'
+import { Fontisto, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
@@ -20,6 +20,8 @@ const OrderDetail = () => {
         queryFn: () => getOrderByOrderId(Number(orderId)),
         enabled: orderId !== null,
     });
+
+    console.log('order', data)
     const { userState } = useUserStore()
     const [currProductId, setCurrProductId] = useState<number | null>(null)
     const [currProductName, setCurrProductName] = useState<string | null>(null)
@@ -81,6 +83,42 @@ const OrderDetail = () => {
             Alert.alert("Thông báo", "Không được để trống Feedback")
         }
     }
+    const STATUS_TEXT: any = {
+        6: 'Đơn hàng đã hoàn thành',
+        5: 'Đơn hàng đang được vận chuyển',
+        4: 'Đơn hàng đang đợi xác nhận',
+        3: 'Đơn hàng đã bị hủy',
+        1: 'Đơn hàng đang đợi xử lý',
+    };
+
+
+    const OrderStatusText = ({ status }: any) => {
+        // Fetch the status text using the status code, or default to an empty string if not found
+        const statusMessage = STATUS_TEXT[status] || '';
+
+        return (
+            <Text style={{
+                fontFamily: 'mon-sb', fontSize: 22, color: COLORS.white
+            }}>
+                {statusMessage}
+            </Text>
+        );
+    };
+
+    const getBackgroundColor = (status: number) => {
+        switch (status) {
+            case 1:
+                return 'yellow';
+            case 4:
+                return COLORS.secondary;
+            case 5:
+                return COLORS.primary;
+            case 6:
+                return '#26AB9A'; // Specific green color for completed orders
+            default:
+                return COLORS.darkGray; // Default color for other statuses
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -88,15 +126,30 @@ const OrderDetail = () => {
                 <ActivityIndicator color={COLORS.primary} size={30} />
             </View> :
                 <ScrollView contentContainerStyle={styles.orderContainer}>
-                    <View style={[styles.orderStatus, { backgroundColor: '#26AB9A' }]}>
+                    <View style={[styles.orderStatus, { backgroundColor: getBackgroundColor(data?.data?.status) }]}>
                         <View style={{ justifyContent: 'center', alignItems: 'flex-start', height: 150, paddingLeft: 10, width: '80%' }}>
-                            <Text style={{ fontFamily: 'mon-sb', fontSize: 22, color: COLORS.white }}>Đơn hàng đã hoàn thành</Text>
-                            <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.white }}>Cảm ơn bạn đã mua sắm tại FTai Store!</Text>
+                            <OrderStatusText status={data?.data?.status} />
+                            <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.white }}>{!(data?.data?.status === 1 || data?.data?.status === 3) ? 'Cảm ơn bạn đã mua sắm tại FTai Store!' : 'Hẹn gặp lại lần sau..'}</Text>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center', width: '20%' }}>
-                            <Ionicons name="checkmark-done-circle" size={50} color={COLORS.white} />
+                            {!(data?.data?.status === 1 || data?.data?.status === 3) ? <Ionicons name="checkmark-done-circle" size={50} color={COLORS.white} /> :
+                                <MaterialCommunityIcons name="archive-cancel-outline" size={50} color={COLORS.white} />
+                            }
                         </View>
                     </View>
+                    {data?.data?.status === 3 && <View style={{
+                        padding: 10,
+                        margin: 10,
+                        backgroundColor: 'white',
+                        gap: 10
+                    }}>
+                        <Text style={{
+                            fontFamily: 'mon-sb', fontSize: 18, color: COLORS.errorColor
+                        }}>Lý do hủy đơn</Text>
+                        <Text style={{
+                            fontFamily: 'mon-sb', fontSize: 16, color: COLORS.darkGray
+                        }}>{data?.data?.cancelReason}</Text>
+                    </View>}
                     <View>
                         <View style={styles.defaultAddressContainer}>
                             <View style={styles.infoDefault}>
@@ -122,6 +175,15 @@ const OrderDetail = () => {
                         {handleOpenBottom} feedbackData={feedbackData?.data} />
 
                 </ScrollView>}
+            {!isFetching && data?.data?.status === 4 && <View style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                margin: 10
+            }}>
+                <CustomButton buttonText={'Hủy đơn'} buttonColor={'errorColor'} />
+            </View>}
             <BottomSheet
                 snapPoints={["60%"]}
                 ref={bottomSheetRef}
@@ -176,7 +238,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     orderContainer: {
-
+        position: 'relative',
+        height: '100%',
     },
     orderStatus: {
         height: 150,

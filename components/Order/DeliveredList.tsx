@@ -41,6 +41,11 @@ const DeliveredCard = ({ item }: any) => {
             color: '#20AC02',
             trans: 'Đã vận chuyển',
         },
+        3: {
+            message: 'Đơn hàng đã bị hủy',
+            color: '#FF0000',
+            trans: 'Đã hủy đơn',
+        },
         default: {
             message: 'Trạng thái đơn hàng không xác định',
             color: '#FF0000',

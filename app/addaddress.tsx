@@ -41,7 +41,7 @@ const AddressModal = () => {
                 recipientPhone: null,
                 street: null,
             })
-            router.back();
+            router.push('/(tabs)/(cart)/cart');
         },
         onError: (error) => {
             console.log(error);
@@ -207,9 +207,20 @@ const AddressModal = () => {
                         onValueChange={(value) => setChecked(value)}
                     />
                 </View>
-                <Pressable onPress={validate} style={styles.confirmBtn}>
-                    <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{isPending ? <ActivityIndicator size={25} color={COLORS.white} /> : 'Hoàn tất'}</Text>
-                </Pressable>
+                <View style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    marginHorizontal: 10,
+                    gap: 10
+                }}>
+                    <Pressable onPress={() => router.push('/(tabs)/(cart)/cart')} style={[styles.confirmBtn, { backgroundColor: COLORS.darkGray, width: '23%' }]}>
+                        <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{'Hủy'}</Text>
+                    </Pressable>
+                    <Pressable onPress={validate} style={styles.confirmBtn}>
+                        <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{isPending ? <ActivityIndicator size={25} color={COLORS.white} /> : 'Hoàn tất'}</Text>
+                    </Pressable>
+                </View>
             </ScrollView>
         </SafeAreaView>
     )
@@ -233,7 +244,7 @@ const styles = StyleSheet.create({
         fontFamily: 'mon-sb',
     },
     modalComponent: {
-        flex: 1
+        flex: 1,
     },
     componentText: {
         height: 50,
@@ -293,9 +304,9 @@ const styles = StyleSheet.create({
         color: COLORS.errorColor
     },
     confirmBtn: {
+        width: '70%',
         backgroundColor: COLORS.primary,
         marginTop: 30,
-        marginHorizontal: 15,
         borderRadius: 16
     }
 })

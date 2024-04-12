@@ -1,18 +1,17 @@
+import { AntDesign } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
-  Button,
   Dimensions,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AntDesign } from "@expo/vector-icons";
 import { COLORS, SHADOWS, SIZES } from "../../../assets";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { categories } from "../exampledata";
+import { categories } from "../../../constants/exampledata";
 const { height, width } = Dimensions.get("window");
 
 export default function CategoriesFilter() {
