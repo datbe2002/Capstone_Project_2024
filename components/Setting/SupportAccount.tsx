@@ -1,10 +1,28 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { COLORS } from '../../assets'
 import { router } from 'expo-router'
 import { AntDesign } from '@expo/vector-icons'
-
+import * as WebBrowser from 'expo-web-browser';
+import * as Linking from 'expo-linking'
 const SupportAccount = () => {
+    const [result, setResult] = useState<any>(null);
+    const url1 = Linking.useURL()
+
+    if (url1) {
+        const { hostname, path, queryParams } = Linking.parse(url1)
+        console.log(hostname)
+        console.log(path)
+        console.log(queryParams)
+    }
+
+    const handleNav = async () => {
+        const url = 'https://qcgateway.zalopay.vn/openinapp?order=eyJ6cHRyYW5zdG9rZW4iOiJBQ2djNzB4SXRGNVBReVJ1TDQyZzduZ3ciLCJhcHBpZCI6NTUzfQ=='
+        let result1 = await WebBrowser.openAuthSessionAsync(url)
+        setResult(result1);
+        // router.push('/success_payment')
+    }
+
     return (
         <View>
             <View style={styles.componentText}>
@@ -31,9 +49,9 @@ const SupportAccount = () => {
                         </View>
                     </View>
                 </Pressable>
-                <Pressable style={styles.threeComp} onPress={() => router.push('/(tabs)/(menu)/paymentmethod')}>
+                <Pressable style={styles.threeComp} onPress={handleNav}>
                     <Text style={styles.mainText}>
-                        Giới thiệu
+                        {url1}
                     </Text>
                     <View style={styles.changeComp} >
                         <View>

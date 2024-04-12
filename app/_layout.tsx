@@ -5,7 +5,7 @@ import { Provider, useAuth } from './context/auth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import BackButton from '../components/BackButton';
 import { COLORS } from '../assets';
-import { View } from 'react-native';
+import { Linking, View } from 'react-native';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary
