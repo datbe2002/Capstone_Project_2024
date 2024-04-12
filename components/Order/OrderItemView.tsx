@@ -7,7 +7,7 @@ const { width } = Dimensions.get("window")
 
 const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData }: any) => {
     //check feedback da ton tai chua
-    const existedFeedback = !!feedbackData.find((feedback: any) => feedback.orderItemProductId === item?.productId)
+    const existedFeedback = !!feedbackData?.find((feedback: any) => feedback.orderItemProductId === item?.productId)
     return (
         <View key={item.productId} style={{ display: 'flex', flexDirection: 'row' }}>
             <View style={styles.card}>
@@ -15,8 +15,8 @@ const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData }: any) =>
                     <Image
                         style={styles.img}
                         source={
-                            item?.product.defaultImage
-                                ? { uri: item?.product.defaultImage }
+                            item?.product?.defaultImage
+                                ? { uri: item?.product?.defaultImage }
                                 :
                                 require("../../assets/images/default.png")
                         }
@@ -102,13 +102,13 @@ const ListFooter = ({ totalWithoutShippingFee, data }: any) => {
 
 
 const OrderItemView = ({ data, handleOpenBottom, feedbackData }: any) => {
-    const totalWithoutShippingFee = data?.orderItems.reduce((total: number, item: any) => total + item.price * item.quantity, 0)
+    const totalWithoutShippingFee = data?.orderItems?.reduce((total: number, item: any) => total + item.price * item.quantity, 0)
     return (
         <View style={styles.mainCard}>
             <FlatList
                 data={data?.orderItems}
-                keyExtractor={(item: any) => item.productId}
-                renderItem={({ item }) => <OrderItemCard item={item} handleOpenBottom={handleOpenBottom} status={data.status} feedbackData={feedbackData} />}
+                keyExtractor={(item: any) => item?.productId}
+                renderItem={({ item }) => <OrderItemCard item={item} handleOpenBottom={handleOpenBottom} status={data?.status} feedbackData={feedbackData} />}
                 ListFooterComponent={<ListFooter totalWithoutShippingFee={totalWithoutShippingFee} data={data} />}
             />
         </View>
