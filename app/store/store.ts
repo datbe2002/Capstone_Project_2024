@@ -40,6 +40,15 @@ export const useUserIDStore = create<UserIDStore>((set) => ({
   userId: null,
   setUserId: (userId) => set(() => ({ userId: userId })),
 }));
+interface OrderIdSuccess {
+  orderIdSucc: number | null;
+  setOrderIdSucc: (orderIdSucc: number | null) => void;
+}
+
+export const useOrderIdSuccess = create<OrderIdSuccess>((set) => ({
+  orderIdSucc: null,
+  setOrderIdSucc: (orderIdSucc) => set(() => ({ orderIdSucc: orderIdSucc })),
+}));
 
 export const useAfterVoucher = create((set: any) => ({
   itemVoucher: {

@@ -12,6 +12,7 @@ import { getAddress } from "./context/addressApi";
 import {
   useAddressChange,
   useAfterVoucher,
+  useOrderIdSuccess,
   useOrderItems,
   useUserIDStore,
 } from "./store/store";
@@ -21,6 +22,8 @@ import AddressChosen from "../components/Address/AddressChosen";
 import ItemCardPayment from "../components/Payment/ItemCardPayment";
 import NoteForShop from "../components/Payment/NoteForShop";
 import PaymentMethodChosen from "../components/Payment/PaymentMethodChosen";
+import * as WebBrowser from 'expo-web-browser';
+import LoadingComponent from "../components/LoadingComponent";
 
 const Payment = () => {
   const { userId } = useUserIDStore();
@@ -72,14 +75,26 @@ const Payment = () => {
       color: item.color,
     };
   });
-
+  const [loading, setLoading] = useState<boolean>(false)
+  const { setOrderIdSucc } = useOrderIdSuccess()
+  const completePayment = async (url: string) => {
+    await new Promise((resolve) => setTimeout(resolve, 8000));
+    setLoading(false);
+    router.push('/success_payment');
+  };
+  const handleCheckoutUrl = async (paymentUrl: string) => {
+    await WebBrowser.openBrowserAsync(paymentUrl)
+    setLoading(true)
+    await completePayment(paymentUrl);
+  }
   const { mutate, isPending } = useMutation({
     mutationFn: (data: any) => checkoutCart(data),
     onSuccess: (response: any) => {
-      const { paymentUrl } = response.data;
-
+      const { paymentUrl, orderId } = response.data;
+      setOrderIdSucc(orderId)
       Alert.alert("Thông báo", "Bạn hãy chọn OK để thanh toán", [
-        { text: "OK", onPress: () => Linking.openURL(paymentUrl) },
+        // { text: "OK", onPress: () => Linking.openURL(paymentUrl) },
+        { text: "OK", onPress: () => handleCheckoutUrl(paymentUrl) },
       ]);
     },
     onError: (err) => {
@@ -100,9 +115,9 @@ const Payment = () => {
     };
     await mutate(orderPad);
   };
-
   return (
     <View style={styles.mainContainer}>
+      {loading && <LoadingComponent />}
       <ScrollView>
         <AddressChosen addressData={selectedAddress} />
         <ItemCardPayment order={order} />

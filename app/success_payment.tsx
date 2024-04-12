@@ -6,15 +6,25 @@ import CustomButton from "../components/Button"
 import { COLORS } from "../assets"
 import { router } from "expo-router"
 import Background from "../components/BackGround"
+import { useOrderIdSuccess } from "./store/store"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { confirmOrder } from "./context/checkoutApi"
 
 
 const SuccessPayment = () => {
-    const handleCheckUrl = () => {
-        Linking.getInitialURL().then(url => {
-            if (url) {
-                console.log('current URL: ' + url)
-            }
-        }).catch(err => console.log(err))
+
+    const { orderIdSucc } = useOrderIdSuccess()
+    const { mutate, isPending } = useMutation({
+        mutationFn: (data: any) => confirmOrder(data),
+        onSuccess: (response: any) => {
+            router.push('/(tabs)/(home)/homepage')
+        },
+        onError: (err) => {
+            console.error("Error confirm:", err);
+        },
+    });
+    const handleCheckUrl = async () => {
+        await mutate(orderIdSucc)
     }
 
     return (

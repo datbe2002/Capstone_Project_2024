@@ -6,33 +6,30 @@ import {
 } from "react-native";
 
 import { FontAwesome5 } from "@expo/vector-icons";
-import { router, useRouter } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../../assets";
-import CustomInput from "../../../components/Input";
-import { Text, View } from "../../../components/Themed";
-import { useQuery } from "@tanstack/react-query";
 import Background from "../../../components/BackGround";
 import CategoriesSection from "../../../components/Home/CategoriesSection";
 import NewProductSection from "../../../components/Home/NewProductsSection";
 import OtherProducts from "../../../components/Home/OtherProducts";
 import TopProductsSection from "../../../components/Home/TopProductsSection";
+import CustomInput from "../../../components/Input";
+import { Text, View } from "../../../components/Themed";
 import instance from "../../context/axiosConfig";
 import {
-  getCategories,
   getNewProduct,
   getProducts,
-  getTopProducts,
+  getTopProducts
 } from "../../context/productsApi";
 import {
-  useAddressChange,
   useCategoriesStore,
   useColorsStore,
-  useOrderItems,
   useSizeStore,
   useUserIDStore,
-  useUserStore,
+  useUserStore
 } from "../../store/store";
 
 export default function HomepageScreen() {
@@ -136,7 +133,7 @@ export default function HomepageScreen() {
         {/* main */}
         <ScrollView style={styles.container}>
           {/* categories */}
-          <CategoriesSection categories={homeCategories} />
+          <CategoriesSection categories={temp.slice(0, 4)} />
           {/* top product */}
           {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
           {topProductsQuery.isSuccess ? (

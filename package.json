@@ -47,6 +47,7 @@
     "react-native-awesome-alerts": "^2.0.0",
     "react-native-bouncy-checkbox": "^3.0.7",
     "react-native-confirmation-code-field": "^7.3.2",
+    "react-native-dialog": "^9.3.0",
     "react-native-element-dropdown": "^2.10.2",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.12.0",
