@@ -12,7 +12,7 @@ const MainSection = () => {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.top}>
-                <Text style={styles.nameUser}>Chào, {userState?.fullName}</Text>
+                <Text style={styles.nameUser}>Chào bạn, {userState?.fullName}</Text>
             </View>
             <OrderComponent />
             <TopThings />
