@@ -42,7 +42,7 @@ const SuccessPayment = () => {
                             <Text style={styles.rightText}>Zalo Pay </Text>
                         </View>
                     </View>
-                    <CustomButton buttonText={"Trở về trang chủ"} onPress={() => router.replace('/(tabs)/(home)/homepage')} />
+                    <CustomButton buttonText={"Trở về trang chủ"} onPress={handleCheckUrl} />
                 </View>
             </View>
         </Background>
