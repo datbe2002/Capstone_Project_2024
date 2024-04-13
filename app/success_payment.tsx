@@ -44,10 +44,6 @@ const SuccessPayment = () => {
                     <Text style={styles.addText}>Cảm ơn quý khách đã tin tưởng</Text>
                     <View style={styles.information}>
                         <View style={styles.line1}>
-                            <Text style={styles.leftText}>Tổng thanh toán: </Text>
-                            <Text style={styles.rightText}>{transNumberFormatter(180000)}đ </Text>
-                        </View>
-                        <View style={styles.line1}>
                             <Text style={styles.leftText}>Thanh toán bằng: </Text>
                             <Text style={styles.rightText}>Zalo Pay </Text>
                         </View>
