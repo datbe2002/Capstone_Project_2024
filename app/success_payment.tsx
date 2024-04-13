@@ -10,7 +10,6 @@ import { useOrderIdSuccess } from "./store/store"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { confirmOrder } from "./context/checkoutApi"
 
-
 const SuccessPayment = () => {
 
     const { orderIdSucc } = useOrderIdSuccess()

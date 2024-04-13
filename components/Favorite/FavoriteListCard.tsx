@@ -71,7 +71,6 @@ export const FavoriteListCard: React.FC<FavoriteListCardProps> = ({ item, index,
                     </Pressable>
                     <TouchableOpacity style={styles.buyProd} onPress={() => {
                         const obj: CartItem = {
-                            // userId: userState?.id,
                             cartId: userState?.userCartId,
                             color:
                                 item.productVariants[0].color.colorCode,

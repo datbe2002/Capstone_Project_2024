@@ -150,7 +150,7 @@ export default function HomepageScreen() {
           <Text style={styles.title}>Đề Xuất Cho Bạn</Text>
           {productsQuery.isLoading ? <ActivityIndicator /> : null}
           {productsQuery.isSuccess ? (
-            <OtherProducts data={productsQuery.data.items} />
+            <OtherProducts data={productsQuery.data.items} userState={userState} />
           ) : null}
         </ScrollView>
       </Background>
