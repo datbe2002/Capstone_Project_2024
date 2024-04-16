@@ -1,4 +1,4 @@
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet, Pressable } from "react-native";
 import { COLORS } from "../../assets";
@@ -34,39 +34,37 @@ const QuantitySelector: React.FC<Props> = ({
 
   return (
     <View style={[styles.container, style]}>
-      <Text style={styles.Text}>Số lượng:</Text>
+      <Text style={styles.text}>Số lượng:</Text>
       <View style={styles.buttonGroup}>
-        <Pressable
-          style={[
-            styles.button,
-            { opacity: quantity === 1 || !enabled ? 0.4 : 1 },
-          ]}
+        <AntDesign
+          style={[{ opacity: quantity === 1 || !enabled ? 0.4 : 1 }]}
           onPress={decreaseQuantity}
           disabled={quantity === 1 || !enabled}
-        >
-          <Entypo name="minus" size={24} color="black" />
-        </Pressable>
+          name="minuscircleo"
+          size={25}
+          color={COLORS.primary}
+        />
+
         <Text
           style={{
             height: 30,
-            width: 40,
+            width: 20,
             textAlign: "center",
             textAlignVertical: "center",
-            borderTopWidth: 1,
-            borderBottomWidth: 1,
-            borderColor: COLORS.darkGray,
-            fontFamily: 'mon-b'
+            fontFamily: "mon-b",
           }}
         >
           {quantity}
         </Text>
-        <Pressable
-          style={[styles.button, { opacity: !enabled ? 0.4 : 1 }]}
+
+        <Ionicons
+          style={{ opacity: !enabled ? 0.4 : 1 }}
+          name="add-circle-outline"
+          size={31}
+          color={COLORS.primary}
           onPress={increaseQuantity}
           disabled={!enabled}
-        >
-          <Ionicons name="add" size={23} color="black" />
-        </Pressable>
+        />
       </View>
     </View>
   );
@@ -88,24 +86,18 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: COLORS.gray,
   },
+
   buttonGroup: {
+    height: 40,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    width: 100,
+    justifyContent: "space-around",
+    gap: 10,
   },
-  button: {
-    width: 30,
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: COLORS.darkGray,
+
+  text: {
+    fontFamily: "mon-sb",
+    fontSize: 16,
   },
-  Text: {
-    fontFamily: 'mon-sb',
-    fontSize: 16
-  }
 });

@@ -221,7 +221,20 @@ const Cart: React.FC<Props> = ({}) => {
             style={{ marginBottom: 80 }}
             data={cartItems}
             keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={<EmptyComponentCustom text={'Giỏ hàng rỗng'} icon={<Fontisto name="shopping-basket" size={40} color={COLORS.white} />} option={'Mua sắm ngay !'} onPress={() => router.push('/(tabs)/(home)/homepage')} />}
+            ListEmptyComponent={
+              <EmptyComponentCustom
+                text={"Giỏ hàng rỗng"}
+                icon={
+                  <Fontisto
+                    name="shopping-basket"
+                    size={40}
+                    color={COLORS.white}
+                  />
+                }
+                option={"Mua sắm ngay !"}
+                onPress={() => router.push("/(tabs)/(home)/homepage")}
+              />
+            }
             renderItem={({ item }) => (
               <View>
                 <ItemCard
