@@ -3,13 +3,13 @@ import React from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useRouter } from 'expo-router'
 import { COLORS } from '../assets'
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 const UserProfileButton = () => {
     const router = useRouter()
     return (
-        <TouchableOpacity style={styles.mainButton} onPress={() => router.push('/(tabs)/(menu)/profile')}>
+        <TouchableOpacity style={styles.mainButton} onPress={() => router.push('/chatStaff')}>
             <View>
-                <FontAwesome5 name="user" size={20} color="white" />
+                <Ionicons name="chatbubble-ellipses-outline" size={25} color={COLORS.white} />
             </View>
         </TouchableOpacity>
     )

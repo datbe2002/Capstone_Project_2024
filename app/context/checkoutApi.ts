@@ -22,3 +22,9 @@ export const getOrderByOrderId = async (orderId?: number | null) => {
   return response.data;
 };
 
+export const confirmOrder = async (orderId?: number | null) => {
+  const response = await instance.put(
+    `/api/payment/confirm/${orderId}`
+  );
+  return response.data;
+}

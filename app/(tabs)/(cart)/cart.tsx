@@ -267,7 +267,7 @@ const Cart: React.FC<Props> = ({}) => {
               />
             )}
 
-            <Text style={{ fontSize: SIZES.medium }}>Chọn tất cả</Text>
+            {/* <Text style={{ fontSize: SIZES.medium }}>Chọn tất cả</Text> */}
           </View>
           {isAdjust ? (
             <View>

@@ -54,7 +54,7 @@ const NewProductSection: React.FC<NewProductProps> = ({
             }}
           >
             <View style={styles.itemCard}>
-              <View style={[styles.itemImgContainer, SHADOWS.medium]}>
+              <View style={[styles.itemImgContainer]}>
                 <Image
                   style={styles.itemImg}
                   source={
@@ -121,21 +121,24 @@ const styles = StyleSheet.create({
     height: width / 1.8,
     alignItems: "center",
     gap: 5,
-    padding: 5,
-    backgroundColor: "transparent",
+    padding: 10,
+    backgroundColor: COLORS.white,
+    marginRight: 5,
+    borderWidth: 1,
+    borderColor: COLORS.gray,
+    borderRadius: 10,
   },
   itemImgContainer: {
     width: width / 3.5,
     height: width / 3,
-    borderRadius: 7,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.gray1,
+    backgroundColor: "white",
   },
   itemImg: {
-    width: width / 3.8,
-    height: width / 3.2,
-    borderRadius: 9,
+    width: width / 3.4,
+    height: width / 2.8,
+    borderRadius: 8,
     objectFit: "cover",
   },
   itemDes: {
