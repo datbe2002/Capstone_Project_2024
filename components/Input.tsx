@@ -13,6 +13,7 @@ const { height, width } = Dimensions.get("window");
 interface CustomInputProps extends TextInputProps {
   style?: TextStyle;
   elementAfter?: any;
+  onSubmitEditing?: () => void;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({

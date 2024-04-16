@@ -47,6 +47,7 @@ const ProductsScreen = () => {
   const { sizes, setSies } = useSizeStore();
   const { colors, setColors } = useColorsStore();
   const { userState } = useUserStore();
+  const [inputText, setInputText] = useState("");
   const [tempFilter, setTempFilter] = useState<FilterParams>({
     name: null,
     category: null,
@@ -95,11 +96,11 @@ const ProductsScreen = () => {
     }, [productsQuery])
   );
 
-  const handleSearch = (text: string) => {
-    if (text.length == 0) {
+  const handleSearch = () => {
+    if (inputText.length == 0) {
       setSearchValue(null);
     }
-    setSearchValue(text);
+    setSearchValue(inputText);
   };
 
   const openBottomSheet = (item: any) => {
@@ -131,11 +132,28 @@ const ProductsScreen = () => {
           >
             <CustomInput
               placeholder="Tìm kiếm..."
-              onChangeText={handleSearch}
-              value={searchValue}
+              onChangeText={(text) => setInputText(text)}
+              value={inputText}
               style={styles.searchInput}
+              onSubmitEditing={handleSearch}
               elementAfter={
-                <FontAwesome5 name="search" size={22} color={COLORS.primary} />
+                searchValue ? (
+                  <FontAwesome5
+                    name="times-circle"
+                    size={22}
+                    color={COLORS.primary}
+                    onPress={() => {
+                      setSearchValue(null), setInputText("");
+                    }}
+                  />
+                ) : (
+                  <FontAwesome5
+                    name="search"
+                    size={22}
+                    color={COLORS.primary}
+                    onPress={handleSearch}
+                  />
+                )
               }
             />
             <Pressable onPress={openBottomSheet}>
@@ -154,11 +172,11 @@ const ProductsScreen = () => {
           ref={bottomSheetRef}
           index={-1}
           backdropComponent={renderBackdrop}
-          enablePanDownToClose={false}
+          enablePanDownToClose={true}
           snapPoints={["70%"]}
         >
           <BottomSheetScrollView style={styles.bottomSheet}>
-            <View style={{ paddingBottom: 80 }}>
+            <View style={{ paddingBottom: 10 }}>
               <Text style={styles.placeholderStyle}>Danh mục</Text>
               <Dropdown
                 style={[
@@ -275,7 +293,10 @@ const ProductsScreen = () => {
               />
               <Text style={[styles.placeholderStyle]}>Giá</Text>
               <View
-                style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
               >
                 <KeyboardAvoidingView
                   behavior="padding"
@@ -331,39 +352,80 @@ const ProductsScreen = () => {
               </View>
             </View>
           </BottomSheetScrollView>
-          <Text
-            style={[
-              styles.button,
-              styles.bottomSheetBtn,
-              {
-                backgroundColor: COLORS.primary,
-                color: COLORS.white,
-                alignSelf: "center",
-                width: 180,
-              },
-              // { opacity: mySelectedItem ? 1 : 0.7 },
-            ]}
-            onPress={() => {
-              console.log("temp ===", tempFilter);
-
-              setFilterParams((prevState) => ({
-                ...prevState,
-                category: tempFilter.category?.name || null,
-                subCategory:
-                  tempFilter.category?.id !== -1
-                    ? tempFilter.subCategory?.name || null
-                    : null,
-                color: tempFilter.color?.name || null,
-                size: tempFilter.size?.name || null,
-                minPrice: tempFilter.minPrice,
-                maxPrice: tempFilter.maxPrice,
-              }));
-              // setFilterParams(tempFilter);
-              bottomSheetRef.current?.close();
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignContent: "center",
+              width: width,
+              gap: 10,
+              height: 100,
+              paddingVertical: 15,
+              borderTopWidth: 1,
+              borderTopColor: COLORS.gray,
             }}
           >
-            Áp dụng
-          </Text>
+            <Text
+              style={[
+                styles.button,
+                // styles.bottomSheetBtn,
+                {
+                  backgroundColor: COLORS.primary,
+                  color: COLORS.white,
+                  width: 180,
+                },
+                // { opacity: mySelectedItem ? 1 : 0.7 },
+              ]}
+              onPress={() => {
+                console.log("temp ===", tempFilter);
+                setFilterParams((prevState) => ({
+                  ...prevState,
+                  category: tempFilter.category?.name || null,
+                  subCategory:
+                    tempFilter.category?.id !== -1
+                      ? tempFilter.subCategory?.name || null
+                      : null,
+                  color: tempFilter.color?.name || null,
+                  size: tempFilter.size?.name || null,
+                  minPrice: tempFilter.minPrice,
+                  maxPrice: tempFilter.maxPrice,
+                }));
+                // setFilterParams(tempFilter);
+                bottomSheetRef.current?.close();
+              }}
+            >
+              Áp dụng
+            </Text>
+            <Text
+              style={[
+                styles.button,
+                // styles.bottomSheetBtn,
+                {
+                  backgroundColor: COLORS.black,
+                  color: COLORS.white,
+                  width: 180,
+                },
+                // { opacity: mySelectedItem ? 1 : 0.7 },
+              ]}
+              onPress={() => {
+                console.log("temp ===", tempFilter);
+                setFilterParams({
+                  name: null,
+                  category: null,
+                  subCategory: null,
+                  color: null,
+                  size: null,
+                  minPrice: null,
+                  maxPrice: null,
+                });
+                // setFilterParams(tempFilter);
+                bottomSheetRef.current?.close();
+              }}
+            >
+              Đặt lại
+            </Text>
+          </View>
         </BottomSheet>
       </Background>
     </SafeAreaView>
@@ -409,8 +471,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     width: width,
-    padding: 20,
-    marginBottom: 100,
+    paddingHorizontal: 20,
   },
   filterInput: {
     borderWidth: 1,
