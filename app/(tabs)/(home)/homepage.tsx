@@ -8,7 +8,7 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../../assets";
 import Background from "../../../components/BackGround";
@@ -22,14 +22,14 @@ import instance from "../../context/axiosConfig";
 import {
   getNewProduct,
   getProducts,
-  getTopProducts
+  getTopProducts,
 } from "../../context/productsApi";
 import {
   useCategoriesStore,
   useColorsStore,
   useSizeStore,
   useUserIDStore,
-  useUserStore
+  useUserStore,
 } from "../../store/store";
 
 export default function HomepageScreen() {
@@ -99,12 +99,10 @@ export default function HomepageScreen() {
     queryFn: () => getTopProducts(5),
   });
 
-  const getRandomItems = (items: any[], count: number): any[] => {
-    const shuffled = items.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
-  const temp = categories.filter((x) => x.id !== -1);
-  const homeCategories: any[] = getRandomItems(temp, 4);
+  // const getRandomItems = useCallback((items: any[], count: number): any[] => {
+  //   const shuffled = items.sort(() => 0.5 - Math.random());
+  //   return shuffled.slice(0, count);
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -133,7 +131,7 @@ export default function HomepageScreen() {
         {/* main */}
         <ScrollView style={styles.container}>
           {/* categories */}
-          <CategoriesSection categories={temp.slice(0, 4)} />
+          <CategoriesSection categories={categories} />
           {/* top product */}
           {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
           {topProductsQuery.isSuccess ? (
@@ -150,7 +148,10 @@ export default function HomepageScreen() {
           <Text style={styles.title}>Đề Xuất Cho Bạn</Text>
           {productsQuery.isLoading ? <ActivityIndicator /> : null}
           {productsQuery.isSuccess ? (
-            <OtherProducts data={productsQuery.data.items} userState={userState} />
+            <OtherProducts
+              data={productsQuery.data.items}
+              userState={userState}
+            />
           ) : null}
         </ScrollView>
       </Background>

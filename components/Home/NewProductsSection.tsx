@@ -8,7 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
 import { Product } from "../../constants/Type";
@@ -71,7 +71,10 @@ const NewProductSection: React.FC<NewProductProps> = ({
                 {item.name}
               </Text>
               <Text style={styles.itemPrice}>
-                {item.productVariants[0].price}đ
+                {item.productVariants[0].price
+                  .toLocaleString("en-US", { minimumFractionDigits: 0 })
+                  .replace(/,/g, " ")}
+                đ
               </Text>
             </View>
           </Pressable>
@@ -130,12 +133,12 @@ const styles = StyleSheet.create({
     height: width / 3,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: 'white'
+    backgroundColor: "white",
   },
   itemImg: {
-    width: width / 3.8,
-    height: width / 3.2,
-    borderRadius: 9,
+    width: width / 3.4,
+    height: width / 2.8,
+    borderRadius: 8,
     objectFit: "cover",
   },
   itemDes: {

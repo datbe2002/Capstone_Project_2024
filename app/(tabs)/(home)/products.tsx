@@ -29,6 +29,7 @@ import {
   useCategoriesStore,
   useColorsStore,
   useSizeStore,
+  useUserStore,
 } from "../../store/store";
 import { Dropdown } from "react-native-element-dropdown";
 import { useLocalSearchParams } from "expo-router";
@@ -45,7 +46,7 @@ const ProductsScreen = () => {
   const { categories, setCategories } = useCategoriesStore();
   const { sizes, setSies } = useSizeStore();
   const { colors, setColors } = useColorsStore();
-
+  const { userState } = useUserStore();
   const [tempFilter, setTempFilter] = useState<FilterParams>({
     name: null,
     category: null,
@@ -145,7 +146,7 @@ const ProductsScreen = () => {
 
         <ScrollView>
           {productsQuery.isSuccess ? (
-            <OtherProducts data={productsQuery.data} />
+            <OtherProducts data={productsQuery.data} userState={userState} />
           ) : null}
         </ScrollView>
 

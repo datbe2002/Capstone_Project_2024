@@ -29,7 +29,6 @@ const OtherProducts: React.FC<OtherProducts> = ({ props, data, userState }) => {
 
   const { orderItems, setOrderItems } = useOrderItems();
 
-
   return (
     <View style={styles.data}>
       <View style={[styles.dataList, isOdd && styles.odd]}>
@@ -57,28 +56,40 @@ const OtherProducts: React.FC<OtherProducts> = ({ props, data, userState }) => {
               <Text style={styles.itemDes} numberOfLines={2}>
                 {item.name}
               </Text>
-              <View style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Text style={styles.itemPrice}>
-                  {transNumberFormatter(item.productVariants[0]?.price)} đ
+                  {(item.productVariants[0]?.price)
+                    .toLocaleString("en-US", { minimumFractionDigits: 0 })
+                    .replace(/,/g, " ")}
+                  đ
                 </Text>
-                <TouchableOpacity style={styles.buyProd} onPress={() => {
-                  const obj: CartItem = {
-                    cartId: userState?.userCartId,
-                    color:
-                      item.productVariants[0].color.colorCode,
-                    price: item.productVariants[0].price,
-                    product: item,
-                    productId: item.id,
-                    quantity: 1,
-                    size: item.productVariants[0].size.value,
-                  };
-                  setOrderItems({
-                    items: [obj],
-                    total: obj.price,
-                    totalQuantityProd: 1,
-                  });
-                  router.push("/payment");
-                }}>
+                <TouchableOpacity
+                  style={styles.buyProd}
+                  onPress={() => {
+                    const obj: CartItem = {
+                      cartId: userState?.userCartId,
+                      color: item.productVariants[0].color.colorCode,
+                      price: item.productVariants[0].price,
+                      product: item,
+                      productId: item.id,
+                      quantity: 1,
+                      size: item.productVariants[0].size.value,
+                    };
+                    setOrderItems({
+                      items: [obj],
+                      total: obj.price,
+                      totalQuantityProd: 1,
+                    });
+                    router.push("/payment");
+                  }}
+                >
                   <View>
                     <Ionicons name="cart" size={20} color={COLORS.white} />
                   </View>
@@ -137,7 +148,7 @@ const styles = StyleSheet.create({
     gap: 3,
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderColor: COLORS.gray,
     borderRadius: 15,
     borderWidth: 1,
@@ -159,19 +170,22 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 15,
   },
   itemDes: {
-    paddingVertical: 5,
-    height: width / 8,
+    paddingVertical: 2,
+    minHeight: 30,
     width: "100%",
     textAlign: "left",
-    fontSize: SIZES.large,
+    fontSize: SIZES.medium,
     textAlignVertical: "top",
-    fontFamily: 'mon-b'
+    fontFamily: "mon-sb",
+    // backgroundColor: "red",
   },
   itemPrice: {
     textAlign: "left",
     fontFamily: "mon-b",
     fontSize: SIZES.large,
-    color: COLORS.primary
+    color: COLORS.primary,
+    height: 30,
+    // backgroundColor: "red",
   },
   buyProd: {
     backgroundColor: COLORS.primary,
@@ -179,7 +193,7 @@ const styles = StyleSheet.create({
     height: 32,
     padding: 5,
     borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

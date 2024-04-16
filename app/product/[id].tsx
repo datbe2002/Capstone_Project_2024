@@ -12,7 +12,7 @@ import {
   Image,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomAlert from "../../components/Arlert";
@@ -49,7 +49,7 @@ const ProductDetail = () => {
   const productQuery = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(id),
-    enabled: id !== null
+    enabled: id !== null,
   });
 
   const mutation = useMutation({
@@ -186,9 +186,12 @@ const ProductDetail = () => {
 
               <View style={[styles.horizWrapper, { paddingHorizontal: 20 }]}>
                 <Text style={styles.itemPrice}>
-                  {productQuery.data.data.productVariants[0]?.price} đ
+                  {productQuery.data.data.productVariants[0]?.price
+                    .toLocaleString("en-US", { minimumFractionDigits: 0 })
+                    .replace(/,/g, " ")}
+                  đ
                 </Text>
-                <View style={styles.horizWrapper}>
+                <View style={[styles.horizWrapper, { paddingHorizontal: 10 }]}>
                   {productQuery.data.data.canTryOn && (
                     <View
                       style={{
@@ -199,7 +202,7 @@ const ProductDetail = () => {
                     >
                       <MaterialCommunityIcons
                         name="tshirt-crew"
-                        size={SIZES.large}
+                        size={26}
                         color={COLORS.white}
                         onPress={() => handleAddToWardrove()}
                       />
@@ -251,58 +254,58 @@ const ProductDetail = () => {
         ) : (
           <ActivityIndicator color={COLORS.primary} size={50} />
         )}
-        {productQuery.isSuccess && (<View style={[styles.bottom, SHADOWS.medium]}>
+        {productQuery.isSuccess && (
+          <View style={[styles.bottom, SHADOWS.medium]}>
+            <FavoriteLogic
+              setIsFavourite={setIsFavourite}
+              isFavourite={isFavourite}
+              item={productQuery.data.data}
+            />
 
-          <FavoriteLogic
-            setIsFavourite={setIsFavourite}
-            isFavourite={isFavourite}
-            item={productQuery.data.data}
-          />
-
-
-          <Text
-            style={[
-              styles.button,
-              { backgroundColor: COLORS.black, color: COLORS.white },
-            ]}
-            onPress={() => {
-              openBottomSheet(null);
-            }}
-          >
-            Thêm vào giỏ hàng
-          </Text>
-          <Text
-            style={[
-              styles.button,
-              { backgroundColor: COLORS.primary, color: COLORS.white },
-            ]}
-            onPress={() => {
-              const obj: CartItem = {
-                cartId: userState?.userCartId,
-                color:
-                  productQuery.data.data.productVariants[0].color.colorCode,
-                price: productQuery.data.data.productVariants[0].price,
-                product: productQuery.data.data,
-                productId: productQuery.data.data.id,
-                quantity: 1,
-                size: productQuery.data.data.productVariants[0].size.value,
-              };
-              // console.log({
-              //   items: [obj],
-              //   total: obj.price,
-              //   totalQuantityProd: 1,
-              // });
-              setOrderItems({
-                items: [obj],
-                total: obj.price,
-                totalQuantityProd: 1,
-              });
-              router.push("/payment");
-            }}
-          >
-            Mua ngay
-          </Text>
-        </View>)}
+            <Text
+              style={[
+                styles.button,
+                { backgroundColor: COLORS.black, color: COLORS.white },
+              ]}
+              onPress={() => {
+                openBottomSheet(null);
+              }}
+            >
+              Thêm vào giỏ hàng
+            </Text>
+            <Text
+              style={[
+                styles.button,
+                { backgroundColor: COLORS.primary, color: COLORS.white },
+              ]}
+              onPress={() => {
+                const obj: CartItem = {
+                  cartId: userState?.userCartId,
+                  color:
+                    productQuery.data.data.productVariants[0].color.colorCode,
+                  price: productQuery.data.data.productVariants[0].price,
+                  product: productQuery.data.data,
+                  productId: productQuery.data.data.id,
+                  quantity: 1,
+                  size: productQuery.data.data.productVariants[0].size.value,
+                };
+                // console.log({
+                //   items: [obj],
+                //   total: obj.price,
+                //   totalQuantityProd: 1,
+                // });
+                setOrderItems({
+                  items: [obj],
+                  total: obj.price,
+                  totalQuantityProd: 1,
+                });
+                router.push("/payment");
+              }}
+            >
+              Mua ngay
+            </Text>
+          </View>
+        )}
         {/* bottom sheet */}
         {productQuery.isSuccess && (
           <BottomSheet
@@ -329,7 +332,7 @@ const ProductDetail = () => {
                 </View>
               </BottomSheetScrollView>
               <QuantitySelector
-                style={{ position: "absolute", bottom: 75 }}
+                style={{ position: "absolute", bottom: 65 }}
                 initialQuantity={quantity}
                 onQuantityChange={(newQuantity) => setQuantity(newQuantity)}
                 enabled={mySelectedItem}
@@ -464,14 +467,14 @@ const styles = StyleSheet.create({
     height: 90,
     flexDirection: "row",
     justifyContent: "space-around",
-    paddingTop: 15,
-    paddingBottom: 35,
+    paddingTop: 20,
+    paddingBottom: 30,
     alignItems: "center",
     position: "absolute",
     bottom: 0,
     width: width,
     borderTopColor: COLORS.gray,
-    borderTopWidth: 1
+    borderTopWidth: 1,
   },
   button: {
     height: 50,
@@ -503,11 +506,11 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   bottomSheet: {
-    height: height * 0.5,
+    height: height * 0.52,
     position: "relative",
   },
   bottomSheetBtn: {
     position: "absolute",
-    bottom: 25,
+    bottom: 0,
   },
 });
