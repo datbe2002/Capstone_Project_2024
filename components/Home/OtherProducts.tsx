@@ -47,10 +47,13 @@ const OtherProducts: React.FC<OtherProducts> = ({ props, data }) => {
                 />
               </View>
               <Text style={styles.itemDes} numberOfLines={2}>
-                {item.description}
+                {item.name}
               </Text>
               <Text style={styles.itemPrice}>
-                {item.productVariants[0]?.price} đ
+                {(item.productVariants[0]?.price)
+                  .toLocaleString("en-US", { minimumFractionDigits: 0 })
+                  .replace(/,/g, " ")}
+                đ
               </Text>
             </View>
           </Pressable>
@@ -123,11 +126,12 @@ const styles = StyleSheet.create({
   },
   itemDes: {
     paddingVertical: 5,
-    height: width / 8,
+    minHeight: 30,
     width: "100%",
     textAlign: "left",
     fontSize: SIZES.medium,
     textAlignVertical: "top",
+    fontFamily: "mon-sb",
   },
   itemPrice: {
     width: "100%",

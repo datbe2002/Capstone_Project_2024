@@ -186,7 +186,10 @@ const ProductDetail = () => {
 
               <View style={[styles.horizWrapper, { paddingHorizontal: 20 }]}>
                 <Text style={styles.itemPrice}>
-                  {productQuery.data.data.productVariants[0]?.price} đ
+                  {productQuery.data.data.productVariants[0]?.price
+                    .toLocaleString("en-US", { minimumFractionDigits: 0 })
+                    .replace(/,/g, " ")}
+                  đ
                 </Text>
                 <View style={[styles.horizWrapper, { paddingHorizontal: 10 }]}>
                   {productQuery.data.data.canTryOn && (

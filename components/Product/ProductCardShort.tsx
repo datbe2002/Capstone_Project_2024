@@ -75,7 +75,12 @@ const ProductCardShort: React.FC<Props> = ({ data, variant }) => {
           {data.description}
         </Text>
         {variant ? (
-          <Text style={styles.price}>{variant?.price} đ</Text>
+          <Text style={styles.price}>
+            {variant?.price
+              .toLocaleString("en-US", { minimumFractionDigits: 0 })
+              .replace(/,/g, " ")}
+            đ
+          </Text>
         ) : (
           <Text></Text>
         )}
