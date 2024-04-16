@@ -73,6 +73,7 @@ function RootLayoutNav() {
           fontSize: 25
         },
         headerTintColor: COLORS.primary,
+
       }} />
       <Stack.Screen name="payment" options={{
         headerShown: true,
