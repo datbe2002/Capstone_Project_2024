@@ -14,7 +14,9 @@ export const getProductsFiltered = async (params: FilterParams) => {
         params[key as keyof FilterParams] !== "" &&
         params[key as keyof FilterParams] !== "Tất cả"
     )
-    .map((key) => `${key}=${params[key as keyof FilterParams]}`)
+    .map(
+      (key) => `${key}=${encodeURIComponent(params[key as keyof FilterParams])}`
+    )
     .join("&");
 
   console.log(`api/product/search?${queryString}`);
