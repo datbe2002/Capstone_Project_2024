@@ -108,15 +108,15 @@ const OrderDetail = () => {
     const getBackgroundColor = (status: number) => {
         switch (status) {
             case 1:
-                return 'yellow';
+                return '#90E0EF';
             case 4:
                 return COLORS.secondary;
             case 5:
                 return COLORS.primary;
             case 6:
-                return '#26AB9A'; // Specific green color for completed orders
+                return '#26AB9A';
             default:
-                return COLORS.darkGray; // Default color for other statuses
+                return COLORS.darkGray;
         }
     };
 
@@ -125,16 +125,23 @@ const OrderDetail = () => {
             {isFetching ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator color={COLORS.primary} size={30} />
             </View> :
-                <ScrollView contentContainerStyle={styles.orderContainer}>
+                <ScrollView contentContainerStyle={styles.orderContainer} >
                     <View style={[styles.orderStatus, { backgroundColor: getBackgroundColor(data?.data?.status) }]}>
                         <View style={{ justifyContent: 'center', alignItems: 'flex-start', height: 150, paddingLeft: 10, width: '80%' }}>
                             <OrderStatusText status={data?.data?.status} />
-                            <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.white }}>{!(data?.data?.status === 1 || data?.data?.status === 3) ? 'Cảm ơn bạn đã mua sắm tại FTai Store!' : 'Hẹn gặp lại lần sau..'}</Text>
+                            <Text style={{ fontFamily: 'mon-sb', fontSize: 16, color: COLORS.white }}>{data?.data?.status === 1 ? 'Vui lòng đợi...' : data?.data?.status === 3 ? 'Hẹn gặp lại lần sau..' : 'Cảm ơn bạn đã mua sắm tại FTai Store!'}
+                            </Text>
                         </View>
                         <View style={{ justifyContent: 'center', alignItems: 'center', width: '20%' }}>
-                            {!(data?.data?.status === 1 || data?.data?.status === 3) ? <Ionicons name="checkmark-done-circle" size={50} color={COLORS.white} /> :
-                                <MaterialCommunityIcons name="archive-cancel-outline" size={50} color={COLORS.white} />
-                            }
+                            {data?.data?.status === 1 ? (
+                                <MaterialIcons name="pending" size={50} color={COLORS.white} />
+                            ) : (
+                                !(data?.data?.status === 3) ? (
+                                    <Ionicons name="checkmark-done-circle" size={50} color={COLORS.white} />
+                                ) : (
+                                    <MaterialCommunityIcons name="archive-cancel-outline" size={50} color={COLORS.white} />
+                                )
+                            )}
                         </View>
                     </View>
                     {data?.data?.status === 3 && <View style={{
@@ -173,17 +180,13 @@ const OrderDetail = () => {
                     </View>
                     <OrderItemView data={data?.data} handleOpenBottom=
                         {handleOpenBottom} feedbackData={feedbackData?.data} />
-
+                    {(data?.data?.status === 4 || data?.data?.status === 1) && <View style={{
+                        margin: 10
+                    }}>
+                        <CustomButton buttonText={'Hủy đơn'} buttonColor={'errorColor'} />
+                    </View>}
                 </ScrollView>}
-            {!isFetching && data?.data?.status === 4 && <View style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                margin: 10
-            }}>
-                <CustomButton buttonText={'Hủy đơn'} buttonColor={'errorColor'} />
-            </View>}
+
             <BottomSheet
                 snapPoints={["60%"]}
                 ref={bottomSheetRef}
@@ -239,7 +242,6 @@ const styles = StyleSheet.create({
     },
     orderContainer: {
         position: 'relative',
-        height: '100%',
     },
     orderStatus: {
         height: 150,

@@ -28,6 +28,7 @@ const wardrove = () => {
   const mutation = useMutation({
     mutationFn: (data: any) => tryOn(data),
     onSuccess: (data) => {
+      console.log('first')
       setImageSrc(data.result);
     },
   });
@@ -83,6 +84,7 @@ const wardrove = () => {
       link_cloth: item.tryOnImage,
       link_edge: item.edgeImage,
     };
+    console.log(obj)
     mutation.mutate(obj);
   };
 

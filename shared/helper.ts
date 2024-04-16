@@ -40,9 +40,16 @@ const clearAsyncWithKey = async (key: string) => {
   }
 };
 
+const getRoomId = (currentId: string | null | undefined, staffId: string) => {
+  const sortedIds = [currentId, staffId].sort();
+  const roomId = sortedIds.join('-');
+  return roomId;
+}
+
 export {
   addItemsToAsyncStorage,
   clearAsyncWithKey,
   getItemsFromAsyncStorage,
   removeItemsFromAsyncStorage,
+  getRoomId
 };

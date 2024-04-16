@@ -21,6 +21,7 @@ const MenuLayout = () => {
                 },
                 headerTintColor: COLORS.primary,
             }} />
+
             <Stack.Screen name='profile' options={{
                 headerShown: true,
                 title: 'Hồ sơ cá nhân',

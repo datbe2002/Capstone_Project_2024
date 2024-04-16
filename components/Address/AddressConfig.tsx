@@ -46,7 +46,7 @@ const AddressConfig: React.FC<AddressConfigProps> = ({ address }) => {
                     data={address}
                     renderItem={({ item }) => <AddressCard addressUnique={item} />}
                     keyExtractor={item => item.id}
-                    ListEmptyComponent={<EmptyComponentCustom onPress={() => router.push('/(tabs)/(home)/homepage')} text={"Bạn chưa có địa chỉ mặc định"} option={"Thêm một để có thể đặt hàng ngay!"} icon={<FontAwesome5 name="address-card" size={40} color="white" />} />}
+                    ListEmptyComponent={<EmptyComponentCustom onPress={() => router.push('/addaddress')} text={"Bạn chưa có địa chỉ mặc định"} option={"Thêm một để có thể đặt hàng ngay!"} icon={<FontAwesome5 name="address-card" size={40} color="white" />} />}
                 />
 
             </View>
