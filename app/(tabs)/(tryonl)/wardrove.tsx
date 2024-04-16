@@ -6,6 +6,7 @@ import {
   Pressable,
   StyleSheet,
   View,
+  Button,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,6 +18,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getModels, tryOn } from "../../context/wardroveApi";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import ReactNativeBlobUtil from "react-native-blob-util";
+import Share from "react-native-share";
+
 const { height, width } = Dimensions.get("window");
 
 const wardrove = () => {
@@ -28,7 +32,7 @@ const wardrove = () => {
   const mutation = useMutation({
     mutationFn: (data: any) => tryOn(data),
     onSuccess: (data) => {
-      console.log('first')
+      console.log("first");
       setImageSrc(data.result);
     },
   });
@@ -84,8 +88,40 @@ const wardrove = () => {
       link_cloth: item.tryOnImage,
       link_edge: item.edgeImage,
     };
-    console.log(obj)
+    console.log(obj);
     mutation.mutate(obj);
+  };
+
+  const shareImage = () => {
+    ReactNativeBlobUtil.fetch(
+      "GET",
+      "https://firebasestorage.googleapis.com/v0/b/fsvton-18ce5.appspot.com/o/ProductImg%2F3474-like.png?alt=media&token=bbe20475-35cc-483f-bc9a-03da743821f9"
+    )
+      .then((res) => {
+        let status = res.info().status;
+        if (status === 200) {
+          let base64Str = res.base64();
+          let options = {
+            title: "Share file",
+            url: `data:image/jpeg;base64,${base64Str}`,
+            message: "Check out this awesome image!",
+          };
+          Share.open(options)
+            .then((r) => {
+              console.log(r);
+            })
+            .catch((e) => {
+              e && console.log(e);
+            });
+        } else {
+          // handle other status codes
+        }
+      })
+      // Something went wrong:
+      .catch((err) => {
+        // error handling
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -99,6 +135,7 @@ const wardrove = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Background imageKey={"i5"}>
+        <Button title="Click to Share Image" onPress={() => shareImage()} />
         <View style={styles.wrapper}>
           <View style={styles.tryon}>
             <View style={[styles.imageWrapper, SHADOWS.medium]}>
