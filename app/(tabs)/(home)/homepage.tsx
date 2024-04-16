@@ -7,7 +7,7 @@ import {
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import { router, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../../assets";
 import CustomInput from "../../../components/Input";
@@ -102,12 +102,10 @@ export default function HomepageScreen() {
     queryFn: () => getTopProducts(5),
   });
 
-  const getRandomItems = (items: any[], count: number): any[] => {
+  const getRandomItems = useCallback((items: any[], count: number): any[] => {
     const shuffled = items.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
-  };
-  const temp = categories.filter((x) => x.id !== -1);
-  const homeCategories: any[] = getRandomItems(temp, 4);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -136,7 +134,7 @@ export default function HomepageScreen() {
         {/* main */}
         <ScrollView style={styles.container}>
           {/* categories */}
-          <CategoriesSection categories={homeCategories} />
+          <CategoriesSection categories={categories} />
           {/* top product */}
           {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
           {topProductsQuery.isSuccess ? (
