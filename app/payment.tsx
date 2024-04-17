@@ -77,24 +77,24 @@ const Payment = () => {
   });
   const [loading, setLoading] = useState<boolean>(false)
   const { setOrderIdSucc } = useOrderIdSuccess()
-  const completePayment = async (url: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 8000));
-    setLoading(false);
-    router.push('/success_payment');
-  };
-  const handleCheckoutUrl = async (paymentUrl: string) => {
-    await WebBrowser.openBrowserAsync(paymentUrl)
-    setLoading(true)
-    await completePayment(paymentUrl);
-  }
+  // const completePayment = async (url: string) => {
+  //   await new Promise((resolve) => setTimeout(resolve, 8000));
+  //   setLoading(false);
+  //   router.push('/success_payment');
+  // };
+  // const handleCheckoutUrl = async (paymentUrl: string) => {
+  //   await WebBrowser.openBrowserAsync(paymentUrl)
+  //   setLoading(true)
+  //   await completePayment(paymentUrl);
+  // }
   const { mutate, isPending } = useMutation({
     mutationFn: (data: any) => checkoutCart(data),
     onSuccess: (response: any) => {
       const { paymentUrl, orderId } = response.data;
       setOrderIdSucc(orderId)
       Alert.alert("Thông báo", "Bạn hãy chọn OK để thanh toán", [
-        // { text: "OK", onPress: () => Linking.openURL(paymentUrl) },
-        { text: "OK", onPress: () => handleCheckoutUrl(paymentUrl) },
+        { text: "OK", onPress: () => Linking.openURL(paymentUrl) },
+        // { text: "OK", onPress: () => handleCheckoutUrl(paymentUrl) },
       ]);
     },
     onError: (err) => {

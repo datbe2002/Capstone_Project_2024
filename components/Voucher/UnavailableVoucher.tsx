@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import EmptyComponentCustom from '../EmptyComponentCustom'
 import { Entypo } from '@expo/vector-icons'
 import VoucherCard2 from './VoucherCard2'
 import { COLORS } from '../../assets'
-
+const { height } = Dimensions.get('window')
 const UnavailableVoucher = ({ dataVoucherUnavailable }: any) => {
 
     return (
-        <View style={{ position: 'relative', flex: 1 }}>
+        <View style={{ height: height }}>
             <FlatList style={{
                 marginBottom: 120,
             }}
