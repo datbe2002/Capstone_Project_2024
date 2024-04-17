@@ -7,11 +7,11 @@ export const getModels = async () => {
 };
 
 export const tryOn = async (data: any) => {
-  console.log('try onl', data)
+  console.log("try onl", data);
   const response = await axios.post(
-    "http://codergang.org:5132/process-images",
+    "https://0fac-2402-800-63b8-a9c1-b4aa-6b04-de84-b490.ngrok-free.app/process-images",
     data
   );
-  console.log(response)
+  console.log(response);
   return response.data;
 };
