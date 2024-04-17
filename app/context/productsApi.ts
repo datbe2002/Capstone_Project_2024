@@ -51,7 +51,7 @@ export const getProductById = async (id: any) => {
 
 export const addToCart = async (data: CartData) => {
   const response = await instance.post("/api/cart/add", data);
-  console.log("api" + response);
+  // console.log("api" + response);
   return response.data;
 };
 
