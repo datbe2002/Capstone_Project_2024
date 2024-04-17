@@ -7,7 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../assets";
@@ -81,7 +81,7 @@ export default function CategoriesFilter() {
             <Pressable
               key={index}
               onPress={() => {
-                console.log("cate " + item.name);
+                // console.log("cate " + item.name);
               }}
             >
               <View style={[styles.cateItem, SHADOWS.small]}>

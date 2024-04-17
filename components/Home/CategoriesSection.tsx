@@ -58,7 +58,7 @@ const CategoriesSection: React.FC<CategoriesProps> = ({
   const images = [cate1, cate2, cate3, cate4];
   const temp = categories.filter((x) => x.id !== -1).slice(0, 4);
   const quadcate: any[] = addImageToCategories(temp, images);
-  console.log(categories);
+  // console.log(categories);
   return (
     <View style={styles.categories}>
       <View style={[styles.horizWrapper, styles.cateTitleWrapper]}>

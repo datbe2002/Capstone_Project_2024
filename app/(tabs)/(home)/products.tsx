@@ -76,7 +76,7 @@ const ProductsScreen = () => {
       setFilterParams((prevParams) => ({ ...prevParams, name: paramSearch }));
     }
     if (cateParam) {
-      console.log("cateParam", cateParam);
+      // console.log("cateParam", cateParam);
 
       setFilterParams((prevParams) => ({ ...prevParams, category: cateParam }));
     }
@@ -378,7 +378,7 @@ const ProductsScreen = () => {
                 // { opacity: mySelectedItem ? 1 : 0.7 },
               ]}
               onPress={() => {
-                console.log("temp ===", tempFilter);
+                // console.log("temp ===", tempFilter);
                 setFilterParams((prevState) => ({
                   ...prevState,
                   category: tempFilter.category?.name || null,
@@ -409,7 +409,7 @@ const ProductsScreen = () => {
                 // { opacity: mySelectedItem ? 1 : 0.7 },
               ]}
               onPress={() => {
-                console.log("temp ===", tempFilter);
+                // console.log("temp ===", tempFilter);
                 setFilterParams({
                   name: null,
                   category: null,
