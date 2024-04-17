@@ -409,37 +409,54 @@ const wardrove = () => {
             ref={bottomSheetRef}
             index={-1}
             enablePanDownToClose={true}
-            snapPoints={["22%"]}
+            snapPoints={["30%"]}
           >
-            <BottomSheetScrollView
-              style={{ height: 130, width: width - 20 }}
-              horizontal={true}
+            <View
+              style={{
+                width: width,
+                height: 130,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              {modelsQuery.isSuccess &&
-                modelsQuery.data?.data?.map((item: any) => (
-                  <Pressable
-                    key={item.id.toString()}
-                    onPress={() => {
-                      setSelectedModel(item);
-                      setImageSrc(item.imageUrl);
-                      bottomSheetRef.current?.close();
-                    }}
-                  >
-                    <View style={styles.itemCard}>
-                      <View style={[styles.itemImgContainer, SHADOWS.medium]}>
-                        <Image
-                          style={styles.itemImg}
-                          source={
-                            item.imageUrl
-                              ? { uri: item.imageUrl }
-                              : require("../../../assets/images/default.png")
-                          }
-                        />
+              <Text
+                style={[
+                  styles.itemDes,
+                  { textAlign: "center", textAlignVertical: "center" },
+                ]}
+              >
+                Chọn model
+              </Text>
+              <BottomSheetScrollView
+                style={{ height: 130, width: width - 20 }}
+                horizontal={true}
+              >
+                {modelsQuery.isSuccess &&
+                  modelsQuery.data?.data?.map((item: any) => (
+                    <Pressable
+                      key={item.id.toString()}
+                      onPress={() => {
+                        setSelectedModel(item);
+                        setImageSrc(item.imageUrl);
+                        bottomSheetRef.current?.close();
+                      }}
+                    >
+                      <View style={styles.itemCard}>
+                        <View style={[styles.itemImgContainer, SHADOWS.medium]}>
+                          <Image
+                            style={styles.itemImg}
+                            source={
+                              item.imageUrl
+                                ? { uri: item.imageUrl }
+                                : require("../../../assets/images/default.png")
+                            }
+                          />
+                        </View>
                       </View>
-                    </View>
-                  </Pressable>
-                ))}
-            </BottomSheetScrollView>
+                    </Pressable>
+                  ))}
+              </BottomSheetScrollView>
+            </View>
           </BottomSheet>
         </View>
       </Background>
