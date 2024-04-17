@@ -414,7 +414,7 @@ const wardrove = () => {
             <View
               style={{
                 width: width,
-                height: 130,
+                height: 160,
                 justifyContent: "center",
                 alignItems: "center",
               }}
