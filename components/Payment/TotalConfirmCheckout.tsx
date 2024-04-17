@@ -2,13 +2,15 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { COLORS } from '../../assets'
 import { transNumberFormatter } from './ShippingFee'
+import { ActivityIndicator } from 'react-native'
 
 interface TotalConfirmCheckoutProps {
     handleCheckout: () => void,
-    totalPay: number | null
+    totalPay: number | null,
+    isPending: boolean
 }
 
-const TotalConfirmCheckout = ({ handleCheckout, totalPay }: TotalConfirmCheckoutProps) => {
+const TotalConfirmCheckout = ({ handleCheckout, totalPay, isPending }: TotalConfirmCheckoutProps) => {
     return (
         <View style={styles.footerPay}>
             <View style={styles.mainTotalPrice}>
@@ -16,7 +18,7 @@ const TotalConfirmCheckout = ({ handleCheckout, totalPay }: TotalConfirmCheckout
                 <Text style={styles.mainPrice}>{transNumberFormatter(totalPay)}đ</Text>
             </View>
             <Pressable style={styles.checkoutBtn} onPress={handleCheckout}>
-                <Text style={styles.textBtn}>Đặt hàng</Text>
+                <Text style={styles.textBtn}>{isPending ? <ActivityIndicator size={30} color={COLORS.white} /> : 'Đặt hàng'}</Text>
             </Pressable>
         </View>
     )
@@ -49,6 +51,7 @@ const styles = StyleSheet.create({
         fontFamily: 'mon-sb'
     },
     checkoutBtn: {
+        width: 150,
         backgroundColor: COLORS.primary,
         justifyContent: 'center',
         alignItems: 'center'
