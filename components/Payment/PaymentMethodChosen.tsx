@@ -1,39 +1,63 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { COLORS } from '../../assets'
+import React, { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { COLORS } from '../../assets';
+import { CheckBox } from 'react-native-elements';
 
-const PaymentMethodChosen = () => {
+const PaymentMethodChosen = ({ setPaymentMethod, paymentMethod }: any) => {
+
+    const handleSelectMethod = (method: number) => {
+        setPaymentMethod(method);
+    };
+
     return (
         <View style={styles.totalPriceContainer}>
             <View>
                 <Text style={styles.label}>Phương thức thanh toán:</Text>
             </View>
-            <Text style={styles.totalPrice}>Zalo Pay</Text>
+            <View style={[styles.option, { borderBottomColor: COLORS.gray, borderBottomWidth: 1 }]}>
+                <CheckBox
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    checked={paymentMethod === 1}
+                    onPress={() => handleSelectMethod(1)}
+                />
+                <Text style={styles.totalPrice}>Zalo Pay</Text>
+            </View>
+            <View style={styles.option}>
+                <CheckBox
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    checked={paymentMethod === 3}
+                    onPress={() => handleSelectMethod(3)}
+                />
+                <Text style={styles.totalPrice}>COD (Thanh toán khi nhận hàng)</Text>
+            </View>
         </View>
-    )
-}
+    );
+};
 
-export default PaymentMethodChosen
+export default PaymentMethodChosen;
 
 const styles = StyleSheet.create({
     totalPriceContainer: {
-        height: 60,
         padding: 10,
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         backgroundColor: COLORS.white,
-        alignItems: 'center',
         borderTopWidth: 1,
         borderColor: COLORS.gray
     },
     totalPrice: {
-        fontSize: 20,
-        fontFamily: 'mon-b',
+        fontSize: 16,
+        fontFamily: 'mon-sb',
         color: COLORS.black
     },
     label: {
         fontSize: 18,
         fontFamily: 'mon-sb'
     },
-})
+    option: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    }
+});

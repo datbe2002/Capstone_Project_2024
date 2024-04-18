@@ -40,7 +40,7 @@ export default VoucherChosen
 const styles = StyleSheet.create({
     voucherContainer: {
         marginTop: 10,
-        height: 60,
+        minHeight: 60,
         padding: 10,
         justifyContent: 'space-between',
         alignItems: 'center',

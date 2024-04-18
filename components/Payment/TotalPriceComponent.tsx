@@ -21,10 +21,10 @@ const TotalPriceComponent = ({ totalPrice, shippingFeePrice, totalVoucher }: any
                     <Text style={styles.textLine}>Tổng tiền phí vận chuyển</Text>
                     <Text style={styles.textLine}>{transNumberFormatter(shippingFeePrice)}đ</Text>
                 </View>
-                <View style={styles.line}>
+                {totalVoucher ? <View style={styles.line}>
                     <Text style={styles.textLine}>Tổng cộng voucher giảm</Text>
                     <Text style={[styles.textLine]}>- {transNumberFormatter(totalVoucher)}đ</Text>
-                </View>
+                </View> : null}
                 <View style={styles.line}>
                     <Text style={styles.textLineEnd}>Tổng thanh toán</Text>
                     <Text style={styles.textLineEndPrice}>{transNumberFormatter(totalPrice + shippingFeePrice - totalVoucher)}đ</Text>
