@@ -83,7 +83,8 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (userState) {
-      console.log(userState.userCartId, userState.id);
+      // console.log(userState.userCartId, userState.id);
+      console.log("mySelectedItem", mySelectedItem);
 
       if (mySelectedItem) {
         mutation.mutate({
@@ -94,6 +95,7 @@ const ProductDetail = () => {
           size: mySelectedItem.size.value,
           price: mySelectedItem.price,
           quantity: quantity,
+          sku: mySelectedItem.sku,
         });
       }
     }
@@ -288,7 +290,9 @@ const ProductDetail = () => {
                   productId: productQuery.data.data.id,
                   quantity: 1,
                   size: productQuery.data.data.productVariants[0].size.value,
+                  sku: productQuery.data.data.productVariants[0].sku,
                 };
+
                 // console.log({
                 //   items: [obj],
                 //   total: obj.price,
@@ -379,7 +383,9 @@ const ProductDetail = () => {
                     productId: productQuery.data.data.id,
                     quantity: quantity,
                     size: mySelectedItem.size.value,
+                    sku: mySelectedItem.sku,
                   };
+
                   setOrderItems({
                     items: [obj],
                     total: obj.price * obj.quantity,

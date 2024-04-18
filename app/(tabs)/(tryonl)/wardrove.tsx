@@ -303,7 +303,9 @@ const wardrove = () => {
                           productId: selectedProduct.id,
                           quantity: 1,
                           size: selectedProduct.productVariants[0].size.value,
+                          sku: selectedProduct.productVariants[0].sku,
                         };
+                        // console.log(obj);
                         setOrderItems({
                           items: [obj],
                           total: obj.price,
