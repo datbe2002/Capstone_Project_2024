@@ -69,6 +69,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   product: Product;
+  sku: string;
 }
 
 // interface RootObject {
