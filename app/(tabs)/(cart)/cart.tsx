@@ -153,6 +153,7 @@ const Cart: React.FC<Props> = ({}) => {
   useEffect(() => {
     if (cartQuery.isSuccess) {
       setCartItems(cartQuery.data.data.cartItems);
+      console.log("cart", cartQuery.data.data.cartItems);
     }
   }, [cartQuery.isSuccess, cartQuery.data]);
 

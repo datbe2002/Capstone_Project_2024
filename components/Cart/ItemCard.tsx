@@ -27,6 +27,7 @@ const ItemCard: React.FC<Props> = ({
   handleCheck,
 }) => {
   const [quantity, setQuantity] = useState<number>(item.quantity);
+  console.log("item", item);
 
   const handleIncrease = () => {
     setQuantity(quantity + 1);
@@ -54,6 +55,25 @@ const ItemCard: React.FC<Props> = ({
                 : require("../../assets/images/default.png")
             }
           />
+          <Text
+            style={[
+              {
+                backgroundColor: COLORS.white,
+                color: COLORS.primary,
+                paddingHorizontal: 5,
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: COLORS.gray,
+                fontSize: SIZES.medium,
+                fontFamily: "mon-sb",
+                position: "absolute",
+                bottom: 5,
+                left: 5,
+              },
+            ]}
+          >
+            {item.sku}
+          </Text>
         </View>
         <View style={styles.info}>
           <View style={styles.vertiWrapper}>
