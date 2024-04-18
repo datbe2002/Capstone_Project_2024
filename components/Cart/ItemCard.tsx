@@ -90,11 +90,16 @@ const ItemCard: React.FC<Props> = ({
                 },
               ]}
             >
-              <Text style={[styles.description, { width: "auto" }]}>
-                Màu: {item.color}
-              </Text>
+              <Text style={[styles.description, { width: "auto" }]}>Màu:</Text>
               <View
-                style={{ height: 20, width: 50, backgroundColor: item.color }}
+                style={{
+                  borderRadius: 50,
+                  borderWidth: 1,
+                  borderColor: COLORS.darkGray,
+                  height: 20,
+                  width: 20,
+                  backgroundColor: item.color,
+                }}
               ></View>
             </View>
           </View>
