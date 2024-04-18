@@ -29,7 +29,7 @@ const MaybeUCanLike = () => {
             </View>
             {isLoading ? <View>
                 <ActivityIndicator size={25} color={COLORS.primary} />
-            </View> : <View style={{ height: '100%' }}>
+            </View> :
                 <MasonryList
                     nestedScrollEnabled
                     style={{
@@ -52,7 +52,7 @@ const MaybeUCanLike = () => {
                     )}
                     onEndReachedThreshold={0.1}
                 />
-            </View>}
+            }
         </View>
     )
 }
@@ -61,6 +61,7 @@ export default MaybeUCanLike
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1
     },
     mainHeader: {
         height: 50,

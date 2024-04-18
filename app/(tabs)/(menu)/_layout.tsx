@@ -55,6 +55,18 @@ const MenuLayout = () => {
                 },
                 headerTintColor: COLORS.primary,
             }} />
+            <Stack.Screen name='chatStaff' options={{
+                headerShown: true,
+                title: 'Staff',
+                headerTitleAlign: 'center',
+                headerLeft: BackButton,
+                headerTitleStyle: {
+                    fontFamily: 'mon-b',
+                    fontSize: 25
+                },
+                headerTintColor: COLORS.primary,
+
+            }} />
             <Stack.Screen name='address' options={{
                 headerShown: true,
                 title: 'Sổ địa chỉ',

@@ -14,7 +14,6 @@ interface ErrorState {
 }
 const ChangePassword = () => {
     const { email } = useLocalSearchParams()
-    console.log(email)
     const [inputs, setInputs] = React.useState({
         password: '',
         rePassword: '',

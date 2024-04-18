@@ -5,11 +5,11 @@ import { transNumberFormatter } from '../Payment/ShippingFee'
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 const { width } = Dimensions.get("window")
 
-const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData }: any) => {
+const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData, index }: any) => {
     //check feedback da ton tai chua
     const existedFeedback = !!feedbackData?.find((feedback: any) => feedback.orderItemProductId === item?.productId)
     return (
-        <View key={item.productId} style={{ display: 'flex', flexDirection: 'row' }}>
+        <View key={index} style={{ display: 'flex', flexDirection: 'row' }}>
             <View style={styles.card}>
                 <View style={styles.imgWrapper}>
                     <Image
@@ -79,6 +79,7 @@ const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData }: any) =>
 }
 
 const ListFooter = ({ totalWithoutShippingFee, data }: any) => {
+    console.log('data', data.payment.paymentMethod.name)
     return (
         <View style={{ paddingHorizontal: 20, height: 100, justifyContent: 'center' }}>
             <View style={styles.Flex}>
@@ -94,7 +95,9 @@ const ListFooter = ({ totalWithoutShippingFee, data }: any) => {
                 <Text style={[styles.Text, { color: COLORS.black, fontFamily: 'mon-b' }]}>{transNumberFormatter(data?.totalAmount)}đ</Text>
             </View>
             <View>
-                <Text style={[styles.Text, { fontSize: 14 }]}>Đã thanh toán <Text style={{ color: COLORS.primary, fontFamily: 'mon-b' }}>{transNumberFormatter(data?.totalAmount)}đ</Text> bằng ZaloPay</Text>
+                {data.payment.paymentMethod.name === 'COD' ?
+                    <Text style={[styles.Text, { fontSize: 14 }]}>Thanh toán <Text style={{ color: COLORS.primary, fontFamily: 'mon-b' }}>{transNumberFormatter(data?.totalAmount)}đ</Text> khi nhận hàng</Text>
+                    : <Text style={[styles.Text, { fontSize: 14 }]}>Đã thanh toán <Text style={{ color: COLORS.primary, fontFamily: 'mon-b' }}>{transNumberFormatter(data?.totalAmount)}đ</Text> bằng ZaloPay</Text>}
             </View>
         </View>
     )
@@ -107,8 +110,8 @@ const OrderItemView = ({ data, handleOpenBottom, feedbackData }: any) => {
         <View style={styles.mainCard}>
             <FlatList
                 data={data?.orderItems}
-                keyExtractor={(item: any) => item?.productId}
-                renderItem={({ item }) => <OrderItemCard item={item} handleOpenBottom={handleOpenBottom} status={data?.status} feedbackData={feedbackData} />}
+                keyExtractor={(item: any, index) => item?.productId + `${index.toString()}`}
+                renderItem={({ item, index }) => <OrderItemCard index={index} item={item} handleOpenBottom={handleOpenBottom} status={data?.status} feedbackData={feedbackData} />}
                 ListFooterComponent={<ListFooter totalWithoutShippingFee={totalWithoutShippingFee} data={data} />}
             />
         </View>

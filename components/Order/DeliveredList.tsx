@@ -5,6 +5,7 @@ import { transNumberFormatter } from '../Payment/ShippingFee';
 import { Feather, Fontisto } from '@expo/vector-icons';
 import EmptyComponentCustom from '../EmptyComponentCustom';
 import { router } from 'expo-router';
+import { dateConvert } from '../Voucher/VoucherCard';
 
 const { height, width } = Dimensions.get("window");
 interface OrderStatusDetail {
@@ -58,13 +59,14 @@ const DeliveredCard = ({ item }: any) => {
     };
 
     const { color, message, trans } = getStatusDetails(item.status)
-
+    console.log(item)
     return (
         <Pressable style={styles.mainCard} onPress={() => router.push({
             pathname: '/order_detail',
             params: { orderId: item.id }
         })}>
             <View style={styles.status}>
+                <Text style={styles.statusText}>{dateConvert(item.createAt)}</Text>
                 <Text style={styles.statusText}>{trans}</Text>
             </View>
             <View style={styles.card}>
@@ -176,7 +178,8 @@ const styles = StyleSheet.create({
     status: {
         padding: 10,
         display: 'flex',
-        alignItems: 'flex-end'
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     statusText: {
         fontFamily: 'mon-sb',

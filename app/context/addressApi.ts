@@ -8,9 +8,7 @@ export const getAddress = async (userId?: string | null) => {
 };
 
 export const deleteAddressWId = async (id: number) => {
-    console.log('delete pa', id)
     const response = await instance.delete("/api/address/" + id);
-    console.log(response.data)
     return response.data;
 };
 

@@ -66,7 +66,6 @@ export default function HomepageScreen() {
           setSies(callSizes.data.data);
         }
       } catch (error: any) {
-        console.log(error.response.data.Message);
         if (error.response.data.Message === "Cart not found") {
           console.log(error.response.data.Message);
         } else {

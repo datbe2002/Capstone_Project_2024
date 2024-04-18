@@ -38,7 +38,6 @@ const ForgotPassword = () => {
 
     const [status, setStatus] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(false)
-    console.log(status)
     const validate = () => {
         Keyboard.dismiss();
         let isValid = true;
@@ -81,7 +80,6 @@ const ForgotPassword = () => {
             email: String(inputs.email),
             code: Number(value)
         }
-        console.log(dataToPass)
         setTimeout(() => {
             setStatus(null)
         }, 1000)
