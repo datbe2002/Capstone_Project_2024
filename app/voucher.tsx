@@ -6,18 +6,31 @@ import { getVoucher } from './context/voucherApi';
 import { COLORS } from '../assets';
 import AvailableVouchers from '../components/Voucher/AvailableVouchers';
 import UnavailableVoucher from '../components/Voucher/UnavailableVoucher';
-import { StyleSheet } from 'react-native';
+
 const Voucher = () => {
     const [index, setIndex] = useState(0);
-    const { totalPrice } = useLocalSearchParams()
+    const { totalPrice } = useLocalSearchParams();
     const { data, isLoading } = useQuery({
         queryKey: ["voucher"],
         queryFn: getVoucher,
     });
 
-    const dataVoucherAvailable = data?.data?.filter((da: any) => da.minTotalValue <= totalPrice)
-    const dataVoucherUnavailable = data?.data?.filter((da: any) => da.minTotalValue > totalPrice)
+    const currentDate = new Date();
 
+    const filterVouchers = (voucher: any) => {
+        return {
+            available: voucher.filter((v: any) => v.minTotalValue <= totalPrice && new Date(v.exprireDate) >= currentDate),
+            unavailable: voucher.filter((v: any) => v.minTotalValue > totalPrice || new Date(v.exprireDate) < currentDate),
+        };
+    };
+
+
+    const { available: dataVoucherAvailable, unavailable: dataVoucherUnavailable } = filterVouchers(data?.data?.filter((s: any) => s.isDeleted === false) || []);
+
+    const tabItems = [
+        { title: "Có sẵn", data: dataVoucherAvailable },
+        { title: "Không khả dụng", data: dataVoucherUnavailable }
+    ];
 
     return (
         <>
@@ -30,30 +43,28 @@ const Voucher = () => {
                 }}
                 containerStyle={{ backgroundColor: COLORS.white }}
             >
-                <Tab.Item
-                    title="Có sẵn"
-                    titleStyle={{ fontFamily: 'mon-b', color: COLORS.primary }}
-                />
-                <Tab.Item
-                    title="Không khả dụng"
-                    titleStyle={{ fontFamily: 'mon-b', color: COLORS.primary }}
-                />
-
+                {tabItems.map((item, idx) => (
+                    <Tab.Item
+                        key={idx}
+                        title={item.title}
+                        titleStyle={{ fontFamily: 'mon-b', color: COLORS.primary }}
+                    />
+                ))}
             </Tab>
 
             <TabView value={index} onChange={setIndex}>
-                <TabView.Item style={{ backgroundColor: 'white', width: '100%' }}>
-                    <AvailableVouchers totalPrice={totalPrice} dataVoucherAvailable={dataVoucherAvailable} />
-                </TabView.Item>
-                <TabView.Item style={{ backgroundColor: 'white', width: '100%' }}>
-                    <UnavailableVoucher dataVoucherUnavailable={dataVoucherUnavailable} />
-                </TabView.Item>
-
+                {tabItems.map((item, idx) => (
+                    <TabView.Item key={idx} style={{ backgroundColor: 'white', width: '100%' }}>
+                        {idx === 0 ? (
+                            <AvailableVouchers totalPrice={totalPrice} dataVoucherAvailable={item.data} />
+                        ) : (
+                            <UnavailableVoucher dataVoucherUnavailable={item.data} />
+                        )}
+                    </TabView.Item>
+                ))}
             </TabView>
         </>
-    )
-}
+    );
+};
 
-export default Voucher
-
-const styles = StyleSheet.create({})
+export default Voucher;
