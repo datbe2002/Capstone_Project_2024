@@ -83,7 +83,8 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (userState) {
-      console.log(userState.userCartId, userState.id);
+      // console.log(userState.userCartId, userState.id);
+      console.log("mySelectedItem", mySelectedItem);
 
       if (mySelectedItem) {
         mutation.mutate({
@@ -94,6 +95,7 @@ const ProductDetail = () => {
           size: mySelectedItem.size.value,
           price: mySelectedItem.price,
           quantity: quantity,
+          sku: mySelectedItem.sku,
         });
       }
     }

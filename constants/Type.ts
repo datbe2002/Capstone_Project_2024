@@ -59,6 +59,7 @@ export interface CartData {
   size: string;
   price: number;
   quantity: number;
+  sku: string;
 }
 
 export interface CartItem {
