@@ -81,7 +81,9 @@ const OtherProducts: React.FC<OtherProducts> = ({ props, data, userState }) => {
                       productId: item.id,
                       quantity: 1,
                       size: item.productVariants[0].size.value,
+                      sku: item.productVariants[0].sku,
                     };
+
                     setOrderItems({
                       items: [obj],
                       total: obj.price,
