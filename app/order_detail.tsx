@@ -21,7 +21,6 @@ const OrderDetail = () => {
         enabled: orderId !== null,
     });
 
-    console.log('order', data)
     const { userState } = useUserStore()
     const [currProductId, setCurrProductId] = useState<number | null>(null)
     const [currProductName, setCurrProductName] = useState<string | null>(null)

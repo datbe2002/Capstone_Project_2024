@@ -171,7 +171,6 @@ const ProductDetail = () => {
               route.canGoBack()
                 ? route.back()
                 : route.push("/(tabs)/(home)/homepage");
-              // route.back();
             }}
           />
         </View>

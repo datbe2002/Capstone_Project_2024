@@ -110,7 +110,6 @@ const Payment = () => {
     };
     await mutate(orderPad);
   };
-  console.log(paymentMethod)
   return (
     <View style={styles.mainContainer}>
       <ScrollView>

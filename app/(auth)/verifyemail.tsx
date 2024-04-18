@@ -39,8 +39,6 @@ const VerifyEmail = () => {
         await verify(dataToPass)
     }
 
-
-    console.log(email)
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.introContainer}>

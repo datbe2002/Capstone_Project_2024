@@ -5,8 +5,8 @@ import { Feather } from '@expo/vector-icons'
 import { router } from 'expo-router'
 
 
-const RenderStatusOrder = ({ name, text, id, value }: any) => {
-    return <Pressable style={styles.renderItemContainer} key={id} onPress={() => {
+const RenderStatusOrder = ({ name, text, id, index }: any) => {
+    return <Pressable style={styles.renderItemContainer} key={index} onPress={() => {
         router.push({
             pathname: "/order",
             params: { indexInitial: id },
@@ -44,7 +44,7 @@ const OrderComponent = () => {
             <FlatList
                 style={{ display: 'flex', height: 80, gap: 25, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
                 data={data}
-                renderItem={({ item }) => <RenderStatusOrder name={item.name} text={item.text} id={item.id} />}
+                renderItem={({ item, index }) => <RenderStatusOrder index={index} name={item.name} text={item.text} id={item.id} />}
                 keyExtractor={(item: any) => item.id}>
             </FlatList>
         </View>

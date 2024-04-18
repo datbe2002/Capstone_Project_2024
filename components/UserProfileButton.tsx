@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { COLORS } from '../assets'
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 const UserProfileButton = () => {
     const router = useRouter()
     return (
         <TouchableOpacity style={styles.mainButton} onPress={() => router.push('/chatStaff')}>
             <View>
-                <Ionicons name="chatbubble-ellipses-outline" size={25} color={COLORS.white} />
+                <Ionicons name="chatbubble" size={20} color={COLORS.white} />
             </View>
         </TouchableOpacity>
     )

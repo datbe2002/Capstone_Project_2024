@@ -9,11 +9,11 @@ import {
     View
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import Input from "../components/Menu/Chat/Input";
-import { MessageItem } from "../components/Menu/Chat/MessageList";
-import { getRoomId } from "../shared/helper";
-import { db } from "./context/firebaseConfig";
-import { useUserStore } from "./store/store";
+import Input from "../../../components/Menu/Chat/Input";
+import { MessageItem } from "../../../components/Menu/Chat/MessageList";
+import { getRoomId } from "../../../shared/helper";
+import { db } from "../../context/firebaseConfig";
+import { useUserStore } from "../../store/store";
 const { height, width } = Dimensions.get('window')
 
 

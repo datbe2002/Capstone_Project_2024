@@ -27,7 +27,6 @@ const ItemCard: React.FC<Props> = ({
   handleCheck,
 }) => {
   const [quantity, setQuantity] = useState<number>(item.quantity);
-  console.log("item", item);
 
   const handleIncrease = () => {
     setQuantity(quantity + 1);
