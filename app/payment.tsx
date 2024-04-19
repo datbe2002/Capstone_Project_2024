@@ -72,25 +72,25 @@ const Payment = () => {
       price: item.price,
       size: item.size,
       color: item.color,
+      sku: item.sku,
     };
   });
-  const { setOrderIdSucc } = useOrderIdSuccess()
+  const { setOrderIdSucc } = useOrderIdSuccess();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data: any) => checkoutCart(data),
     onSuccess: (response: any) => {
       if (paymentMethod === 1) {
         const { paymentUrl, orderId } = response.data;
-        setOrderIdSucc(orderId)
+        setOrderIdSucc(orderId);
         Alert.alert("Thông báo", "Bạn hãy chọn OK để thanh toán", [
           { text: "OK", onPress: () => Linking.openURL(paymentUrl) },
         ]);
       } else {
         Alert.alert("Thông báo", "Bạn đã đặt hàng thành công", [
-          { text: "OK", onPress: () => router.push('/homepage') },
+          { text: "OK", onPress: () => router.push("/homepage") },
         ]);
       }
-
     },
     onError: (err) => {
       console.error("Checkout error:", err);
@@ -98,6 +98,8 @@ const Payment = () => {
   });
 
   const handleCheckout = async () => {
+    console.log("transformedArray", transformedArray);
+
     const orderPad = {
       userId,
       note: note,
@@ -122,7 +124,10 @@ const Payment = () => {
         <NoteForShop note={note} setNote={setNote} />
         <TotalAmountPrice totalAmount={totalAmount} totalPrice={totalPrice} />
         <VoucherChosen totalPrice={totalPrice} />
-        <PaymentMethodChosen setPaymentMethod={setPaymentMethod} paymentMethod={paymentMethod} />
+        <PaymentMethodChosen
+          setPaymentMethod={setPaymentMethod}
+          paymentMethod={paymentMethod}
+        />
         <TotalPriceComponent
           totalPrice={totalPrice}
           shippingFeePrice={shippingFeePrice}
