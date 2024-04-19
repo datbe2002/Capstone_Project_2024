@@ -69,7 +69,7 @@ const ProductsScreen = () => {
   });
 
   useEffect(() => {
-    if (searchValue?.lenght != 0) {
+    if (searchValue?.length != 0) {
       setFilterParams((prevParams) => ({ ...prevParams, name: searchValue }));
     }
     if (paramSearch) {
