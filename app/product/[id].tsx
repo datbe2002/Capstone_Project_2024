@@ -242,7 +242,7 @@ const ProductDetail = () => {
                   </Text>
                   {productQuery.data.data.properties.map(
                     (item: any, index: any) => (
-                      <Text key={index}>
+                      <Text key={index} style={styles.itemDes}>
                         {item.name}: {item.value}
                       </Text>
                     )
