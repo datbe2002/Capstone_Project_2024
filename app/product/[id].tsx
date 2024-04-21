@@ -269,7 +269,7 @@ const ProductDetail = () => {
                 { backgroundColor: COLORS.black, color: COLORS.white },
               ]}
               onPress={() => {
-                openBottomSheet(null);
+                bottomSheetRef.current?.expand();
               }}
             >
               Thêm vào giỏ hàng
