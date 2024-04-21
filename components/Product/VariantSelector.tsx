@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Pressable, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Pressable,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { COLORS, SIZES } from "../../assets";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -69,7 +75,7 @@ const styles = StyleSheet.create({
   variantItemPressed: {
     borderWidth: 1,
     borderColor: COLORS.primary,
-    backgroundColor: COLORS.primary
+    backgroundColor: COLORS.primary,
   },
 });
 
@@ -78,17 +84,31 @@ const VariantSection: React.FC<Props> = ({ data, onPress, selectedItem }) => (
     <Text style={styles.secondaryTitle}>Các loại có sẵn</Text>
     <View style={styles.variantItemList}>
       {data.map((item, index) => (
-        <Pressable
-          key={index}
-          style={[
-            styles.variantItem,
-            item === selectedItem ? styles.variantItemPressed : null,
-          ]}
-          onPress={() => onPress(item)}
-        >
-          <Text style={[styles.variantText, item === selectedItem ? styles.variantTextPressed : null,]}>{item.size.value.trim()}</Text>
-          <Text style={[styles.variantText, item === selectedItem ? styles.variantTextPressed : null,]}>{item.color.name.trim()}</Text>
-        </Pressable>
+        <TouchableOpacity key={index} onPress={() => onPress(item)}>
+          <View
+            style={[
+              styles.variantItem,
+              item === selectedItem ? styles.variantItemPressed : null,
+            ]}
+          >
+            <Text
+              style={[
+                styles.variantText,
+                item === selectedItem ? styles.variantTextPressed : null,
+              ]}
+            >
+              {item.size.value.trim()}
+            </Text>
+            <Text
+              style={[
+                styles.variantText,
+                item === selectedItem ? styles.variantTextPressed : null,
+              ]}
+            >
+              {item.color.name.trim()}
+            </Text>
+          </View>
+        </TouchableOpacity>
       ))}
     </View>
   </View>

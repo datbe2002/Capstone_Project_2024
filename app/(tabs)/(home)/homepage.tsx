@@ -20,6 +20,7 @@ import CustomInput from "../../../components/Input";
 import { Text, View } from "../../../components/Themed";
 import instance from "../../context/axiosConfig";
 import {
+  getCategories,
   getNewProduct,
   getProducts,
   getTopProducts,
@@ -98,14 +99,39 @@ export default function HomepageScreen() {
     queryFn: () => getTopProducts(5),
   });
 
+  const getCategoriesQuery = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+
   // const getRandomItems = useCallback((items: any[], count: number): any[] => {
   //   const shuffled = items.sort(() => 0.5 - Math.random());
   //   return shuffled.slice(0, count);
   // }, []);
+  let content;
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Background imageKey={"i6"}>
+  if (
+    topProductsQuery.isLoading ||
+    newProductsQuery.isLoading ||
+    productsQuery.isLoading ||
+    getCategoriesQuery.isLoading
+  ) {
+    // If any of the queries are still loading, show an activity indicator
+    content = (
+      <View
+        style={{
+          flex: 1,
+          alignContent: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator size={50} color="#0000ff" />
+      </View>
+    );
+  } else {
+    // Once all the data is loaded, render your components
+    content = (
+      <View>
         {/* search box */}
         <View style={[styles.horizWrapper, styles.searchBoxWrapper]}>
           <Text style={styles.title}>Shop</Text>
@@ -127,32 +153,24 @@ export default function HomepageScreen() {
             />
           </View>
         </View>
-        {/* main */}
-        <ScrollView style={styles.container}>
-          {/* categories */}
-          <CategoriesSection categories={categories} />
-          {/* top product */}
-          {topProductsQuery.isLoading ? <ActivityIndicator /> : null}
-          {topProductsQuery.isSuccess ? (
-            <TopProductsSection topProducts={topProductsQuery.data} />
-          ) : null}
-
-          {/* new items */}
-          {newProductsQuery.isLoading ? <ActivityIndicator /> : null}
-          {newProductsQuery.isSuccess ? (
-            <NewProductSection newProduct={newProductsQuery.data} />
-          ) : null}
-
-          {/* recommendations */}
-          <Text style={styles.title}>Đề Xuất Cho Bạn</Text>
-          {productsQuery.isLoading ? <ActivityIndicator /> : null}
-          {productsQuery.isSuccess ? (
-            <OtherProducts
-              data={productsQuery.data.items}
-              userState={userState}
-            />
-          ) : null}
+        {/* main content */}
+        <ScrollView>
+          <CategoriesSection categories={getCategoriesQuery.data.data} />
+          <TopProductsSection topProducts={topProductsQuery.data} />
+          <NewProductSection newProduct={newProductsQuery.data} />
+          <OtherProducts
+            data={productsQuery.data.items}
+            userState={userState}
+          />
         </ScrollView>
+      </View>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Background imageKey={"i6"}>
+        <View style={styles.container}>{content}</View>
       </Background>
     </SafeAreaView>
   );
