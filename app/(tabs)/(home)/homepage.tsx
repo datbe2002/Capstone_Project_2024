@@ -26,12 +26,14 @@ import {
   getTopProducts,
 } from "../../context/productsApi";
 import {
+  useAIURL,
   useCategoriesStore,
   useColorsStore,
   useSizeStore,
   useUserIDStore,
   useUserStore,
 } from "../../store/store";
+import axios from "axios";
 
 export default function HomepageScreen() {
   const { userId } = useUserIDStore();
@@ -40,6 +42,9 @@ export default function HomepageScreen() {
   const { categories, setCategories } = useCategoriesStore();
   const { sizes, setSies } = useSizeStore();
   const { colors, setColors } = useColorsStore();
+  const { setUrlAI, urlAI } = useAIURL()
+
+
 
   useEffect(() => {
     const initCall = async () => {
@@ -49,6 +54,8 @@ export default function HomepageScreen() {
         let callCategories = await instance.get("/api/category");
         let callColors = await instance.get("/api/color");
         let callSizes = await instance.get("/api/size");
+        const callApiAI = await axios.get('https://662517f304457d4aaf9dd3b9.mockapi.io/api/v1/url')
+        setUrlAI(callApiAI.data[0].url)
         let userData: any = {
           ...userState,
           userCartId: userCart.data.data.id,
@@ -76,6 +83,7 @@ export default function HomepageScreen() {
     };
     initCall();
   }, []);
+  console.log('callApiAI', urlAI)
 
   const handleSearch = () => {
     router.push({
