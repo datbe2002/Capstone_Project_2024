@@ -125,7 +125,7 @@ export default function HomepageScreen() {
           justifyContent: "center",
         }}
       >
-        <ActivityIndicator size={50} color="#0000ff" />
+        <ActivityIndicator size={50} color={COLORS.primary} />
       </View>
     );
   } else {
