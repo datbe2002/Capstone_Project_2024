@@ -19,4 +19,9 @@ export const getFeedbackByProdId = async (productId?: number | null) => {
     return response.data;
 };
 
+export const postUserData = async (data: any) => {
+    const { userId, ...objToPost } = data;
+    const response = await instance.put(`/api/user/profile/${userId}`, objToPost);
+    return response.data;
+}
 

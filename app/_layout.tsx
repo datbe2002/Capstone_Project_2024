@@ -76,6 +76,17 @@ function RootLayoutNav() {
         },
         headerTintColor: COLORS.primary,
       }} />
+      <Stack.Screen name="editprofile" options={{
+        headerShown: true,
+        title: 'Sửa thông tin',
+        headerTitleAlign: 'center',
+        headerLeft: BackButton,
+        headerTitleStyle: {
+          fontFamily: 'mon-b',
+          fontSize: 25
+        },
+        headerTintColor: COLORS.primary,
+      }} />
       <Stack.Screen name="addresspayment" options={{
         headerShown: true,
         title: 'Chọn địa chỉ nhận hàng',

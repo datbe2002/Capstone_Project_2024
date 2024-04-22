@@ -58,7 +58,6 @@ const ProductDetail = () => {
       setAlert({ title: "Xong", msg: "Đã thêm vào giỏ hàng của bạn!" });
     },
     onError: (error) => {
-      // console.log(error);
       setAlert({ title: "Lỗi", msg: "Thêm thất bại! Vui lòng thử lại sau!" });
     },
   });
@@ -84,8 +83,6 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (userState) {
       // console.log(userState.userCartId, userState.id);
-      console.log("mySelectedItem", mySelectedItem);
-
       if (mySelectedItem) {
         mutation.mutate({
           userId: userState.id,
@@ -102,8 +99,6 @@ const ProductDetail = () => {
   };
 
   const handleAddToWardrove = () => {
-    // console.log("product ", productQuery.data.data);
-
     // Check if the item already exists in the wardroveItems
     if (
       !wardroveItems.some((item: any) => item.id === productQuery.data.data.id)
@@ -291,12 +286,6 @@ const ProductDetail = () => {
                   size: productQuery.data.data.productVariants[0].size.value,
                   sku: productQuery.data.data.productVariants[0].sku,
                 };
-
-                // console.log({
-                //   items: [obj],
-                //   total: obj.price,
-                //   totalQuantityProd: 1,
-                // });
                 setOrderItems({
                   items: [obj],
                   total: obj.price,

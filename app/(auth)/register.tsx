@@ -46,6 +46,20 @@ async function onGoogleButtonPress() {
 
 
 
+export const formatDate = (rawDate: any) => {
+    let date = new Date(rawDate)
+    let year = date.getFullYear()
+    let month = date.getMonth() + 1
+    let day = date.getDate()
+    return `${day}/${month}/${year}`
+}
+
+export const convertToISO8601WithTime = (dateStr: any) => {
+    var parts = dateStr.split('/');
+    var dateObject = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
+    var iso8601Date = dateObject.toISOString().split('T')[0] + "T00:00:00.000Z";
+    return iso8601Date;
+}
 interface ErrorState {
     email?: string,
     password?: string,
@@ -82,20 +96,6 @@ const RegisterPage = () => {
         setShowPicker(!showPicker)
     }
 
-    const formatDate = (rawDate: any) => {
-        let date = new Date(rawDate)
-        let year = date.getFullYear()
-        let month = date.getMonth() + 1
-        let day = date.getDate()
-        return `${day}/${month}/${year}`
-    }
-
-    const convertToISO8601WithTime = (dateStr: any) => {
-        var parts = dateStr.split('/');
-        var dateObject = new Date(Date.UTC(parts[2], parts[1] - 1, parts[0]));
-        var iso8601Date = dateObject.toISOString().split('T')[0] + "T00:00:00.000Z";
-        return iso8601Date;
-    }
 
     const onChange = ({ type }: any, selectedDate: any) => {
         if (type == 'set') {
@@ -327,7 +327,6 @@ const RegisterPage = () => {
                                 onPress={() =>
                                     onGoogleButtonPress()
                                         .then((result) => {
-                                            console.log(result);
                                             setLoadingState(true);
                                             const { uid, email, displayName, photoURL } = result.user;
                                             instance

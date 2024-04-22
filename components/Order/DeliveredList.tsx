@@ -20,6 +20,7 @@ type OrderStatusMap = {
     default: OrderStatusDetail;
 };
 const DeliveredCard = ({ item }: any) => {
+    console.log(item)
     const totalQuantity = item?.orderItems?.reduce((total: number, item: any) => total + item.quantity, 0);
     const orderStatusDetails: OrderStatusMap = {
         1: {
@@ -37,7 +38,7 @@ const DeliveredCard = ({ item }: any) => {
             color: '#FFA500',
             trans: 'Đang giao',
         },
-        6: {
+        2: {
             message: 'Đơn hàng đã được giao thành công',
             color: '#20AC02',
             trans: 'Đã vận chuyển',

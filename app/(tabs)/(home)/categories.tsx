@@ -81,7 +81,6 @@ export default function CategoriesFilter() {
             <Pressable
               key={index}
               onPress={() => {
-                // console.log("cate " + item.name);
               }}
             >
               <View style={[styles.cateItem, SHADOWS.small]}>

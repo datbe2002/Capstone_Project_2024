@@ -13,7 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../assets";
 import Background from "../../../components/BackGround";
-import { useOrderItems, useUserStore, useWardove } from "../../store/store";
+import { useAIURL, useOrderItems, useUserStore, useWardove } from "../../store/store";
 import { CartItem, Product } from "../../../constants/Type";
 import { Fontisto, Ionicons, Octicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -30,6 +30,7 @@ const wardrove = () => {
     queryKey: ["models"],
     queryFn: getModels,
   });
+  const { urlAI } = useAIURL()
 
   const mutation = useMutation({
     mutationFn: (data: any) => tryOn(data),
@@ -128,6 +129,7 @@ const wardrove = () => {
       link_image: selectedModel.imageUrl,
       link_cloth: item.tryOnImage,
       link_edge: item.edgeImage,
+      url: urlAI
     };
     // console.log(obj);
     mutation.mutate(obj);

@@ -5,6 +5,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { getProducts } from '../../app/context/productsApi';
 import { COLORS } from '../../assets';
 import { FavoriteListCard } from './FavoriteListCard';
+import SpaceBet from '../SpaceBet';
 
 const MaybeUCanLike = () => {
     const handleOpenBottom = () => {

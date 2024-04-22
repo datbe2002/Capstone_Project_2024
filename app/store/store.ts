@@ -49,6 +49,15 @@ export const useOrderIdSuccess = create<OrderIdSuccess>((set) => ({
   orderIdSucc: null,
   setOrderIdSucc: (orderIdSucc) => set(() => ({ orderIdSucc: orderIdSucc })),
 }));
+interface AIURLProps {
+  urlAI: string | null;
+  setUrlAI: (urlAI: string | null) => void;
+}
+
+export const useAIURL = create<AIURLProps>((set) => ({
+  urlAI: null,
+  setUrlAI: (urlAI) => set(() => ({ urlAI: urlAI })),
+}));
 
 export const useAfterVoucher = create((set: any) => ({
   itemVoucher: {

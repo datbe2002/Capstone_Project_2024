@@ -24,18 +24,23 @@ import {
 } from "./store/store";
 
 const Payment = () => {
+
   const { userId } = useUserIDStore();
-  const { orderItems, setOrderItems } = useOrderItems();
+  const { orderItems } = useOrderItems();
   const { setSelectedAddress, selectedAddress } = useAddressChange();
+  const { setOrderIdSucc } = useOrderIdSuccess();
+  const { itemVoucher, setItemVoucher } = useAfterVoucher();
+
   const [paymentMethod, setPaymentMethod] = useState<number>(3);
   const [note, setNote] = useState<string | null>(null);
-  const [shippingFeePrice, setShippingFeePrice] = useState<any | null>(null);
+  const [shippingFeePrice, setShippingFeePrice] = useState<any>(10000);
   const [order] = useState<any | null>(orderItems.items);
-  const { itemVoucher, setItemVoucher } = useAfterVoucher();
+
   const totalAmount = orderItems.totalQuantityProd;
   const totalPrice = orderItems.total;
   const totalVoucher = itemVoucher.totalVoucherMoney || 0;
   const totalPay = totalPrice + shippingFeePrice - totalVoucher;
+
   const getUserAddress = useQuery({
     queryKey: ["address", userId],
     queryFn: () => getAddress(userId),
@@ -47,10 +52,10 @@ const Payment = () => {
   useEffect(() => {
     if (getUserAddress?.isSuccess && getUserAddress?.data) {
       if (currAddress.length > 0) {
-        const data1 = currAddress.find(
-          (data1: any) => data1.isDefault === true
+        const add = currAddress.find(
+          (add: any) => add.isDefault === true
         );
-        setSelectedAddress(data1);
+        setSelectedAddress(add);
       } else {
         router.push("/addaddress");
       }
@@ -75,7 +80,6 @@ const Payment = () => {
       sku: item.sku,
     };
   });
-  const { setOrderIdSucc } = useOrderIdSuccess();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data: any) => checkoutCart(data),
@@ -98,8 +102,6 @@ const Payment = () => {
   });
 
   const handleCheckout = async () => {
-    console.log("transformedArray", transformedArray);
-
     const orderPad = {
       userId,
       note: note,
@@ -130,7 +132,7 @@ const Payment = () => {
         />
         <TotalPriceComponent
           totalPrice={totalPrice}
-          shippingFeePrice={shippingFeePrice}
+          shippingFeePrice={shippingFeePrice || 10000}
           totalVoucher={totalVoucher}
         />
         <TermPurchase />

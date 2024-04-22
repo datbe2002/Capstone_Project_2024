@@ -7,8 +7,9 @@ import {
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { router } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../../assets";
 import Background from "../../../components/BackGround";
@@ -17,6 +18,7 @@ import NewProductSection from "../../../components/Home/NewProductsSection";
 import OtherProducts from "../../../components/Home/OtherProducts";
 import TopProductsSection from "../../../components/Home/TopProductsSection";
 import CustomInput from "../../../components/Input";
+import SpaceBet from "../../../components/SpaceBet";
 import { Text, View } from "../../../components/Themed";
 import instance from "../../context/axiosConfig";
 import {
@@ -26,6 +28,7 @@ import {
   getTopProducts,
 } from "../../context/productsApi";
 import {
+  useAIURL,
   useCategoriesStore,
   useColorsStore,
   useSizeStore,
@@ -40,9 +43,14 @@ export default function HomepageScreen() {
   const { categories, setCategories } = useCategoriesStore();
   const { sizes, setSies } = useSizeStore();
   const { colors, setColors } = useColorsStore();
+  const { setUrlAI, urlAI } = useAIURL()
+
+
 
   useEffect(() => {
     const initCall = async () => {
+      const callApiAI = await axios.get('https://662517f304457d4aaf9dd3b9.mockapi.io/api/v1/url')
+      setUrlAI(callApiAI.data[0].url)
       try {
         const userCart = await instance.get("/api/cart/" + userId);
 
@@ -86,7 +94,7 @@ export default function HomepageScreen() {
 
   const productsQuery = useQuery({
     queryKey: ["recommendProducts"],
-    queryFn: () => getProducts(6),
+    queryFn: () => getProducts(10),
   });
 
   const newProductsQuery = useQuery({
@@ -162,6 +170,7 @@ export default function HomepageScreen() {
             data={productsQuery.data.items}
             userState={userState}
           />
+          <SpaceBet height={50} />
         </ScrollView>
       </View>
     );
