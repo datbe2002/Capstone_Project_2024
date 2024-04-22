@@ -174,7 +174,6 @@ const LoginPage = () => {
                 onPress={() =>
                   onGoogleButtonPress()
                     .then((result) => {
-                      console.log(result);
                       setLoadingState(true);
                       const { uid, email, displayName, photoURL } = result.user;
                       instance

@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 });
 
 const ProductCardShort: React.FC<Props> = ({ data, variant }) => {
-  console.log(variant);
+  // console.log('variant', variant);
 
   return (
     <View style={styles.container}>

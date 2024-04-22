@@ -25,7 +25,7 @@ const UserSection: React.FC<UserSectionProps> = ({
                     <Image
                         style={styles.logo}
                         source={{
-                            uri: userState?.profilePicture,
+                            uri: String(userState?.profilePicture),
                         }}
                     />
                 </TouchableOpacity>

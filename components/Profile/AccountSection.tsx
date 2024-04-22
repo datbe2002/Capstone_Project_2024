@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { COLORS } from '../../assets'
 import { AntDesign } from '@expo/vector-icons'
@@ -30,6 +30,9 @@ const AccountSection = () => {
         <View style={styles.account}>
             <View style={styles.componentText}>
                 <Text style={styles.syntaxText}>Tài khoản</Text>
+                <Pressable onPress={() => router.push('/editprofile')}>
+                    <Text style={styles.editButton}>Cập nhật thông tin</Text>
+                </Pressable>
             </View>
             <View style={styles.lineFunc}>
                 <View style={styles.accountId}>
@@ -70,15 +73,9 @@ const AccountSection = () => {
                             Số điện thoại
                         </Text>
                         <Text style={styles.secondText}>
-                            {userState?.phone ? maskPhoneNumber(userState?.phone) : "Chưa có số điện thoại"}
+                            {userState?.phone ? maskPhoneNumber(userState?.phone) : "Chưa cập nhật số điện thoại"}
                         </Text>
                     </View>
-                    <TouchableOpacity style={styles.changeComp} >
-                        <Text style={styles.changeText}>Đổi</Text>
-                        <View>
-                            <AntDesign name="right" size={18} color={COLORS.blue1} />
-                        </View>
-                    </TouchableOpacity>
                 </View>
                 <View style={styles.signUpDate}>
                     <Text style={styles.mainText}>
@@ -102,13 +99,26 @@ const styles = StyleSheet.create({
     },
     componentText: {
         height: 80,
-        justifyContent: 'center',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         paddingLeft: 10,
     },
     syntaxText: {
         color: COLORS.blue1,
         fontFamily: 'mon-sb',
         fontSize: 25,
+    },
+    editButton: {
+        fontFamily: 'mon-sb',
+        fontSize: 16,
+        color: COLORS.white,
+        borderRadius: 10,
+        borderWidth: 2,
+        backgroundColor: COLORS.primary,
+        borderColor: COLORS.primary,
+        padding: 5,
     },
     lineFunc: {
         height: 'auto',
