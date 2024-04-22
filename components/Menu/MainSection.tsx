@@ -5,6 +5,7 @@ import OrderComponent from './OrderComponent'
 import MaybeUCanLike from '../Favorite/MaybeUCanLike'
 import TopThings from './TopThings'
 import { ScrollView } from 'react-native-virtualized-view'
+import SpaceBet from '../SpaceBet'
 
 const { height, width } = Dimensions.get('window')
 const MainSection = () => {
@@ -17,7 +18,7 @@ const MainSection = () => {
             <OrderComponent />
             <TopThings />
             <MaybeUCanLike />
-
+            <SpaceBet height={200} />
         </ScrollView>
     )
 }

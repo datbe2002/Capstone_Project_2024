@@ -9,13 +9,10 @@ export const getModels = async () => {
 };
 
 export const tryOn = async (data: any) => {
-  console.log("try onl", data);
   const { url, ...newobj } = data
-  console.log(newobj)
   const response = await axios.post(
     String(url),
     newobj
   );
-  console.log(response);
   return response.data;
 };
