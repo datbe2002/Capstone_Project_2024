@@ -1,17 +1,17 @@
-import { ActivityIndicator, Alert, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useRef, useState } from 'react'
+import { ActivityIndicator, Alert, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { COLORS } from '../../assets'
+import { MaterialIcons } from '@expo/vector-icons';
+import { convertToISO8601WithTime, formatDate } from '../../app/(auth)/register';
+import { CheckBox } from 'react-native-elements';
+import { postUserData } from '../../app/context/feedbackApi';
+import { router } from 'expo-router';
+import { useMutation } from '@tanstack/react-query';
 import PhoneInput from 'react-native-phone-number-input'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import InputV2 from '../InputV2';
-import { MaterialIcons } from '@expo/vector-icons';
-import { convertToISO8601WithTime, formatDate } from '../../app/(auth)/register';
 import CustomButton from '../Button';
 import SpaceBet from '../SpaceBet';
-import { CheckBox } from 'react-native-elements';
-import { useMutation } from '@tanstack/react-query';
-import { postUserData } from '../../app/context/feedbackApi';
-import { router } from 'expo-router';
 
 interface ErrorState {
     fullName?: string,
@@ -28,7 +28,7 @@ const EditProfileContainer = ({ userChanged, setUserChanged }: any) => {
     const [showPicker, setShowPicker] = useState(false)
     const [date, setDate] = useState(new Date())
     const [dateOfbirth, setDateOfBirth] = useState("")
-    const [gender, setGender] = useState<number>(1);
+    const [gender, setGender] = useState<number>(userChanged.gender || 0);
 
     const toggleDatePicker = () => {
         setShowPicker(!showPicker)

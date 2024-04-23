@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   Image,
   Pressable,
@@ -300,12 +301,20 @@ const Cart: React.FC<Props> = ({ }) => {
                   { opacity: selectedItems.length === 0 ? 0.6 : 1 },
                 ]}
                 onPress={() => {
-                  setOrderItems({
-                    items: selectedItems,
-                    total,
-                    totalQuantityProd,
-                  });
-                  router.push("/payment");
+                  if (userState?.verified === true) {
+                    setOrderItems({
+                      items: selectedItems,
+                      total,
+                      totalQuantityProd,
+                    });
+                    router.push("/payment");
+                  } else {
+                    Alert.alert("Lỗi", "Bạn chưa xác thực", [
+                      { text: 'Hủy' },
+                      { text: "Xác thực ngay", onPress: () => router.push('/verifylater') },
+                    ]);
+                  }
+
                 }}
                 disabled={selectedItems.length === 0}
               >

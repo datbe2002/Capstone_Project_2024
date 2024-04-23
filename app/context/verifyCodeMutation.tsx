@@ -1,7 +1,9 @@
 import { useMutation } from "@tanstack/react-query"
 import { Alert } from "react-native"
 import instance from "./axiosConfig"
-import { router } from "expo-router"
+import { router, useSegments } from "expo-router"
+import { setUserAuthToken } from "./authService"
+import { useAddressChange, useUserStore } from "../store/store"
 
 export interface VerificationConfig {
     code: number | null,
@@ -30,11 +32,45 @@ const verifyCodeQuery = async (data: VerificationConfig) => {
 }
 
 function useVerifyCodeHook() {
+    const { setUserState } = useUserStore()
+    const { setSelectedAddress } = useAddressChange()
+    const segments = useSegments()
+    const inAuthGroup = segments[0] === "(auth)";
+
+    const handleResetApp = () => {
+        if (inAuthGroup) {
+            router.replace('/(auth)/login')
+        } else {
+            setUserAuthToken();
+            setUserState(null);
+            setSelectedAddress({
+                userId: null,
+                recipientName: null,
+                recipientPhone: null,
+                province: null,
+                provinceId: null,
+                district: null,
+                disctrictId: null,
+                ward: null,
+                wardCode: null,
+                street: null,
+                isDefault: null,
+                id: null,
+                isDeleted: null,
+                createAt: null,
+                updateAt: null,
+                updateBy: null,
+                createBy: null,
+            })
+            router.replace("/(auth)/login");
+        }
+
+    }
     const verifyCode = useMutation({
         mutationFn: verifyCodeQuery,
         onSuccess: (res) => {
             Alert.alert('Thành công', res.msg, [
-                { text: 'OK', onPress: () => router.replace('/(auth)/login') },
+                { text: 'OK', onPress: handleResetApp },
             ])
         },
         onError: (error) => {

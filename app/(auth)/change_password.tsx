@@ -1,4 +1,4 @@
-import { Keyboard, StyleSheet, Text, View } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import Background from '../../components/BackGround'
