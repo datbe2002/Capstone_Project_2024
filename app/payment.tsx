@@ -20,6 +20,7 @@ import {
   useAfterVoucher,
   useOrderIdSuccess,
   useOrderItems,
+  useTotalPaymentAmount,
   useUserIDStore,
 } from "./store/store";
 
@@ -30,7 +31,7 @@ const Payment = () => {
   const { setSelectedAddress, selectedAddress } = useAddressChange();
   const { setOrderIdSucc } = useOrderIdSuccess();
   const { itemVoucher, setItemVoucher } = useAfterVoucher();
-
+  const { setTotalAmount, setDateNowPay } = useTotalPaymentAmount()
   const [paymentMethod, setPaymentMethod] = useState<number>(3);
   const [note, setNote] = useState<string | null>(null);
   const [shippingFeePrice, setShippingFeePrice] = useState<any>(10000);
@@ -102,6 +103,8 @@ const Payment = () => {
   });
 
   const handleCheckout = async () => {
+    setTotalAmount(String(totalPay))
+    setDateNowPay(new Date().toLocaleString())
     const orderPad = {
       userId,
       note: note,

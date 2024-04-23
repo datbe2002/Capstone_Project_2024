@@ -58,6 +58,19 @@ export const useAIURL = create<AIURLProps>((set) => ({
   urlAI: null,
   setUrlAI: (urlAI) => set(() => ({ urlAI: urlAI })),
 }));
+interface TotalPaymentAmountProps {
+  totalAmount: string | null;
+  date: string | null;
+  setTotalAmount: (totalAmount: string | null) => void;
+  setDateNowPay: (date: string | null) => void;
+}
+
+export const useTotalPaymentAmount = create<TotalPaymentAmountProps>((set) => ({
+  totalAmount: null,
+  date: null,
+  setTotalAmount: (totalAmount) => set(() => ({ totalAmount: totalAmount })),
+  setDateNowPay: (date) => set(() => ({ date: date })),
+}));
 
 export const useAfterVoucher = create((set: any) => ({
   itemVoucher: {

@@ -79,7 +79,6 @@ const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData, index }: 
 }
 
 const ListFooter = ({ totalWithoutShippingFee, data }: any) => {
-    console.log('data', data.payment.paymentMethod.name)
     return (
         <View style={{ paddingHorizontal: 20, height: 100, justifyContent: 'center' }}>
             <View style={styles.Flex}>

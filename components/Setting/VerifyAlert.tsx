@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { useUserStore } from '../../app/store/store'
 import { COLORS } from '../../assets'
+import { router } from 'expo-router'
 
 const VerifyAlert = () => {
     const { userState } = useUserStore()
     const [isShow, setIsShow] = useState<any>(false)
-
     const handleVerifyAccount = () => {
-        console.log('handle verify account')
+        router.push('/verifylater')
     }
 
     return (

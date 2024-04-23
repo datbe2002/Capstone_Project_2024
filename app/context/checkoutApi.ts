@@ -26,3 +26,18 @@ export const confirmOrder = async (orderId?: number | null) => {
   );
   return response.data;
 }
+export const cancelOrder = async (data: any) => {
+  console.log(data)
+  const { orderId, reason } = data;
+  const response = await instance.put(
+    `/api/order/${orderId}?status=3`,
+    reason,
+    {
+      headers: {
+        'Content-Type': 'application/json', // Set the Content-Type header to JSON
+      }
+    }
+  );
+  return response.data;
+}
+
