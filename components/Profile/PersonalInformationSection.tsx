@@ -3,9 +3,14 @@ import React from 'react'
 import { COLORS } from '../../assets'
 import { useUserStore } from '../../app/store/store'
 
+const genderSet = (num: number) => {
+    if (num === 0) return "Nam"
+    if (num === 1) return "Nữ"
+}
+
 const PersonalInformationSection = () => {
     const { userState } = useUserStore()
-
+    console.log(userState)
     return (
         <View style={styles.account}>
             <View style={styles.componentText}>
@@ -33,10 +38,10 @@ const PersonalInformationSection = () => {
                         Giới tính
                     </Text>
                     <Text style={styles.secondText}>
-                        {userState?.gender && userState.fullName || "Chưa chọn"}
+                        {genderSet(userState?.gender) || "Chưa chọn"}
                     </Text>
                 </View>
-                <View style={styles.informationunder}>
+                <View style={styles.informationtop}>
                     <Text style={styles.mainText}>
                         Quốc gia
                     </Text>
@@ -44,14 +49,7 @@ const PersonalInformationSection = () => {
                         Việt Nam
                     </Text>
                 </View>
-                <View style={styles.informationtop}>
-                    <Text style={styles.mainText}>
-                        Thành phố/Thị trấn
-                    </Text>
-                    <Text style={styles.secondText}>
-                        Ho Chi Minh City
-                    </Text>
-                </View>
+
             </View>
         </View>
     )
@@ -96,8 +94,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 10,
-        borderTopColor: COLORS.gray,
-        borderTopWidth: 1,
     },
     mainText: {
         color: COLORS.primary,

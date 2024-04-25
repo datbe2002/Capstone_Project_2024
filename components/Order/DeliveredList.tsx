@@ -20,7 +20,6 @@ type OrderStatusMap = {
     default: OrderStatusDetail;
 };
 const DeliveredCard = ({ item }: any) => {
-    console.log(item)
     const totalQuantity = item?.orderItems?.reduce((total: number, item: any) => total + item.quantity, 0);
     const orderStatusDetails: OrderStatusMap = {
         1: {
@@ -60,7 +59,6 @@ const DeliveredCard = ({ item }: any) => {
     };
 
     const { color, message, trans } = getStatusDetails(item.status)
-    console.log(item)
     return (
         <Pressable style={styles.mainCard} onPress={() => router.push({
             pathname: '/order_detail',

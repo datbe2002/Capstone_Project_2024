@@ -1,26 +1,26 @@
 import { Fontisto, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useCallback, useRef, useState } from 'react'
-import { ActivityIndicator, Alert, Keyboard, StyleSheet, Text, View } from 'react-native'
-import { AirbnbRating } from 'react-native-elements'
+import { ActivityIndicator, Alert, Keyboard, StyleSheet, Text, TextInput, View } from 'react-native'
+import { AirbnbRating, Dialog } from 'react-native-elements'
 import { ScrollView } from 'react-native-virtualized-view'
 import { COLORS } from '../assets'
 import CustomButton from '../components/Button'
 import OrderItemView from '../components/Order/OrderItemView'
-import { getOrderByOrderId } from './context/checkoutApi'
+import { cancelOrder, getOrderByOrderId } from './context/checkoutApi'
 import { getFeedbackByUserId, postFeedback } from './context/feedbackApi'
 import { useUserStore } from './store/store'
 
-const OrderDetail = () => {
+const OrderDetail = React.memo(() => {
     const { orderId } = useLocalSearchParams()
-    const { data, isFetching } = useQuery({
-        queryKey: ["order", orderId],
+    const { data, isFetching, refetch } = useQuery({
+        queryKey: ["orderDetail", orderId],
         queryFn: () => getOrderByOrderId(Number(orderId)),
         enabled: orderId !== null,
     });
-
+    const [visible2, setVisible2] = useState<boolean>(false);
     const { userState } = useUserStore()
     const [currProductId, setCurrProductId] = useState<number | null>(null)
     const [currProductName, setCurrProductName] = useState<string | null>(null)
@@ -118,6 +118,32 @@ const OrderDetail = () => {
                 return COLORS.darkGray;
         }
     };
+    const queryClient = useQueryClient()
+
+    const { mutate: cancelOrderRe, isPending: cancelOrderLoading } = useMutation({
+        mutationFn: (data: any) => cancelOrder(data),
+        onSuccess: (response: any) => {
+            refetch()
+            setVisible2(!visible2);
+            queryClient.invalidateQueries({ queryKey: ["order"] })
+        },
+        onError: (err) => {
+            console.error("Error confirm:", err);
+        },
+    });
+    const toggleDialog2 = () => {
+        setVisible2(!visible2);
+    };
+    const cancelReasonRef = useRef<any>("")
+
+    const handleGetValue = async () => {
+        const reason = cancelReasonRef.current?.trim() || "Người dùng hủy đơn này"
+        const data2 = {
+            orderId: data?.data.id,
+            reason: reason
+        }
+        await cancelOrderRe(data2)
+    }
 
     return (
         <View style={styles.container}>
@@ -182,8 +208,25 @@ const OrderDetail = () => {
                     {(data?.data?.status === 4 || data?.data?.status === 1) && <View style={{
                         margin: 10
                     }}>
-                        <CustomButton buttonText={'Hủy đơn'} buttonColor={'errorColor'} />
+                        <CustomButton buttonText={'Hủy đơn'} buttonColor={'errorColor'} onPress={toggleDialog2} />
                     </View>}
+
+                    <Dialog
+                        isVisible={visible2}
+                        onBackdropPress={toggleDialog2}
+                    >
+                        {cancelOrderLoading ? <Dialog.Loading /> : <>
+                            <Dialog.Title titleStyle={styles.title} title="Hủy đơn" />
+                            <TextInput
+                                onChangeText={(value) => (cancelReasonRef.current = value)}
+                                style={styles.func}
+                                placeholder='Lý do hủy đơn' />
+                            <Dialog.Actions>
+                                <Dialog.Button title="Xác nhận" onPress={handleGetValue} />
+                                <Dialog.Button title="Hủy" onPress={toggleDialog2} />
+                            </Dialog.Actions>
+                        </>}
+                    </Dialog>
                 </ScrollView>}
 
             <BottomSheet
@@ -231,7 +274,7 @@ const OrderDetail = () => {
             </BottomSheet>
         </View>
     )
-}
+})
 
 export default OrderDetail
 
@@ -252,6 +295,14 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10
+    },
+    func: {
+        backgroundColor: COLORS.white,
+        padding: 15,
+        fontFamily: 'mon-sb',
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: COLORS.darkGray
     },
     defaultAddressContainer: {
         height: 150,

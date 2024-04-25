@@ -3,7 +3,8 @@ import axios from 'axios';
 // Next we make an 'instance' of it
 const instance = axios.create({
     // .. where we make our configurations
-    baseURL: 'https://ftai-api.monoinfinity.net'
+    baseURL: 'https://ftai-api.monoinfinity.net',
+
 });
 
 
