@@ -27,7 +27,7 @@ const Setting = () => {
             <View style={styles.bottom}>
                 <CustomButton onPress={signOut} buttonText='Đăng xuất' buttonColor='errorColor' ></CustomButton>
                 <View style={styles.version}>
-                    <Text style={styles.versionText}>Phiên bản v2.0.0</Text>
+                    <Text style={styles.versionText}>Phiên bản v2.0.1</Text>
                 </View>
             </View>
         </View>
