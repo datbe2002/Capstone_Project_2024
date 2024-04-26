@@ -70,15 +70,16 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         gap: 5,
         marginHorizontal: 5,
+        flex: 1
     },
     card: {
         alignSelf: "center",
-        height: 120,
         width: '100%',
         display: "flex",
         flexDirection: "row",
         backgroundColor: COLORS.white,
         gap: 10,
+        flex: 1
     },
     horizWrapper: {
         display: "flex",

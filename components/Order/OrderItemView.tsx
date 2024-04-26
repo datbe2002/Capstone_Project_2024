@@ -1,10 +1,12 @@
-import { Dimensions, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { COLORS, SIZES } from '../../assets'
 import { transNumberFormatter } from '../Payment/ShippingFee'
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 const { width } = Dimensions.get("window")
-
+import {
+    TouchableOpacity,
+} from '@gorhom/bottom-sheet';
 const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData, index }: any) => {
     //check feedback da ton tai chua
     const existedFeedback = !!feedbackData?.find((feedback: any) => feedback.orderItemProductId === item?.productId)
@@ -65,12 +67,12 @@ const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData, index }: 
                             <Text style={{ textAlign: 'center', fontFamily: 'mon-sb', fontSize: 14 }}>Cảm ơn bạn đã feedback</Text>
                         </View>
                     ) : (
-                        <Pressable
+                        <TouchableOpacity
                             style={{ justifyContent: 'center', alignItems: 'center' }}
                             onPress={() => handleOpenBottom(item.productId, item.product.name)}>
                             <MaterialCommunityIcons name="pencil-circle" size={40} color={COLORS.primary} />
                             <Text style={{ textAlign: 'center', fontFamily: 'mon-sb', fontSize: 14 }}>Feedback cho sản phẩm</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     )}
                 </View>
             )}

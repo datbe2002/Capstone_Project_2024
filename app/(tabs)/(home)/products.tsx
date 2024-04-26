@@ -24,6 +24,7 @@ import { ScrollView, TextInput } from "react-native-gesture-handler";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView,
+  BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import {
   useCategoriesStore,
@@ -298,27 +299,23 @@ const ProductsScreen = () => {
                   justifyContent: "space-evenly",
                 }}
               >
-                <KeyboardAvoidingView
-                  behavior="padding"
-                  keyboardVerticalOffset={-30}
-                >
-                  <TextInput
-                    style={[
-                      styles.dropdown,
-                      styles.itemTextStyle,
-                      { width: 140, textAlign: "right", paddingHorizontal: 20 },
-                    ]}
-                    keyboardType="numeric"
-                    value={tempFilter.minPrice?.toString() || ""}
-                    onChangeText={(value: any) => {
-                      setTempFilter((prev) => ({
-                        ...prev,
-                        minPrice: value,
-                      }));
-                    }}
-                    placeholder="Thấp"
-                  />
-                </KeyboardAvoidingView>
+
+                <BottomSheetTextInput
+                  style={[
+                    styles.dropdown,
+                    styles.itemTextStyle,
+                    { width: 140, textAlign: "right", paddingHorizontal: 20 },
+                  ]}
+                  keyboardType="numeric"
+                  value={tempFilter.minPrice?.toString() || ""}
+                  onChangeText={(value: any) => {
+                    setTempFilter((prev) => ({
+                      ...prev,
+                      minPrice: value,
+                    }));
+                  }}
+                  placeholder="Thấp"
+                />
                 <Text
                   style={{
                     height: "100%",
@@ -328,27 +325,23 @@ const ProductsScreen = () => {
                 >
                   --
                 </Text>
-                <KeyboardAvoidingView
-                  behavior="padding"
-                  keyboardVerticalOffset={-30}
-                >
-                  <TextInput
-                    style={[
-                      styles.dropdown,
-                      styles.itemTextStyle,
-                      { width: 140, textAlign: "right", paddingHorizontal: 20 },
-                    ]}
-                    keyboardType="numeric"
-                    value={tempFilter.maxPrice?.toString() || ""}
-                    onChangeText={(value: any) => {
-                      setTempFilter((prev) => ({
-                        ...prev,
-                        maxPrice: value,
-                      }));
-                    }}
-                    placeholder="Cao"
-                  />
-                </KeyboardAvoidingView>
+
+                <BottomSheetTextInput
+                  style={[
+                    styles.dropdown,
+                    styles.itemTextStyle,
+                    { width: 140, textAlign: "right", paddingHorizontal: 20 },
+                  ]}
+                  keyboardType="numeric"
+                  value={tempFilter.maxPrice?.toString() || ""}
+                  onChangeText={(value: any) => {
+                    setTempFilter((prev) => ({
+                      ...prev,
+                      maxPrice: value,
+                    }));
+                  }}
+                  placeholder="Cao"
+                />
               </View>
             </View>
           </BottomSheetScrollView>

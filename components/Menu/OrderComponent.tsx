@@ -1,9 +1,9 @@
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { COLORS } from '../../assets'
 import { Feather } from '@expo/vector-icons'
 import { router } from 'expo-router'
-
+const { height, width } = Dimensions.get('window')
 
 const RenderStatusOrder = ({ name, text, id, index }: any) => {
     return <Pressable style={styles.renderItemContainer} key={index} onPress={() => {
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 10,
         alignItems: 'center',
+        width: width
     },
     textCon: {
         fontSize: 18,

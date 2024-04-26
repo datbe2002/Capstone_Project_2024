@@ -69,6 +69,10 @@ const Cart: React.FC<Props> = ({ }) => {
             selectedItem.size === cartItem.size
         )
     );
+    if (updatedCartItems.length < 1) {
+      setIsAdjust(!isAdjust)
+    }
+    setSelectedItems(updatedCartItems);
     mutation.mutate({ userId: userState?.id, cartItems: updatedCartItems });
     setTimeout(() => {
       setAlert(null);
@@ -175,6 +179,7 @@ const Cart: React.FC<Props> = ({ }) => {
   // total
   useEffect(() => {
     let newTotal = 0;
+    console.log('inUseEffect', selectedItems)
     if (selectedItems.length != 0) {
       selectedItems.forEach((element) => {
         newTotal += element.price * element.quantity;

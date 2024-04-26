@@ -1,7 +1,7 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, TextInput, View } from 'react-native'
 import React from 'react'
 import { COLORS } from '../../assets'
-
+const { height, width } = Dimensions.get('window')
 const NoteForShop = ({ note, setNote }: any) => {
 
 
@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
         height: 60,
         alignItems: 'center',
+        width: width
     },
     lableContainer: {
-        width: 100,
     },
     label: {
         fontSize: 18,

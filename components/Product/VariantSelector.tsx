@@ -4,11 +4,12 @@ import {
   Pressable,
   Text,
   StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import { COLORS, SIZES } from "../../assets";
 import { ScrollView } from "react-native-gesture-handler";
-
+import {
+  TouchableOpacity,
+} from '@gorhom/bottom-sheet';
 interface Item {
   size: {
     value: string;

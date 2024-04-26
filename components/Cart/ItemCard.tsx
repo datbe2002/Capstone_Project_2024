@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 5,
     backgroundColor: "transparent",
+    flex: 1,
   },
   checkbox: {
     width: width * 0.15,
@@ -152,7 +153,6 @@ const styles = StyleSheet.create({
   card: {
     alignSelf: "center",
     marginVertical: 5,
-    height: 120,
     width: width * 0.8,
     display: "flex",
     flexDirection: "row",

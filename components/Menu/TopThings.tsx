@@ -15,10 +15,6 @@ const TopThings = () => {
                 <MaterialCommunityIcons name="comment-processing-outline" size={24} color={COLORS.primary} />
                 <Text style={styles.textLine}>Đánh giá</Text>
             </Pressable>
-            <Pressable style={[styles.firstLine, { marginBottom: 20 }]} onPress={() => router.push('/success_payment')}>
-                <MaterialCommunityIcons name="archive-arrow-up-outline" size={24} color={COLORS.darkGray} />
-                <Text style={styles.textLine}>Sản phẩm bán chạy</Text>
-            </Pressable>
             <Pressable style={styles.firstLine} onPress={() => router.push('/(tabs)/(menu)/profile')}>
                 <MaterialCommunityIcons name="account-check-outline" size={24} color={"#20AC02"} />
                 <Text style={styles.textLine}>Tài khoản hệ thống</Text>
