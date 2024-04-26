@@ -29,7 +29,7 @@ const Order = () => {
         // cancelled: data?.data?.filter((order: any) => order.status === 3),
         waiting: data?.data?.filter((order: any) => order.status === 4),
         delivering: data?.data?.filter((order: any) => order.status === 5),
-        delivered: data?.data?.filter((order: any) => order.status === 6),
+        delivered: data?.data?.filter((order: any) => order.status === 2),
     };
     return (
         <>
