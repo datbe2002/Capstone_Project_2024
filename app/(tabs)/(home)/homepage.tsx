@@ -43,14 +43,14 @@ export default function HomepageScreen() {
   const { categories, setCategories } = useCategoriesStore();
   const { sizes, setSies } = useSizeStore();
   const { colors, setColors } = useColorsStore();
-  const { setUrlAI, urlAI } = useAIURL()
-
-
+  const { setUrlAI, urlAI } = useAIURL();
 
   useEffect(() => {
     const initCall = async () => {
-      const callApiAI = await axios.get('https://662517f304457d4aaf9dd3b9.mockapi.io/api/v1/url')
-      setUrlAI(callApiAI.data[0].url)
+      const callApiAI = await axios.get(
+        "https://662517f304457d4aaf9dd3b9.mockapi.io/api/v1/url"
+      );
+      setUrlAI(callApiAI.data[0].url);
       try {
         const userCart = await instance.get("/api/cart/" + userId);
 
@@ -166,6 +166,9 @@ export default function HomepageScreen() {
           <CategoriesSection categories={getCategoriesQuery.data.data} />
           <TopProductsSection topProducts={topProductsQuery.data} />
           <NewProductSection newProduct={newProductsQuery.data} />
+          <Text style={[styles.title, { paddingHorizontal: 10 }]}>
+            Đề xuất cho bạn
+          </Text>
           <OtherProducts
             data={productsQuery.data.items}
             userState={userState}
