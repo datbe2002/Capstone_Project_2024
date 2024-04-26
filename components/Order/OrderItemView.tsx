@@ -56,7 +56,7 @@ const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData, index }: 
                 </View>
 
             </View>
-            {status === 6 && (
+            {status === 2 && (
                 <View style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
                     {existedFeedback ? (
                         <View

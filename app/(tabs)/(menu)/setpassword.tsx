@@ -47,10 +47,11 @@ const SetPassword = () => {
             handleError('Không được để trống ô này', 'retypeNewPassword');
             isValid = false;
         }
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$!@%])[A-Za-z\d$!@%]{6,}$/;
 
-        if (!passwordRegex.test(inputs.newPassword)) {
-            handleError('Mật khẩu phải có ít nhất 6 ký tự, bao gồm cả chữ số, chữ cái và ký tự đặc biệt (!$@%)', 'newPassword');
+
+
+        if (inputs.newPassword.length < 6) {
+            handleError('Mật khẩu phải có ít nhất 6 ký tự', 'newPassword');
             isValid = false;
         }
 
@@ -82,7 +83,7 @@ const SetPassword = () => {
                     <Text style={styles.biggerText}>Đổi mật khẩu</Text>
                     <SpaceBet height={5} />
 
-                    <Text style={styles.mainText}>Mật khẩu của bạn phải có ít nhất 6 ký tự, bao gồm cả chữ số, chữ cái và ký tự đặc biệt (!$@%)</Text>
+                    <Text style={styles.mainText}>Mật khẩu của bạn phải có ít nhất 6 ký tự</Text>
                 </View>
                 <View style={styles.inputCo}>
                     <InputV2

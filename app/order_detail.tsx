@@ -83,7 +83,7 @@ const OrderDetail = React.memo(() => {
         }
     }
     const STATUS_TEXT: any = {
-        6: 'Đơn hàng đã hoàn thành',
+        2: 'Đơn hàng đã hoàn thành',
         5: 'Đơn hàng đang được vận chuyển',
         4: 'Đơn hàng đang đợi xác nhận',
         3: 'Đơn hàng đã bị hủy',
@@ -112,7 +112,7 @@ const OrderDetail = React.memo(() => {
                 return COLORS.secondary;
             case 5:
                 return COLORS.primary;
-            case 6:
+            case 2:
                 return '#26AB9A';
             default:
                 return COLORS.darkGray;
