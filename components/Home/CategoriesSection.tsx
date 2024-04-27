@@ -1,6 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { memo } from "react";
 import {
   Dimensions,
   Image,
@@ -40,7 +40,7 @@ const CategoriesSection: React.FC<CategoriesProps> = ({
       params: { cateParam: item.name },
     });
   };
-
+  console.log('categories 1')
   function addImageToCategories(categories: any, images: any) {
     // Make sure there are enough images for each category
     if (categories.length > images.length) {
@@ -112,7 +112,7 @@ const CategoriesSection: React.FC<CategoriesProps> = ({
   );
 };
 
-export default CategoriesSection;
+export default memo(CategoriesSection);
 
 const styles = StyleSheet.create({
   container: {

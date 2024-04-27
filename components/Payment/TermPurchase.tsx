@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { memo } from 'react'
 import { COLORS } from '../../assets'
 
 const TermPurchase = () => {
@@ -10,7 +10,7 @@ const TermPurchase = () => {
     )
 }
 
-export default TermPurchase
+export default memo(TermPurchase)
 
 const styles = StyleSheet.create({
     lastCom: {

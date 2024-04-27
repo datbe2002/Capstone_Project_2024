@@ -1,6 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { memo } from "react";
 import {
   Dimensions,
   Image,
@@ -24,6 +24,7 @@ const NewProductSection: React.FC<NewProductProps> = ({
   newProduct,
 }) => {
   const router = useRouter();
+  console.log('new product 1')
   return (
     <View style={styles.newItems}>
       <View style={[styles.horizWrapper, styles.cateTitleWrapper]}>
@@ -84,7 +85,7 @@ const NewProductSection: React.FC<NewProductProps> = ({
   );
 };
 
-export default NewProductSection;
+export default memo(NewProductSection);
 
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import { getShippingFee } from '../../app/context/addressApi'
@@ -45,7 +45,7 @@ const ShippingFee: React.FC<ShippingFeeProps> = ({ addressId, setShippingFeePric
     )
 }
 
-export default ShippingFee
+export default memo(ShippingFee)
 
 const styles = StyleSheet.create({
     shippingMethod: {

@@ -1,11 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { memo } from 'react'
 import { COLORS } from '../../assets'
 import { transNumberFormatter } from './ShippingFee'
 
 const TotalPriceComponent = ({ totalPrice, shippingFeePrice, totalVoucher }: any) => {
-
-
 
     return (
         <View style={styles.totalPriceContainer}>
@@ -34,7 +32,7 @@ const TotalPriceComponent = ({ totalPrice, shippingFeePrice, totalVoucher }: any
     )
 }
 
-export default TotalPriceComponent
+export default memo(TotalPriceComponent)
 
 const styles = StyleSheet.create({
     totalPriceContainer: {
