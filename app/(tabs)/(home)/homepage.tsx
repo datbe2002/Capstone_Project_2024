@@ -1,15 +1,18 @@
 import {
-  ActivityIndicator,
+  Dimensions,
   Pressable,
+  RefreshControl,
   ScrollView,
-  StyleSheet,
+  StyleSheet
 } from "react-native";
 
 import { FontAwesome5 } from "@expo/vector-icons";
+import { Skeleton } from "@rneui/themed";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SIZES } from "../../../assets";
 import Background from "../../../components/BackGround";
@@ -35,6 +38,7 @@ import {
   useUserIDStore,
   useUserStore,
 } from "../../store/store";
+const { height, width } = Dimensions.get("window");
 
 export default function HomepageScreen() {
   const { userId } = useUserIDStore();
@@ -112,57 +116,60 @@ export default function HomepageScreen() {
     queryFn: getCategories,
   });
 
-  // const getRandomItems = useCallback((items: any[], count: number): any[] => {
-  //   const shuffled = items.sort(() => 0.5 - Math.random());
-  //   return shuffled.slice(0, count);
-  // }, []);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    topProductsQuery.refetch()
+    newProductsQuery.refetch()
+    productsQuery.refetch()
+    getCategoriesQuery.refetch()
+  }, []);
+  const skeletonDataCate = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]
+  const skeletonDataTopSelling = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]
+
   let content;
 
-  if (
-    topProductsQuery.isLoading ||
-    newProductsQuery.isLoading ||
-    productsQuery.isLoading ||
-    getCategoriesQuery.isLoading
-  ) {
-    // If any of the queries are still loading, show an activity indicator
-    content = (
-      <View
-        style={{
-          flex: 1,
-          alignContent: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ActivityIndicator size={50} color={COLORS.primary} />
-      </View>
-    );
-  } else {
-    // Once all the data is loaded, render your components
-    content = (
-      <View>
-        {/* search box */}
-        <View style={[styles.horizWrapper, styles.searchBoxWrapper]}>
-          <Text style={styles.title}>Shop</Text>
-          <View style={{ backgroundColor: "transparent" }}>
-            <CustomInput
-              placeholder="Tìm kiếm..."
-              onChangeText={(text: any) => setSearchValue(text)}
-              value={searchValue}
-              style={styles.searchInput}
-              elementAfter={
-                <Pressable onPress={handleSearch}>
-                  <FontAwesome5
-                    name="search"
-                    size={22}
-                    color={COLORS.primary}
-                  />
-                </Pressable>
-              }
-            />
-          </View>
+
+
+  // Once all the data is loaded, render your components
+  content = (
+    <View>
+      {/* search box */}
+      <View style={[styles.horizWrapper, styles.searchBoxWrapper]}>
+        <Text style={styles.title}>Shop</Text>
+
+        <View style={{ backgroundColor: "transparent" }}>
+
+          <CustomInput
+            placeholder="Tìm kiếm..."
+            onChangeText={(text: any) => setSearchValue(text)}
+            value={searchValue}
+            style={styles.searchInput}
+            elementAfter={
+              <Pressable onPress={handleSearch}>
+                <FontAwesome5
+                  name="search"
+                  size={22}
+                  color={COLORS.primary}
+                />
+              </Pressable>
+            }
+          />
         </View>
-        {/* main content */}
-        <ScrollView>
+      </View>
+      {/* main content */}
+      {topProductsQuery.isSuccess &&
+        newProductsQuery.isSuccess &&
+        productsQuery.isSuccess &&
+        getCategoriesQuery.isSuccess ?
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={topProductsQuery.isLoading &&
+              newProductsQuery.isLoading &&
+              productsQuery.isLoading &&
+              getCategoriesQuery.isLoading} onRefresh={onRefresh} />
+          }
+        >
           <CategoriesSection categories={getCategoriesQuery.data.data} />
           <TopProductsSection topProducts={topProductsQuery.data} />
           <NewProductSection newProduct={newProductsQuery.data} />
@@ -175,9 +182,80 @@ export default function HomepageScreen() {
           />
           <SpaceBet height={50} />
         </ScrollView>
-      </View>
-    );
-  }
+        :
+        <View style={{ paddingHorizontal: 13, marginTop: 10 }}>
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Skeleton
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              width={130}
+              height={40}
+            />
+            <Skeleton
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              width={130}
+              height={30}
+            />
+          </View>
+          <View style={{
+            marginTop: 10,
+            paddingBottom: 5,
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 10,
+          }}>
+            {skeletonDataCate.map((i) => <View key={i.id}>
+              <Skeleton
+                LinearGradientComponent={LinearGradient}
+                animation="wave"
+                width={width / 2.2}
+                height={width / 2.5}
+                style={{ borderRadius: 10 }}
+              />
+            </View>)}
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <Skeleton
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              width={180}
+              height={40}
+            />
+          </View>
+          <View style={{
+            display: 'flex',
+            flexDirection: 'row',
+            marginTop: 10,
+            justifyContent: 'center',
+            gap: 5,
+            alignItems: "center",
+          }}>
+            {skeletonDataTopSelling.map((i) => <View key={i.id}>
+              <Skeleton
+                circle
+                width={width / 5.5}
+                height={width / 5.5}
+                LinearGradientComponent={LinearGradient}
+                animation="wave" />
+            </View>)}
+          </View>
+          <View style={{ marginTop: 20, marginHorizontal: 10 }}>
+            <Skeleton
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              width={width / 1.1}
+              height={100}
+              style={{ borderRadius: 10 }}
+            />
+          </View>
+        </View>
+      }
+
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.container}>

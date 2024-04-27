@@ -1,35 +1,73 @@
 import MasonryList from '@react-native-seoul/masonry-list';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from 'react-native';
 import { getProducts } from '../../app/context/productsApi';
 import { COLORS } from '../../assets';
 import { FavoriteListCard } from './FavoriteListCard';
 import SpaceBet from '../SpaceBet';
+import { Skeleton } from '@rneui/themed';
+import { LinearGradient } from 'expo-linear-gradient';
+const { height, width } = Dimensions.get("window");
 
 const MaybeUCanLike = () => {
     const handleOpenBottom = () => {
         console.log('open')
     }
     const [data, setData] = useState<any>([])
-
-    const { data: queryData, isLoading } = useQuery({
+    const [loading, setLoading] = useState<boolean>(false)
+    const { data: queryData, isSuccess } = useQuery({
         queryKey: ["recommendProducts"],
         queryFn: () => getProducts(6),
     });
 
     useEffect(() => {
-        if (queryData && queryData.items) {
-            setData(queryData.items);
-        }
+        setLoading(true);
+        setTimeout(() => {
+            if (queryData && queryData.items) {
+                setData(queryData.items);
+                setLoading(false);
+            }
+        }, 1000)
     }, [queryData]);
     return (
         <View style={styles.container}>
             <View style={styles.mainHeader}>
                 <Text style={styles.mainHeaderText}> Có thể bạn sẽ thích </Text>
             </View>
-            {isLoading ? <View>
-                <ActivityIndicator size={25} color={COLORS.primary} />
+            {loading ? <View style={{ flex: 1 }}>
+                <View style={{ display: 'flex', flexDirection: 'row', gap: 10 }}>
+                    <Skeleton
+                        LinearGradientComponent={LinearGradient}
+                        animation="wave"
+                        width={width / 2.1}
+                        height={250}
+                        style={{ borderRadius: 10 }}
+                    />
+                    <Skeleton
+                        LinearGradientComponent={LinearGradient}
+                        animation="wave"
+                        width={width / 2.1}
+                        height={250}
+                        style={{ borderRadius: 10 }}
+                    />
+                </View>
+                <View style={{ display: 'flex', flexDirection: 'row', gap: 10, marginTop: 10 }}>
+                    <Skeleton
+                        LinearGradientComponent={LinearGradient}
+                        animation="wave"
+                        width={width / 2.1}
+                        height={150}
+                        style={{ borderRadius: 10 }}
+                    />
+                    <Skeleton
+                        LinearGradientComponent={LinearGradient}
+                        animation="wave"
+                        width={width / 2.1}
+                        height={150}
+                        style={{ borderRadius: 10 }}
+                    />
+                </View>
             </View> :
                 <MasonryList
                     nestedScrollEnabled
@@ -52,6 +90,7 @@ const MaybeUCanLike = () => {
                         />
                     )}
                     onEndReachedThreshold={0.1}
+
                 />
             }
         </View>

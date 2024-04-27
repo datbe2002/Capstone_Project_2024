@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { COLORS } from '../../assets';
 import { CheckBox } from 'react-native-elements';
@@ -36,7 +36,7 @@ const PaymentMethodChosen = ({ setPaymentMethod, paymentMethod }: any) => {
     );
 };
 
-export default PaymentMethodChosen;
+export default memo(PaymentMethodChosen);
 
 const styles = StyleSheet.create({
     totalPriceContainer: {

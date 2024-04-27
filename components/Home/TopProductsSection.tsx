@@ -1,6 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { memo } from "react";
 import {
   Dimensions,
   Image,
@@ -24,7 +24,7 @@ const TopProductsSection: React.FC<TopProductsProps> = ({
   topProducts,
 }) => {
   const router = useRouter();
-
+  console.log('topProducts 1')
   return (
     <View style={styles.topProducts}>
       <Text style={styles.title}>Bán chạy nhất</Text>
@@ -56,7 +56,7 @@ const TopProductsSection: React.FC<TopProductsProps> = ({
   );
 };
 
-export default TopProductsSection;
+export default memo(TopProductsSection);
 
 const styles = StyleSheet.create({
   container: {

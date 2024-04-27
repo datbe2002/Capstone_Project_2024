@@ -17,9 +17,14 @@ const TotalConfirmCheckout = ({ handleCheckout, totalPay, isPending }: TotalConf
                 <Text style={styles.labelMain}>Tổng thanh toán</Text>
                 <Text style={styles.mainPrice}>{transNumberFormatter(totalPay)}đ</Text>
             </View>
-            <Pressable style={styles.checkoutBtn} onPress={handleCheckout}>
-                <Text style={styles.textBtn}>{isPending ? <ActivityIndicator size={30} color={COLORS.white} /> : 'Đặt hàng'}</Text>
-            </Pressable>
+
+            {isPending ? <Pressable disabled style={[styles.checkoutBtn, { backgroundColor: COLORS.darkGray, opacity: 0.6 }]} onPress={handleCheckout}>
+                <Text style={styles.textBtn}>{<ActivityIndicator size={30} color={COLORS.white} />}</Text>
+            </Pressable> :
+                <Pressable style={[styles.checkoutBtn, { backgroundColor: COLORS.primary }]} onPress={handleCheckout}>
+                    <Text style={styles.textBtn}>{'Đặt hàng'}</Text>
+                </Pressable>
+            }
         </View>
     )
 }
@@ -52,7 +57,6 @@ const styles = StyleSheet.create({
     },
     checkoutBtn: {
         width: 150,
-        backgroundColor: COLORS.primary,
         justifyContent: 'center',
         alignItems: 'center'
     },

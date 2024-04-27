@@ -1,5 +1,5 @@
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { memo } from 'react'
 import { CartItem } from '../../constants/Type'
 import { COLORS, SIZES } from '../../assets'
 
@@ -62,7 +62,7 @@ const ItemCardPayment = ({ order }: any) => {
     )
 }
 
-export default ItemCardPayment
+export default memo(ItemCardPayment)
 
 const styles = StyleSheet.create({
     cardProdContainer: {

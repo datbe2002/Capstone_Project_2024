@@ -1,11 +1,12 @@
 import { AntDesign, Fontisto } from '@expo/vector-icons';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { memo, useCallback, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { COLORS } from '../../assets';
 import { router } from 'expo-router';
 import { ActivityIndicator } from 'react-native';
 
 const AddressChosen = ({ addressData }: any) => {
+    console.log('AddressChosen')
     return (
         <View>
             <Pressable onPress={() => {
@@ -44,7 +45,7 @@ const AddressChosen = ({ addressData }: any) => {
     )
 }
 
-export default AddressChosen
+export default memo(AddressChosen)
 
 const styles = StyleSheet.create({
     title: {

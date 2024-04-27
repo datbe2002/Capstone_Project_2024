@@ -1,11 +1,13 @@
-import { ActivityIndicator, Dimensions, FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, Dimensions, FlatList, Image, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native'
+import React, { memo, useCallback, useState } from 'react'
 import { COLORS, SIZES } from '../../assets'
 import { transNumberFormatter } from '../Payment/ShippingFee';
 import { Feather, Fontisto } from '@expo/vector-icons';
 import EmptyComponentCustom from '../EmptyComponentCustom';
 import { router } from 'expo-router';
 import { dateConvert } from '../Voucher/VoucherCard';
+import { Skeleton } from '@rneui/themed';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { height, width } = Dimensions.get("window");
 interface OrderStatusDetail {
@@ -133,20 +135,96 @@ const DeliveredCard = ({ item }: any) => {
 
 
 
-const DeliveredList = ({ data, loading }: any) => {
-
+const DeliveredList = ({ data, loading, refetch }: any) => {
+    const [refreshing, setRefreshing] = useState(false);
+    const skeletonData = [{ id: 1 }, { id: 2 }, { id: 3 }]
+    const onRefresh = useCallback(() => {
+        refetch()
+    }, []);
     return (
-        <View style={{ marginTop: 10 }}>
-            {loading ? <View style={{
-                height: height, justifyContent: 'center', alignItems: 'center'
-            }}>
-                <ActivityIndicator color={COLORS.primary} size={30} />
-            </View> :
+        <View>
+            {loading ?
+                <View style={{
+                    height: height
+                }}>
+                    {skeletonData.map((i) =>
+                        <View key={i.id} style={{ width: width, backgroundColor: 'white', padding: 10, marginBottom: 20 }}>
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+                                <Skeleton
+                                    LinearGradientComponent={LinearGradient}
+                                    animation="wave"
+                                    width={140}
+                                    height={30}
+                                />
+                                <Skeleton
+                                    LinearGradientComponent={LinearGradient}
+                                    animation="wave"
+                                    width={90}
+                                    height={30}
+                                />
+                            </View>
+                            <View style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
+                                <Skeleton
+                                    LinearGradientComponent={LinearGradient}
+                                    animation="wave"
+                                    width={110}
+                                    height={120}
+                                />
+                                <View style={{ display: 'flex', gap: 15, flexDirection: 'column', justifyContent: 'flex-end' }}>
+                                    <Skeleton
+                                        LinearGradientComponent={LinearGradient}
+                                        animation="wave"
+                                        width={90}
+                                        height={20}
+                                    />
+                                    <Skeleton
+                                        LinearGradientComponent={LinearGradient}
+                                        animation="wave"
+                                        width={90}
+                                        height={20}
+                                    />
+                                    <Skeleton
+                                        LinearGradientComponent={LinearGradient}
+                                        animation="wave"
+                                        width={200}
+                                        height={20}
+                                    />
+                                </View>
+                            </View>
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
+                                <Skeleton
+                                    LinearGradientComponent={LinearGradient}
+                                    animation="wave"
+                                    width={100}
+                                    height={30}
+                                />
+                                <Skeleton
+                                    LinearGradientComponent={LinearGradient}
+                                    animation="wave"
+                                    width={180}
+                                    height={30}
+                                />
+                            </View>
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Skeleton
+                                    LinearGradientComponent={LinearGradient}
+                                    animation="wave"
+                                    width={250}
+                                    height={30}
+                                />
+                            </View>
+                        </View>
+                    )}
+                </View>
+                :
                 <FlatList
                     ListEmptyComponent={<EmptyComponentCustom icon={<Fontisto name="justify" size={35} color={COLORS.white} />} text={'Bạn chưa có đơn hàng nào'} />}
                     data={data}
                     renderItem={({ item }) => <DeliveredCard item={item} />}
                     keyExtractor={(item: any) => item.id}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 />
             }
 
@@ -154,7 +232,7 @@ const DeliveredList = ({ data, loading }: any) => {
     )
 }
 
-export default DeliveredList
+export default memo(DeliveredList)
 
 const styles = StyleSheet.create({
     textConfirm: {
