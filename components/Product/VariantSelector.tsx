@@ -1,15 +1,8 @@
 import React from "react";
-import {
-  View,
-  Pressable,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { View, Pressable, Text, StyleSheet } from "react-native";
 import { COLORS, SIZES } from "../../assets";
 import { ScrollView } from "react-native-gesture-handler";
-import {
-  TouchableOpacity,
-} from '@gorhom/bottom-sheet';
+import { TouchableOpacity } from "@gorhom/bottom-sheet";
 interface Item {
   size: {
     value: string;
@@ -80,39 +73,41 @@ const styles = StyleSheet.create({
   },
 });
 
-const VariantSection: React.FC<Props> = ({ data, onPress, selectedItem }) => (
-  <View style={styles.variantContaner}>
-    <Text style={styles.secondaryTitle}>Các loại có sẵn</Text>
-    <View style={styles.variantItemList}>
-      {data.map((item, index) => (
-        <TouchableOpacity key={index} onPress={() => onPress(item)}>
-          <View
-            style={[
-              styles.variantItem,
-              item === selectedItem ? styles.variantItemPressed : null,
-            ]}
-          >
-            <Text
+const VariantSection: React.FC<Props> = ({ data, onPress, selectedItem }) => {
+  return (
+    <View style={styles.variantContaner}>
+      <Text style={styles.secondaryTitle}>Các loại có sẵn</Text>
+      <View style={styles.variantItemList}>
+        {data.map((item, index) => (
+          <Pressable key={index} onPress={() => onPress(item)}>
+            <View
               style={[
-                styles.variantText,
-                item === selectedItem ? styles.variantTextPressed : null,
+                styles.variantItem,
+                item === selectedItem ? styles.variantItemPressed : null,
               ]}
             >
-              {item.size.value.trim()}
-            </Text>
-            <Text
-              style={[
-                styles.variantText,
-                item === selectedItem ? styles.variantTextPressed : null,
-              ]}
-            >
-              {item.color.name.trim()}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      ))}
+              <Text
+                style={[
+                  styles.variantText,
+                  item === selectedItem ? styles.variantTextPressed : null,
+                ]}
+              >
+                {item.size.value.trim()}
+              </Text>
+              <Text
+                style={[
+                  styles.variantText,
+                  item === selectedItem ? styles.variantTextPressed : null,
+                ]}
+              >
+                {item.color.name.trim()}
+              </Text>
+            </View>
+          </Pressable>
+        ))}
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 export default VariantSection;

@@ -3,7 +3,7 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
 
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -119,18 +119,21 @@ export default function HomepageScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
-    topProductsQuery.refetch()
-    newProductsQuery.refetch()
-    productsQuery.refetch()
-    getCategoriesQuery.refetch()
+    topProductsQuery.refetch();
+    newProductsQuery.refetch();
+    productsQuery.refetch();
+    getCategoriesQuery.refetch();
   }, []);
-  const skeletonDataCate = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]
-  const skeletonDataTopSelling = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]
+  const skeletonDataCate = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+  const skeletonDataTopSelling = [
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+    { id: 5 },
+  ];
 
   let content;
-
-
-
   // Once all the data is loaded, render your components
   content = (
     <View>
@@ -139,7 +142,6 @@ export default function HomepageScreen() {
         <Text style={styles.title}>Shop</Text>
 
         <View style={{ backgroundColor: "transparent" }}>
-
           <CustomInput
             placeholder="Tìm kiếm..."
             onChangeText={(text: any) => setSearchValue(text)}
@@ -147,11 +149,7 @@ export default function HomepageScreen() {
             style={styles.searchInput}
             elementAfter={
               <Pressable onPress={handleSearch}>
-                <FontAwesome5
-                  name="search"
-                  size={22}
-                  color={COLORS.primary}
-                />
+                <FontAwesome5 name="search" size={22} color={COLORS.primary} />
               </Pressable>
             }
           />
@@ -159,15 +157,20 @@ export default function HomepageScreen() {
       </View>
       {/* main content */}
       {topProductsQuery.isSuccess &&
-        newProductsQuery.isSuccess &&
-        productsQuery.isSuccess &&
-        getCategoriesQuery.isSuccess ?
+      newProductsQuery.isSuccess &&
+      productsQuery.isSuccess &&
+      getCategoriesQuery.isSuccess ? (
         <ScrollView
           refreshControl={
-            <RefreshControl refreshing={topProductsQuery.isLoading &&
-              newProductsQuery.isLoading &&
-              productsQuery.isLoading &&
-              getCategoriesQuery.isLoading} onRefresh={onRefresh} />
+            <RefreshControl
+              refreshing={
+                topProductsQuery.isLoading &&
+                newProductsQuery.isLoading &&
+                productsQuery.isLoading &&
+                getCategoriesQuery.isLoading
+              }
+              onRefresh={onRefresh}
+            />
           }
         >
           <CategoriesSection categories={getCategoriesQuery.data.data} />
@@ -182,9 +185,15 @@ export default function HomepageScreen() {
           />
           <SpaceBet height={50} />
         </ScrollView>
-        :
+      ) : (
         <View style={{ padding: 10 }}>
-          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
             <Skeleton
               LinearGradientComponent={LinearGradient}
               animation="wave"
@@ -198,13 +207,15 @@ export default function HomepageScreen() {
               height={30}
             />
           </View>
-          <View style={{
-            width,
-            display: 'flex',
-            flexDirection: 'row',
-            gap: 10,
-            marginTop: 10,
-          }}>
+          <View
+            style={{
+              width,
+              display: "flex",
+              flexDirection: "row",
+              gap: 10,
+              marginTop: 10,
+            }}
+          >
             <Skeleton
               LinearGradientComponent={LinearGradient}
               animation="wave"
@@ -220,13 +231,15 @@ export default function HomepageScreen() {
               style={{ borderRadius: 10 }}
             />
           </View>
-          <View style={{
-            width,
-            display: 'flex',
-            flexDirection: 'row',
-            gap: 10,
-            marginTop: 10,
-          }}>
+          <View
+            style={{
+              width,
+              display: "flex",
+              flexDirection: "row",
+              gap: 10,
+              marginTop: 10,
+            }}
+          >
             <Skeleton
               LinearGradientComponent={LinearGradient}
               animation="wave"
@@ -250,22 +263,27 @@ export default function HomepageScreen() {
               height={40}
             />
           </View>
-          <View style={{
-            display: 'flex',
-            flexDirection: 'row',
-            marginTop: 10,
-            justifyContent: 'center',
-            gap: 5,
-            alignItems: "center",
-          }}>
-            {skeletonDataTopSelling.map((i) => <View key={i.id}>
-              <Skeleton
-                circle
-                width={width / 5.5}
-                height={width / 5.5}
-                LinearGradientComponent={LinearGradient}
-                animation="wave" />
-            </View>)}
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              marginTop: 10,
+              justifyContent: "center",
+              gap: 5,
+              alignItems: "center",
+            }}
+          >
+            {skeletonDataTopSelling.map((i) => (
+              <View key={i.id}>
+                <Skeleton
+                  circle
+                  width={width / 5.5}
+                  height={width / 5.5}
+                  LinearGradientComponent={LinearGradient}
+                  animation="wave"
+                />
+              </View>
+            ))}
           </View>
           <View style={{ marginTop: 20 }}>
             <Skeleton
@@ -277,8 +295,7 @@ export default function HomepageScreen() {
             />
           </View>
         </View>
-      }
-
+      )}
     </View>
   );
 
