@@ -18,7 +18,7 @@ const Order = () => {
         setIndex(initialIndex);
     }, [initialIndex]);
 
-    const { data, isLoading, refetch } = useQuery({
+    const { data, isSuccess, refetch } = useQuery({
         queryKey: ["order", userId],
         queryFn: () => getOrderByUserId(userId),
         enabled: userId !== null,
@@ -68,19 +68,19 @@ const Order = () => {
 
             <TabView value={index} onChange={setIndex} >
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList refetch={refetch} data={filteredData.all} loading={isLoading} />
+                    <DeliveredList refetch={refetch} data={filteredData.all} loading={isSuccess} />
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList refetch={refetch} data={filteredData.pending} loading={isLoading} />
+                    <DeliveredList refetch={refetch} data={filteredData.pending} loading={isSuccess} />
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList refetch={refetch} data={filteredData.waiting} loading={isLoading} />
+                    <DeliveredList refetch={refetch} data={filteredData.waiting} loading={isSuccess} />
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList refetch={refetch} data={filteredData.delivering} loading={isLoading} />
+                    <DeliveredList refetch={refetch} data={filteredData.delivering} loading={isSuccess} />
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%' }}>
-                    <DeliveredList refetch={refetch} data={filteredData.delivered} loading={isLoading} />
+                    <DeliveredList refetch={refetch} data={filteredData.delivered} loading={isSuccess} />
                 </TabView.Item>
 
             </TabView>

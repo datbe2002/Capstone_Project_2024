@@ -1,16 +1,15 @@
 import { Fontisto, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
-import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet"
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
-import React, { useCallback, useRef, useState } from 'react'
-import { ActivityIndicator, Alert, Keyboard, StyleSheet, Text, TextInput, View } from 'react-native'
-import { AirbnbRating, Dialog } from 'react-native-elements'
+import React, { useRef, useState } from 'react'
+import { ActivityIndicator, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Dialog } from 'react-native-elements'
 import { ScrollView } from 'react-native-virtualized-view'
 import { COLORS } from '../assets'
 import CustomButton from '../components/Button'
 import OrderItemView from '../components/Order/OrderItemView'
 import { cancelOrder, getOrderByOrderId } from './context/checkoutApi'
-import { getFeedbackByUserId, postFeedback } from './context/feedbackApi'
+import { getFeedbackByUserId } from './context/feedbackApi'
 import { useUserStore } from './store/store'
 
 const OrderDetail = React.memo(() => {
@@ -22,66 +21,12 @@ const OrderDetail = React.memo(() => {
     });
     const [visible2, setVisible2] = useState<boolean>(false);
     const { userState } = useUserStore()
-    const [currProductId, setCurrProductId] = useState<number | null>(null)
-    const [currProductName, setCurrProductName] = useState<string | null>(null)
-    const [currRating, setCurrRating] = useState<number | null>(null)
-    const [defaultRating, setDefaultRating] = useState<number>(0)
-    const [comment, setComment] = useState<string | undefined>('')
-    const bottomSheetRef = useRef<any>(null)
-    const handleOpenBottom = (productId: number, productName: string) => {
-        setCurrProductName(productName)
-        setCurrProductId(productId)
-        bottomSheetRef.current?.expand()
-    }
-    const renderBackdrop = useCallback((props: any) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />, [])
-    const ratingCompleted = (rating: number) => {
-        setCurrRating(rating)
-    }
-    const handleClose = () => {
-        setCurrRating(null)
-        setCurrProductId(null)
-        setComment('')
-        setDefaultRating(0)
-        bottomSheetRef.current?.close()
-    }
-
-    const { mutate, isPending } = useMutation({
-        mutationFn: (data: any) => postFeedback(data),
-        onSuccess: (response: any) => {
-            setCurrRating(null)
-            setCurrProductId(null)
-            setComment('')
-            setDefaultRating(0)
-            Keyboard.dismiss()
-            feedbackRefetch();
-            bottomSheetRef.current?.close()
-        },
-        onError: (err) => {
-            Alert.alert("Lỗi", "Có lỗi xảy ra. Vui lòng thử lại sau");
-        },
-    });
-
-
     const { data: feedbackData, isFetching: isFeedbackLoading, refetch: feedbackRefetch } = useQuery({
         queryKey: ["feedback", userState?.id],
         queryFn: () => getFeedbackByUserId(userState?.id),
         enabled: userState?.id !== null,
     });
 
-    const handleSubmitFeedback = async () => {
-        if (currProductId && currRating && comment) {
-            const dataToPass = {
-                orderId: orderId,
-                productId: currProductId,
-                userId: userState?.id,
-                comment: comment,
-                rating: currRating
-            }
-            await mutate(dataToPass)
-        } else {
-            Alert.alert("Thông báo", "Không được để trống Feedback")
-        }
-    }
     const STATUS_TEXT: any = {
         2: 'Đơn hàng đã hoàn thành',
         5: 'Đơn hàng đang được vận chuyển',
@@ -203,8 +148,7 @@ const OrderDetail = React.memo(() => {
                             </View>
                         </View>
                     </View>
-                    <OrderItemView data={data?.data} handleOpenBottom=
-                        {handleOpenBottom} feedbackData={feedbackData?.data} />
+                    <OrderItemView feedbackRefetch={feedbackRefetch} data={data?.data} userStateId={userState?.id} feedbackData={feedbackData?.data} />
                     {(data?.data?.status === 4 || data?.data?.status === 1) && <View style={{
                         margin: 10
                     }}>
@@ -229,49 +173,6 @@ const OrderDetail = React.memo(() => {
                     </Dialog>
                 </ScrollView>}
 
-            <BottomSheet
-                snapPoints={["60%"]}
-                ref={bottomSheetRef}
-                index={-1}
-                enablePanDownToClose={true}
-                backdropComponent={renderBackdrop}
-                backgroundStyle={{ backgroundColor: COLORS.white }}
-                onClose={handleClose}
-            >
-                <BottomSheetView style={{ position: 'relative', height: '100%' }}>
-                    <View style={{ backgroundColor: COLORS.white, paddingHorizontal: 20 }}>
-                        <View style={{ paddingBottom: 10 }}>
-                            <Text style={{ fontFamily: 'mon-sb', fontSize: 16 }}>{`Hãy cho chúng tớ xin feedback của bạn về sản phẩm (${currProductName}) `}</Text>
-                        </View>
-                        <BottomSheetTextInput
-                            multiline={true}
-                            numberOfLines={5}
-                            onChangeText={text => setComment(text)}
-                            value={comment}
-                            style={{ borderWidth: 1, borderColor: COLORS.gray, fontFamily: 'mon-sb', fontSize: 16, borderRadius: 10 }}
-                        />
-                        <View style={{ paddingBottom: 10 }}>
-                            <Text style={{ fontFamily: 'mon-sb', fontSize: 16, paddingTop: 10 }}>Hãy cho chúng tớ sao nhé: </Text>
-                        </View>
-                        <AirbnbRating
-                            starContainerStyle={{
-                                padding: 5,
-                                borderWidth: 1,
-                                borderColor: COLORS.gray,
-                                borderRadius: 10
-                            }}
-                            count={5}
-                            reviews={["Quá tệ", "OK", "Tốt", "Rất tốt", "Tuyệt vời"]}
-                            defaultRating={defaultRating}
-                            size={30}
-                            onFinishRating={ratingCompleted}
-                        />
-                    </View>
-                    <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, borderTopWidth: 2, borderTopColor: COLORS.gray, padding: 10 }}>
-                        <CustomButton buttonText={isPending ? <ActivityIndicator color={COLORS.white} size={25} /> : 'Xác nhận'} onPress={handleSubmitFeedback} />
-                    </View>
-                </BottomSheetView>
-            </BottomSheet>
         </View>
     )
 })

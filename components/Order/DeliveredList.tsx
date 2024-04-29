@@ -143,7 +143,7 @@ const DeliveredList = ({ data, loading, refetch }: any) => {
     }, []);
     return (
         <View>
-            {loading ?
+            {!loading ?
                 <View style={{
                     height: height
                 }}>

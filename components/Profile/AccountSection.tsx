@@ -56,9 +56,6 @@ const AccountSection = () => {
                         <Text style={styles.mainText}>
                             Mật khẩu
                         </Text>
-                        <Text style={styles.secondText}>
-                            Thay đổi lần cuối: 190
-                        </Text>
                     </View>
                     <TouchableOpacity style={styles.changeComp} onPress={() => router.push('/(tabs)/(menu)/setpassword')}>
                         <Text style={styles.changeText}>Đổi</Text>

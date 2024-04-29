@@ -10,7 +10,6 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Skeleton } from "@rneui/themed";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -38,6 +37,7 @@ import {
   useUserIDStore,
   useUserStore,
 } from "../../store/store";
+import { LinearGradient } from "expo-linear-gradient";
 const { height, width } = Dimensions.get("window");
 
 export default function HomepageScreen() {
@@ -183,7 +183,7 @@ export default function HomepageScreen() {
           <SpaceBet height={50} />
         </ScrollView>
         :
-        <View style={{ paddingHorizontal: 13, marginTop: 10 }}>
+        <View style={{ padding: 10 }}>
           <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
             <Skeleton
               LinearGradientComponent={LinearGradient}
@@ -199,23 +199,48 @@ export default function HomepageScreen() {
             />
           </View>
           <View style={{
-            marginTop: 10,
-            paddingBottom: 5,
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
+            width,
+            display: 'flex',
+            flexDirection: 'row',
             gap: 10,
+            marginTop: 10,
           }}>
-            {skeletonDataCate.map((i) => <View key={i.id}>
-              <Skeleton
-                LinearGradientComponent={LinearGradient}
-                animation="wave"
-                width={width / 2.2}
-                height={width / 2.5}
-                style={{ borderRadius: 10 }}
-              />
-            </View>)}
+            <Skeleton
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              width={width / 2.15}
+              height={width / 2.5}
+              style={{ borderRadius: 10 }}
+            />
+            <Skeleton
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              width={width / 2.15}
+              height={width / 2.5}
+              style={{ borderRadius: 10 }}
+            />
+          </View>
+          <View style={{
+            width,
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 10,
+            marginTop: 10,
+          }}>
+            <Skeleton
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              width={width / 2.15}
+              height={width / 2.5}
+              style={{ borderRadius: 10 }}
+            />
+            <Skeleton
+              LinearGradientComponent={LinearGradient}
+              animation="wave"
+              width={width / 2.15}
+              height={width / 2.5}
+              style={{ borderRadius: 10 }}
+            />
           </View>
           <View style={{ marginTop: 10 }}>
             <Skeleton
@@ -242,11 +267,11 @@ export default function HomepageScreen() {
                 animation="wave" />
             </View>)}
           </View>
-          <View style={{ marginTop: 20, marginHorizontal: 10 }}>
+          <View style={{ marginTop: 20 }}>
             <Skeleton
               LinearGradientComponent={LinearGradient}
               animation="wave"
-              width={width / 1.1}
+              width={width / 1.05}
               height={100}
               style={{ borderRadius: 10 }}
             />

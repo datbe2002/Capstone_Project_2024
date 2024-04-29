@@ -1,5 +1,5 @@
-import { Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Alert, Dimensions, FlatList, Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
 import { COLORS, SIZES } from '../../assets'
 import { transNumberFormatter } from '../Payment/ShippingFee'
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -7,78 +7,7 @@ const { width } = Dimensions.get("window")
 import {
     TouchableOpacity,
 } from '@gorhom/bottom-sheet';
-const OrderItemCard = ({ item, handleOpenBottom, status, feedbackData, index }: any) => {
-    //check feedback da ton tai chua
-    const existedFeedback = !!feedbackData?.find((feedback: any) => feedback.orderItemProductId === item?.productId)
-    return (
-        <View key={index} style={{ display: 'flex', flexDirection: 'row' }}>
-            <View style={styles.card}>
-                <View style={styles.imgWrapper}>
-                    <Image
-                        style={styles.img}
-                        source={
-                            item?.product?.defaultImage
-                                ? { uri: item?.product?.defaultImage }
-                                :
-                                require("../../assets/images/default.png")
-                        }
-                    />
-                </View>
-                <View style={styles.info}>
-                    <View style={styles.vertiWrapper}>
-                        <Text style={styles.name}>{item?.product.name}</Text>
-                        <Text style={styles.description} numberOfLines={2}>
-                            Size: {item?.size}
-                        </Text>
-                        <View
-                            style={[
-                                styles.horizWrapper,
-                                {
-                                    width: "100%",
-                                    justifyContent: "flex-start",
-                                },
-                            ]}
-                        >
-                            <Text style={[styles.description, { width: "auto" }]}>
-                                Màu:
-                            </Text>
-                            <View
-                                style={{ borderRadius: 50, borderWidth: 1, borderColor: COLORS.darkGray, height: 20, width: 20, backgroundColor: item?.color }}
-                            ></View>
-                        </View>
-                    </View>
-                    <View style={styles.horizWrapper}>
-                        <Text style={[styles.price, {
-                            color: COLORS.primary,
-                        }]}>{transNumberFormatter(item?.price)}đ </Text>
-                        <View style={styles.quantityWrapper}>
-                            <Text style={styles.price}>x{item?.quantity}</Text>
-                        </View>
-                    </View>
-                </View>
-
-            </View>
-            {status === 2 && (
-                <View style={{ width: '20%', justifyContent: 'center', alignItems: 'center' }}>
-                    {existedFeedback ? (
-                        <View
-                            style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <FontAwesome name="check-circle" size={40} color={"#26AB9A"} />
-                            <Text style={{ textAlign: 'center', fontFamily: 'mon-sb', fontSize: 14 }}>Cảm ơn bạn đã feedback</Text>
-                        </View>
-                    ) : (
-                        <TouchableOpacity
-                            style={{ justifyContent: 'center', alignItems: 'center' }}
-                            onPress={() => handleOpenBottom(item.productId, item.product.name)}>
-                            <MaterialCommunityIcons name="pencil-circle" size={40} color={COLORS.primary} />
-                            <Text style={{ textAlign: 'center', fontFamily: 'mon-sb', fontSize: 14 }}>Feedback cho sản phẩm</Text>
-                        </TouchableOpacity>
-                    )}
-                </View>
-            )}
-        </View>
-    )
-}
+import { OrderItemCard } from './OrderItemCard'
 
 const ListFooter = ({ totalWithoutShippingFee, data }: any) => {
     return (
@@ -105,14 +34,14 @@ const ListFooter = ({ totalWithoutShippingFee, data }: any) => {
 }
 
 
-const OrderItemView = ({ data, handleOpenBottom, feedbackData }: any) => {
+const OrderItemView = ({ data, feedbackData, userStateId, feedbackRefetch }: any) => {
     const totalWithoutShippingFee = data?.orderItems?.reduce((total: number, item: any) => total + item.price * item.quantity, 0)
     return (
         <View style={styles.mainCard}>
             <FlatList
                 data={data?.orderItems}
                 keyExtractor={(item: any, index) => item?.productId + `${index.toString()}`}
-                renderItem={({ item, index }) => <OrderItemCard index={index} item={item} handleOpenBottom={handleOpenBottom} status={data?.status} feedbackData={feedbackData} />}
+                renderItem={({ item, index }) => <OrderItemCard index={index} item={item} userStateId={userStateId} status={data?.status} feedbackData={feedbackData} feedbackRefetch={feedbackRefetch} />}
                 ListFooterComponent={<ListFooter totalWithoutShippingFee={totalWithoutShippingFee} data={data} />}
             />
         </View>
@@ -234,5 +163,47 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-around",
         gap: 10,
+    },
+    // this is modal
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        width: width,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+    },
+    buttonOpen: {
+        backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
     },
 })
