@@ -399,6 +399,15 @@ const ProductsScreen = () => {
                   minPrice: null,
                   maxPrice: null,
                 });
+                setTempFilter({
+                  name: null,
+                  category: null,
+                  subCategory: null,
+                  color: null,
+                  size: null,
+                  minPrice: null,
+                  maxPrice: null,
+                });
                 // setFilterParams(tempFilter);
                 setModalVisible(false);
               }}
