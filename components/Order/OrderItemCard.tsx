@@ -8,6 +8,7 @@ import { AirbnbRating } from 'react-native-elements';
 import CustomButton from '../Button'
 import { useMutation } from '@tanstack/react-query'
 import { postFeedback } from '../../app/context/feedbackApi'
+import { BottomModal } from '../BottomModal'
 
 export const OrderItemCard = ({ item, status, feedbackData, index, userStateId, feedbackRefetch }: any) => {
     //check feedback da ton tai chua
@@ -115,7 +116,9 @@ const FeedbackModal = ({ item, userStateId, feedbackRefetch }: any) => {
                 productId: item.productId,
                 userId: userStateId,
                 comment: comment,
-                rating: currRating
+                rating: currRating,
+                color: item.color,
+                size: item.size,
             }
             await mutate(dataToPass)
         } else {
@@ -124,55 +127,42 @@ const FeedbackModal = ({ item, userStateId, feedbackRefetch }: any) => {
     }
     return (
         <View style={styles.centeredView}>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                    setModalVisible(!modalVisible);
-                }}>
-                <View style={[styles.centeredView, { position: 'relative' }]}>
-                    <View style={styles.modalBackdrop}></View>
-                    <View style={[styles.modalView]}>
-                        <View style={{ width: width, alignItems: 'flex-end', padding: 20 }}>
-
-                            <AntDesign onPress={() => setModalVisible(!modalVisible)} name="closecircleo" size={24} color="black" />
-                        </View>
-                        <View style={{ paddingHorizontal: 20 }}>
-                            <Text style={{ fontFamily: 'mon-sb', fontSize: 16 }}>{`Hãy cho chúng tớ xin feedback của bạn về sản phẩm (${item.product.name}) `}</Text>
-                            <TextInput
-                                multiline={true}
-                                numberOfLines={5}
-                                onChangeText={text => setComment(text)}
-                                value={comment}
-                                style={{ borderWidth: 1, borderColor: COLORS.gray, fontFamily: 'mon-sb', fontSize: 16, borderRadius: 10, marginTop: 10 }}
-                            />
-                            <View style={{ paddingBottom: 10 }}>
-                                <Text style={{ fontFamily: 'mon-sb', fontSize: 16, paddingTop: 10 }}>Hãy cho chúng tớ sao nhé: </Text>
-                            </View>
-                            <AirbnbRating
-                                starContainerStyle={{
-                                    padding: 5,
-                                    borderWidth: 1,
-                                    borderColor: COLORS.gray,
-                                    borderRadius: 10
-                                }}
-                                count={5}
-                                reviews={["Quá tệ", "OK", "Tốt", "Rất tốt", "Tuyệt vời"]}
-                                defaultRating={defaultRating}
-                                size={30}
-                                onFinishRating={ratingCompleted}
-                            />
-
-                        </View>
-                        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, borderTopWidth: 2, borderTopColor: COLORS.gray, padding: 10 }}>
-                            <CustomButton buttonText={'Xác nhận'} onPress={handleSubmitFeedback} />
-                        </View>
-
+            <BottomModal
+                isOpen={modalVisible}
+                setIsOpen={setModalVisible}
+                snapHeight={"60%"}
+            >
+                <View style={{ paddingHorizontal: 20 }}>
+                    <Text style={{ fontFamily: 'mon-sb', fontSize: 16 }}>{`Hãy cho chúng tớ xin feedback của bạn về sản phẩm (${item.product.name}) `}</Text>
+                    <TextInput
+                        multiline={true}
+                        numberOfLines={5}
+                        onChangeText={text => setComment(text)}
+                        value={comment}
+                        style={{ borderWidth: 1, borderColor: COLORS.gray, fontFamily: 'mon-sb', fontSize: 16, borderRadius: 10, marginTop: 10 }}
+                    />
+                    <View style={{ paddingBottom: 10 }}>
+                        <Text style={{ fontFamily: 'mon-sb', fontSize: 16, paddingTop: 10 }}>Hãy cho chúng tớ sao nhé: </Text>
                     </View>
+                    <AirbnbRating
+                        starContainerStyle={{
+                            padding: 5,
+                            borderWidth: 1,
+                            borderColor: COLORS.gray,
+                            borderRadius: 10
+                        }}
+                        count={5}
+                        reviews={["Quá tệ", "OK", "Tốt", "Rất tốt", "Tuyệt vời"]}
+                        defaultRating={defaultRating}
+                        size={30}
+                        onFinishRating={ratingCompleted}
+                    />
+
                 </View>
-            </Modal>
+                <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, borderTopWidth: 2, borderTopColor: COLORS.gray, padding: 10 }}>
+                    <CustomButton buttonText={'Xác nhận'} onPress={handleSubmitFeedback} />
+                </View>
+            </BottomModal>
             <Pressable
                 style={{ justifyContent: 'center', alignItems: 'center' }}
                 onPress={() => setModalVisible(true)}>
