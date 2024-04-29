@@ -1,11 +1,8 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -34,6 +31,7 @@ import {
 import FeedbackSection from "../../components/Home/FeedbackSection";
 import { ScrollView } from "react-native-virtualized-view";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
+import { BottomModal } from "../../components/BottomModal";
 const { height, width } = Dimensions.get("window");
 
 const ProductDetail = () => {
@@ -43,9 +41,10 @@ const ProductDetail = () => {
   const { userState, setUserState } = useUserStore();
   const { wardroveItems, setWardroveItems } = useWardove();
   const { userId } = useUserIDStore();
-  const bottomSheetRef = useRef<BottomSheet>(null);
   const [alert, setAlert] = useState<any>(null);
   const { orderItems, setOrderItems } = useOrderItems();
+
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const productQuery = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(id),
@@ -64,21 +63,6 @@ const ProductDetail = () => {
 
   const [mySelectedItem, setMySelectedItem] = useState<any>();
   const [quantity, setQuantity] = useState(1);
-
-  const openBottomSheet = (item: any) => {
-    setMySelectedItem(item);
-    bottomSheetRef.current?.expand();
-  };
-  const renderBackdrop = useCallback(
-    (props: any) => (
-      <BottomSheetBackdrop
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        {...props}
-      />
-    ),
-    []
-  );
 
   const handleAddToCart = () => {
     if (userState) {
@@ -222,7 +206,8 @@ const ProductDetail = () => {
               <VariantSection
                 data={productQuery.data.data.productVariants}
                 onPress={(item) => {
-                  openBottomSheet(item);
+                  setMySelectedItem(item);
+                  setModalVisible(true);
                 }}
               />
 
@@ -264,7 +249,7 @@ const ProductDetail = () => {
                 { backgroundColor: COLORS.black, color: COLORS.white },
               ]}
               onPress={() => {
-                bottomSheetRef.current?.expand();
+                setModalVisible(true);
               }}
             >
               Thêm vào giỏ hàng
@@ -300,20 +285,18 @@ const ProductDetail = () => {
         )}
         {/* bottom sheet */}
         {productQuery.isSuccess && (
-          <BottomSheet
-            ref={bottomSheetRef}
-            backdropComponent={renderBackdrop}
-            enablePanDownToClose={true}
-            index={-1}
-            snapPoints={["60%"]}
+          <BottomModal
+            isOpen={modalVisible}
+            setIsOpen={setModalVisible}
+            snapHeight={"65%"}
           >
             <View style={styles.bottomSheet}>
               <ProductCardShort
                 data={productQuery.data.data}
                 variant={mySelectedItem}
               />
-              <BottomSheetScrollView style={{ marginBottom: 120 }}>
-                <View style={{ height: 200 }}>
+              <ScrollView style={{ marginBottom: 120 }}>
+                <View style={{ minHeight: 100 }}>
                   <VariantSection
                     data={productQuery.data.data.productVariants}
                     onPress={(item) => {
@@ -322,7 +305,7 @@ const ProductDetail = () => {
                     selectedItem={mySelectedItem}
                   />
                 </View>
-              </BottomSheetScrollView>
+              </ScrollView>
               <QuantitySelector
                 style={{ position: "absolute", bottom: 65 }}
                 initialQuantity={quantity}
@@ -362,30 +345,32 @@ const ProductDetail = () => {
                   { opacity: mySelectedItem ? 1 : 0.7 },
                 ]}
                 onPress={() => {
-                  const obj: CartItem = {
-                    // userId: userState?.id,
-                    cartId: userState?.userCartId,
-                    color: mySelectedItem.color.colorCode,
-                    price: mySelectedItem.price,
-                    product: productQuery.data.data,
-                    productId: productQuery.data.data.id,
-                    quantity: quantity,
-                    size: mySelectedItem.size.value,
-                    sku: mySelectedItem.sku,
-                  };
+                  if (mySelectedItem) {
+                    const obj: CartItem = {
+                      // userId: userState?.id,
+                      cartId: userState?.userCartId,
+                      color: mySelectedItem.color.colorCode,
+                      price: mySelectedItem.price,
+                      product: productQuery.data.data,
+                      productId: productQuery.data.data.id,
+                      quantity: quantity,
+                      size: mySelectedItem.size.value,
+                      sku: mySelectedItem.sku,
+                    };
 
-                  setOrderItems({
-                    items: [obj],
-                    total: obj.price * obj.quantity,
-                    totalQuantityProd: obj.quantity,
-                  });
-                  router.push("/payment");
+                    setOrderItems({
+                      items: [obj],
+                      total: obj.price * obj.quantity,
+                      totalQuantityProd: obj.quantity,
+                    });
+                    router.push("/payment");
+                  }
                 }}
               >
                 Mua ngay
               </Text>
             </View>
-          </BottomSheet>
+          </BottomModal>
         )}
       </Background>
     </SafeAreaView>

@@ -6,22 +6,27 @@ import {
   Pressable,
   StyleSheet,
   View,
-  Button,
   Text,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../assets";
 import Background from "../../../components/BackGround";
-import { useAIURL, useOrderItems, useUserStore, useWardove } from "../../store/store";
+import {
+  useAIURL,
+  useOrderItems,
+  useUserStore,
+  useWardove,
+} from "../../store/store";
 import { CartItem, Product } from "../../../constants/Type";
-import { Fontisto, Ionicons, Octicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getModels, tryOn } from "../../context/wardroveApi";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import Share from "react-native-share";
 import { router } from "expo-router";
+import { BottomModal } from "../../../components/BottomModal";
+import { ScrollView } from "react-native-gesture-handler";
 
 const { height, width } = Dimensions.get("window");
 
@@ -30,7 +35,7 @@ const wardrove = () => {
     queryKey: ["models"],
     queryFn: getModels,
   });
-  const { urlAI } = useAIURL()
+  const { urlAI } = useAIURL();
 
   const mutation = useMutation({
     mutationFn: (data: any) => tryOn(data),
@@ -46,10 +51,7 @@ const wardrove = () => {
   const { userState, setUserState } = useUserStore();
   const { orderItems, setOrderItems } = useOrderItems();
   const [shareLoading, setShareLoading] = useState(false);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const openBottomSheet = (item: any) => {
-    bottomSheetRef.current?.expand();
-  };
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleRemoveItem = (itemToRemove: Product) => {
     setWardroveItems((prevItems: Product[]) =>
@@ -129,7 +131,7 @@ const wardrove = () => {
       link_image: selectedModel.imageUrl,
       link_cloth: item.tryOnImage,
       link_edge: item.edgeImage,
-      url: urlAI
+      url: urlAI,
     };
     // console.log(obj);
     mutation.mutate(obj);
@@ -236,7 +238,7 @@ const wardrove = () => {
               <View style={styles.rightContainer}>
                 <Pressable
                   style={[styles.modelSelector, SHADOWS.medium]}
-                  onPress={openBottomSheet}
+                  onPress={() => setModalVisible(true)}
                 >
                   <Image
                     style={[styles.img, { objectFit: "scale-down" }]}
@@ -409,11 +411,11 @@ const wardrove = () => {
               }
             />
           </View>
-          <BottomSheet
-            ref={bottomSheetRef}
-            index={-1}
-            enablePanDownToClose={true}
-            snapPoints={["30%"]}
+
+          <BottomModal
+            isOpen={modalVisible}
+            setIsOpen={setModalVisible}
+            snapHeight={"40%"}
           >
             <View
               style={{
@@ -431,7 +433,7 @@ const wardrove = () => {
               >
                 Chọn model
               </Text>
-              <BottomSheetScrollView
+              <ScrollView
                 style={{ height: 130, width: width - 20 }}
                 horizontal={true}
               >
@@ -442,7 +444,7 @@ const wardrove = () => {
                       onPress={() => {
                         setSelectedModel(item);
                         setImageSrc(item.imageUrl);
-                        bottomSheetRef.current?.close();
+                        setModalVisible(false);
                       }}
                     >
                       <View style={styles.itemCard}>
@@ -459,9 +461,9 @@ const wardrove = () => {
                       </View>
                     </Pressable>
                   ))}
-              </BottomSheetScrollView>
+              </ScrollView>
             </View>
-          </BottomSheet>
+          </BottomModal>
         </View>
       </Background>
     </SafeAreaView>

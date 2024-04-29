@@ -1,13 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Pressable,
-  Dimensions,
-  KeyboardAvoidingView,
-} from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, Text, StyleSheet, Pressable, Dimensions } from "react-native";
 
 // replace with the actual path
 import OtherProducts from "../../../components/Home/OtherProducts";
@@ -20,12 +12,12 @@ import { useFocusEffect } from "@react-navigation/native";
 import CustomInput from "../../../components/Input";
 import { COLORS, SIZES } from "../../../assets";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView,
-  BottomSheetTextInput,
-} from "@gorhom/bottom-sheet";
+import {
+  RefreshControl,
+  ScrollView,
+  TextInput,
+} from "react-native-gesture-handler";
+
 import {
   useCategoriesStore,
   useColorsStore,
@@ -35,12 +27,12 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import { useLocalSearchParams } from "expo-router";
 import Background from "../../../components/BackGround";
+import { BottomModal } from "../../../components/BottomModal";
 const { height, width } = Dimensions.get("window");
 
 const ProductsScreen = () => {
   const { paramSearch, cateParam } = useLocalSearchParams();
   const [searchValue, setSearchValue] = useState<any>(paramSearch || null);
-  const bottomSheetRef = useRef<BottomSheet>(null);
   const [isFocusCate, setIsFocusCate] = useState(false);
   const [isFocusSubCate, setIsFocusSubCate] = useState(false);
   const [isFocusSize, setIsFocusSize] = useState(false);
@@ -49,6 +41,8 @@ const ProductsScreen = () => {
   const { colors, setColors } = useColorsStore();
   const { userState } = useUserStore();
   const [inputText, setInputText] = useState("");
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
   const [tempFilter, setTempFilter] = useState<FilterParams>({
     name: null,
     category: null,
@@ -104,20 +98,9 @@ const ProductsScreen = () => {
     setSearchValue(inputText);
   };
 
-  const openBottomSheet = (item: any) => {
-    bottomSheetRef.current?.expand();
-  };
-
-  const renderBackdrop = useCallback(
-    (props: any) => (
-      <BottomSheetBackdrop
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        {...props}
-      />
-    ),
-    []
-  );
+  const onRefresh = useCallback(() => {
+    productsQuery.refetch();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <Background imageKey="i6">
@@ -157,26 +140,31 @@ const ProductsScreen = () => {
                 )
               }
             />
-            <Pressable onPress={openBottomSheet}>
+            <Pressable onPress={() => setModalVisible(true)}>
               <FontAwesome5 name="filter" size={22} color={COLORS.primary} />
             </Pressable>
           </View>
         </View>
 
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={productsQuery.isLoading}
+              onRefresh={onRefresh}
+            />
+          }
+        >
           {productsQuery.isSuccess ? (
             <OtherProducts data={productsQuery.data} userState={userState} />
           ) : null}
         </ScrollView>
 
-        <BottomSheet
-          ref={bottomSheetRef}
-          index={-1}
-          backdropComponent={renderBackdrop}
-          enablePanDownToClose={true}
-          snapPoints={["70%"]}
+        <BottomModal
+          isOpen={modalVisible}
+          setIsOpen={setModalVisible}
+          snapHeight={"75%"}
         >
-          <BottomSheetScrollView style={styles.bottomSheet}>
+          <ScrollView style={styles.bottomSheet}>
             <View style={{ paddingBottom: 10 }}>
               <Text style={styles.placeholderStyle}>Danh mục</Text>
               <Dropdown
@@ -299,8 +287,7 @@ const ProductsScreen = () => {
                   justifyContent: "space-evenly",
                 }}
               >
-
-                <BottomSheetTextInput
+                <TextInput
                   style={[
                     styles.dropdown,
                     styles.itemTextStyle,
@@ -326,7 +313,7 @@ const ProductsScreen = () => {
                   --
                 </Text>
 
-                <BottomSheetTextInput
+                <TextInput
                   style={[
                     styles.dropdown,
                     styles.itemTextStyle,
@@ -344,7 +331,7 @@ const ProductsScreen = () => {
                 />
               </View>
             </View>
-          </BottomSheetScrollView>
+          </ScrollView>
           <View
             style={{
               display: "flex",
@@ -385,7 +372,7 @@ const ProductsScreen = () => {
                   maxPrice: tempFilter.maxPrice,
                 }));
                 // setFilterParams(tempFilter);
-                bottomSheetRef.current?.close();
+                setModalVisible(false);
               }}
             >
               Áp dụng
@@ -413,13 +400,13 @@ const ProductsScreen = () => {
                   maxPrice: null,
                 });
                 // setFilterParams(tempFilter);
-                bottomSheetRef.current?.close();
+                setModalVisible(false);
               }}
             >
               Đặt lại
             </Text>
           </View>
-        </BottomSheet>
+        </BottomModal>
       </Background>
     </SafeAreaView>
   );
