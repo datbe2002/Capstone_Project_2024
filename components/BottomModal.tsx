@@ -12,8 +12,7 @@ interface Props {
 
 const styles = StyleSheet.create({
   centeredView: {
-    height: "100%",
-    display: "flex",
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -1,11 +1,8 @@
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -44,7 +41,6 @@ const ProductDetail = () => {
   const { userState, setUserState } = useUserStore();
   const { wardroveItems, setWardroveItems } = useWardove();
   const { userId } = useUserIDStore();
-  const bottomSheetRef = useRef<BottomSheet>(null);
   const [alert, setAlert] = useState<any>(null);
   const { orderItems, setOrderItems } = useOrderItems();
 

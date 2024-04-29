@@ -6,10 +6,9 @@ import {
   Pressable,
   StyleSheet,
   View,
-  Button,
   Text,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, SHADOWS, SIZES } from "../../../assets";
 import Background from "../../../components/BackGround";
@@ -20,10 +19,9 @@ import {
   useWardove,
 } from "../../store/store";
 import { CartItem, Product } from "../../../constants/Type";
-import { Fontisto, Ionicons, Octicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getModels, tryOn } from "../../context/wardroveApi";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import Share from "react-native-share";
 import { router } from "expo-router";
@@ -54,10 +52,6 @@ const wardrove = () => {
   const { orderItems, setOrderItems } = useOrderItems();
   const [shareLoading, setShareLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const openBottomSheet = (item: any) => {
-    bottomSheetRef.current?.expand();
-  };
 
   const handleRemoveItem = (itemToRemove: Product) => {
     setWardroveItems((prevItems: Product[]) =>
@@ -450,7 +444,7 @@ const wardrove = () => {
                       onPress={() => {
                         setSelectedModel(item);
                         setImageSrc(item.imageUrl);
-                        bottomSheetRef.current?.close();
+                        setModalVisible(false);
                       }}
                     >
                       <View style={styles.itemCard}>
