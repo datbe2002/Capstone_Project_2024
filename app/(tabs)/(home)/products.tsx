@@ -162,7 +162,7 @@ const ProductsScreen = () => {
         <BottomModal
           isOpen={modalVisible}
           setIsOpen={setModalVisible}
-          snapHeight={"65%"}
+          snapHeight={"75%"}
         >
           <ScrollView style={styles.bottomSheet}>
             <View style={{ paddingBottom: 10 }}>
