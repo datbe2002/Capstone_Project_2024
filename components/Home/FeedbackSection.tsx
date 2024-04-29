@@ -30,7 +30,7 @@ const FeedbackCard = ({ item }: any) => {
                         imageSize={20}
                         ratingCount={5}
                         startingValue={item.rating}
-                        style={{ marginLeft: 0 }}
+                        style={{ alignItems: 'flex-start', marginLeft: 22 }}
                     />
                 </View>
                 <View style={styles.feedbackWrapp}>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     nameNrating: {
         display: 'flex',
         flexDirection: 'column',
-        width: 150
+        width: 300
     },
     feedbackWrapp: {
         marginLeft: 25,

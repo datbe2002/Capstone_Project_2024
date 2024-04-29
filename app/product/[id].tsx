@@ -32,6 +32,7 @@ import FeedbackSection from "../../components/Home/FeedbackSection";
 import { ScrollView } from "react-native-virtualized-view";
 import { COLORS, SHADOWS, SIZES } from "../../assets";
 import { BottomModal } from "../../components/BottomModal";
+import MaybeUCanLike from "../../components/Favorite/MaybeUCanLike";
 const { height, width } = Dimensions.get("window");
 
 const ProductDetail = () => {
