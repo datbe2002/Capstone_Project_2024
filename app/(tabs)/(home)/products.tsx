@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, Dimensions } from "react-native";
 
 // replace with the actual path
@@ -12,7 +12,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import CustomInput from "../../../components/Input";
 import { COLORS, SIZES } from "../../../assets";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import {
+  RefreshControl,
+  ScrollView,
+  TextInput,
+} from "react-native-gesture-handler";
 
 import {
   useCategoriesStore,
@@ -94,6 +98,9 @@ const ProductsScreen = () => {
     setSearchValue(inputText);
   };
 
+  const onRefresh = useCallback(() => {
+    productsQuery.refetch();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <Background imageKey="i6">
@@ -139,7 +146,14 @@ const ProductsScreen = () => {
           </View>
         </View>
 
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={productsQuery.isLoading}
+              onRefresh={onRefresh}
+            />
+          }
+        >
           {productsQuery.isSuccess ? (
             <OtherProducts data={productsQuery.data} userState={userState} />
           ) : null}
