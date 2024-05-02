@@ -49,7 +49,7 @@ const SupportAccount = () => {
                         </View>
                     </View>
                 </Pressable>
-                <Pressable style={styles.threeComp}>
+                <Pressable style={styles.threeComp} onPress={() => router.push('/chatStaff')}>
                     <Text style={styles.mainText}>
                         Hỗ trợ
                     </Text>

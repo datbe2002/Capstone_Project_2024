@@ -65,9 +65,6 @@ export default function HomepageScreen() {
           ...userState,
           userCartId: userCart.data.data.id,
         };
-        // console.log("categories", categories.data.data);
-        // console.log("colors", colors.data.data);
-        // console.log("sizes", sizes.data.data);
         setUserState(userData);
         if (categories.length < 2) {
           setCategories(callCategories.data.data);
@@ -157,9 +154,9 @@ export default function HomepageScreen() {
       </View>
       {/* main content */}
       {topProductsQuery.isSuccess &&
-      newProductsQuery.isSuccess &&
-      productsQuery.isSuccess &&
-      getCategoriesQuery.isSuccess ? (
+        newProductsQuery.isSuccess &&
+        productsQuery.isSuccess &&
+        getCategoriesQuery.isSuccess ? (
         <ScrollView
           refreshControl={
             <RefreshControl

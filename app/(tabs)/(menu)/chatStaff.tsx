@@ -6,6 +6,7 @@ import {
     KeyboardAvoidingView,
     ScrollView,
     StyleSheet,
+    Text,
     View
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
@@ -14,6 +15,7 @@ import { MessageItem } from "../../../components/Menu/Chat/MessageList";
 import { getRoomId } from "../../../shared/helper";
 import { db } from "../../context/firebaseConfig";
 import { useUserStore } from "../../store/store";
+import { SIZES } from "../../../assets";
 const { height, width } = Dimensions.get('window')
 
 
@@ -67,7 +69,6 @@ const ChatStaff = () => {
                 senderName: userState?.fullName,
                 createdAt: Timestamp.fromDate(new Date()),
             });
-            console.log("new message id", newDoc.id);
         } catch (error: any) {
             Alert.alert("Message", error.message);
         }
@@ -82,7 +83,7 @@ const ChatStaff = () => {
                 keyExtractor={(_, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 20 }}
-
+                ListEmptyComponent={<FirstChat />}
             />
             <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-191} contentContainerStyle={{ paddingTop: 20 }}>
                 <Input inputRef={inputRef} textRef={textRef} handleSendMassage={handleSendMassage} />
@@ -93,8 +94,24 @@ const ChatStaff = () => {
 
 export default ChatStaff;
 
+const FirstChat = () => {
+    return <View style={styles.firstChat}>
+        <Text style={styles.text}>Đây là khởi đầu của cuộc trò chuyện</Text>
+    </View>
+}
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    firstChat: {
+        height: height / 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    text: {
+        fontFamily: 'mon-sb',
+        fontSize: SIZES.medium
+    }
 });

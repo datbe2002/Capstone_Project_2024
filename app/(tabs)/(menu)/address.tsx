@@ -16,7 +16,6 @@ const Address = () => {
     });
 
     const addressReal = getUserAddress?.data?.data.filter((address: any) => address.isDeleted === false)
-    console.log(addressReal)
     return (
         <View style={styles.container}>
             {getUserAddress.isLoading ? <LoadingComponent /> : <AddressConfig

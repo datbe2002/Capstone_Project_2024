@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import VoucherSection from './VoucherSection';
 import MainSection from './MainSection';
+import FeatureSection from './FeatureSection';
 
 interface CenterSectionProps {
     activeButton: 'main' | 'noti' | 'ticket';
@@ -15,10 +16,10 @@ const CenterSection: React.FC<CenterSectionProps> = ({ activeButton }) => {
             sectionContent = <MainSection />;
             break;
         case 'noti':
-            sectionContent = <Text>NotiSection</Text>;
+            sectionContent = <FeatureSection />;
             break;
         case 'ticket':
-            sectionContent = <VoucherSection />;
+            sectionContent = <FeatureSection />;
             break;
         default:
             break;

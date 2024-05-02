@@ -11,7 +11,7 @@ const Input = ({ inputRef, textRef, handleSendMassage }: any) => {
                 <TextInput
                     ref={inputRef}
                     onChangeText={(value) => (textRef.current = value)}
-                    placeholder="Type..."
+                    placeholder="Bạn cần giúp đỡ ?"
                     style={{
                         paddingLeft: 10,
                         flex: 1,

@@ -19,7 +19,6 @@ const Feedback = () => {
     });
 
     const FeedbackCard = ({ feedbackData }: any) => {
-        console.log('feedbackData', feedbackData)
         return (
             <View style={styles.containerFeedbackCard}>
                 <View style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>

@@ -56,7 +56,6 @@ const VerifyUserPage = () => {
 
 
     const onSubmitCode = async () => {
-        console.log(value)
         if (value.length !== 4 || isNaN(Number(value)) || value === '0') {
             Alert.alert("Thông báo", "Code nhập không đúng định dạng")
             return;

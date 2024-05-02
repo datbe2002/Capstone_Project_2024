@@ -82,7 +82,7 @@ export const FavoriteListCard: React.FC<FavoriteListCardProps> = ({
         <View style={styles.mainHandle}>
           <Pressable
             style={styles.threeDot}
-            onPress={() => handleOpenBottom(item.id)}
+            onPress={() => handleOpenBottom(item)}
           >
             <Entypo
               name="dots-three-horizontal"
