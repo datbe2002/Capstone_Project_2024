@@ -36,7 +36,7 @@ const UserSection: React.FC<UserSectionProps> = ({
                 </View>
             </View>
             <View style={styles.rightSection}>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={[
                         styles.tinyLogo,
                         activeButton === 'ticket' && { backgroundColor: COLORS.primary },
@@ -44,7 +44,7 @@ const UserSection: React.FC<UserSectionProps> = ({
                     onPress={() => handleButtonClick('ticket')}
                 >
                     <MaterialCommunityIcons name="ticket-percent-outline" size={30} color={activeButton === 'ticket' ? 'white' : COLORS.primary} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity
                     style={[
                         styles.tinyLogo,
@@ -104,7 +104,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         gap: 10,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
+        paddingRight: 10,
         alignItems: 'center'
     },
     tinyLogo: {

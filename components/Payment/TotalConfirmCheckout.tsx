@@ -15,7 +15,7 @@ const TotalConfirmCheckout = ({ handleCheckout, totalPay, isPending }: TotalConf
         <View style={styles.footerPay}>
             <View style={styles.mainTotalPrice}>
                 <Text style={styles.labelMain}>Tổng thanh toán</Text>
-                <Text style={[styles.labelMain, { fontSize: SIZES.medium, color: COLORS.darkGray }]}>(Đã bao gồm VAT và shipping)</Text>
+                <Text style={[styles.labelMain, { fontSize: 13, color: COLORS.darkGray }]}>(Đã bao gồm VAT và shipping)</Text>
                 <Text style={styles.mainPrice}>{transNumberFormatter(totalPay)}đ</Text>
             </View>
 

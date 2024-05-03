@@ -30,7 +30,7 @@ const PaymentMethodChosen = ({ setPaymentMethod, paymentMethod }: any) => {
                     checked={paymentMethod === 3}
                     onPress={() => handleSelectMethod(3)}
                 />
-                <Text style={styles.totalPrice}>COD (Thanh toán khi nhận hàng)</Text>
+                <Text style={styles.totalPrice}>Thanh toán khi nhận hàng</Text>
             </View>
         </View>
     );

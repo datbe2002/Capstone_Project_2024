@@ -1,4 +1,4 @@
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -15,6 +15,7 @@ import { COLORS, SHADOWS, SIZES } from "../../assets";
 import { CartItem, Product } from "../../constants/Type";
 import { transNumberFormatter } from "../Payment/ShippingFee";
 import { useOrderItems } from "../../app/store/store";
+import EmptyComponentCustom from "../EmptyComponentCustom";
 const { height, width } = Dimensions.get("window");
 
 interface OtherProducts {
@@ -28,6 +29,10 @@ const OtherProducts: React.FC<OtherProducts> = ({ props, data, userState }) => {
   const isOdd = data.length % 2 !== 0;
 
   const { orderItems, setOrderItems } = useOrderItems();
+
+  if (data.length < 1) {
+    return <EmptyComponentCustom text={'Không có sản phẩm phù hợp'} icon={<FontAwesome name="tasks" size={45} color={COLORS.white} />} />
+  }
 
   return (
     <View style={styles.data}>

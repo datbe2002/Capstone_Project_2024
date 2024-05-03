@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     lastText: {
-        fontSize: 18,
+        fontSize: 13,
         fontFamily: 'mon-sb'
     }
 })
