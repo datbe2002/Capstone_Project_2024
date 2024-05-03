@@ -63,11 +63,13 @@ const ItemCard: React.FC<Props> = ({
                 borderRadius: 5,
                 borderWidth: 1,
                 borderColor: COLORS.gray,
-                fontSize: SIZES.medium,
+                fontSize: 13,
                 fontFamily: "mon-sb",
                 position: "absolute",
                 bottom: 5,
-                left: 5,
+                left: 10,
+                maxWidth: 110,
+
               },
             ]}
           >
@@ -109,9 +111,9 @@ const ItemCard: React.FC<Props> = ({
                 name="minuscircleo"
                 size={25}
                 color={COLORS.primary}
-                style={quantity == 0 ? { opacity: 0.5 } : { opacity: 1 }}
+                style={quantity == 1 ? { opacity: 0.5 } : { opacity: 1 }}
                 onPress={() => {
-                  if (quantity > 0) {
+                  if (quantity > 1) {
                     handleDecrease();
                   }
                 }}
@@ -182,12 +184,14 @@ const styles = StyleSheet.create({
     width: 120,
     alignItems: "center",
     justifyContent: "center",
+    paddingLeft: 10
   },
   img: {
     height: 110,
     width: 110,
     objectFit: "cover",
     backgroundColor: "transparent",
+    borderRadius: 5
   },
   iconWrapper: {
     height: 44,

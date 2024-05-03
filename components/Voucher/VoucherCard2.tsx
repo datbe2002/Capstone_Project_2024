@@ -37,7 +37,7 @@ const VoucherCard2 = ({ item }: any) => {
                 <View style={styles.iconInfo}>
                     <Feather name="info" size={28} color="black" />
                 </View>
-                <Text style={styles.infoText}>Không đáp ứng giới hạn tiền tối thiểu. </Text>
+                <Text style={styles.infoText}>Không đáp ứng điều kiện sử dụng.</Text>
             </View>
         </View>
     )

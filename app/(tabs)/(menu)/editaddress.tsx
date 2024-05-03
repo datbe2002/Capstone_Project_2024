@@ -58,7 +58,6 @@ const EditAddressComponent = () => {
     }, []);
 
     const handleDistrict = (province: string) => {
-        console.log(province)
         var config = {
             method: 'get',
             url: `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${province}`,
@@ -105,7 +104,6 @@ const EditAddressComponent = () => {
     }
 
     const handleCheck = () => {
-        console.log(selectedPutAddress)
         router.back()
     }
 

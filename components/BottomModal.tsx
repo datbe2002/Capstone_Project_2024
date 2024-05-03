@@ -1,4 +1,4 @@
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import { ReactNode, useState } from "react";
 import { Alert, Dimensions, Modal, StyleSheet, Text, View } from "react-native";
 import { COLORS } from "../assets";
@@ -102,12 +102,7 @@ export const BottomModal: React.FC<Props> = ({
                 paddingTop: 20,
               }}
             >
-              <AntDesign
-                onPress={() => setIsOpen(!isOpen)}
-                name="closecircleo"
-                size={24}
-                color="black"
-              />
+              <EvilIcons onPress={() => setIsOpen(!isOpen)} name="close" size={24} color="black" />
             </View>
             {children}
           </View>

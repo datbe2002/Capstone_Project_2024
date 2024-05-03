@@ -265,7 +265,7 @@ const RegisterPage = () => {
                             {showPicker && <DateTimePicker
                                 onChange={onChange}
                                 mode="date"
-                                display="spinner"
+                                display="calendar"
                                 value={date}
                                 maximumDate={new Date()}
                                 minimumDate={new Date(1980, 1, 1)}

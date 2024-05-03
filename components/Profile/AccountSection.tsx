@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { COLORS } from '../../assets'
 import { AntDesign } from '@expo/vector-icons'
 import { router } from 'expo-router'
@@ -9,6 +9,9 @@ import moment from 'moment'
 const AccountSection = () => {
     const { userState } = useUserStore()
     console.log(userState)
+
+    const [userData, setUserData] = useState(userState)
+
     const maskPhoneNumber = (phoneNumber: string) => {
         const visibleDigits = 3;
         const phoneNumberLength = phoneNumber?.length;
@@ -40,7 +43,7 @@ const AccountSection = () => {
                         Số tài khoản
                     </Text>
                     <Text style={styles.secondText}>
-                        id: {userState?.id?.slice(0, 13)}
+                        id: {userData?.id?.slice(0, 13)}
                     </Text>
                 </View>
                 <View style={styles.twoLine}>
@@ -48,7 +51,7 @@ const AccountSection = () => {
                         E-mail
                     </Text>
                     <Text style={styles.secondText}>
-                        {userState?.email}
+                        {userData?.email}
                     </Text>
                 </View>
                 <View style={styles.threeComp}>
@@ -70,7 +73,7 @@ const AccountSection = () => {
                             Số điện thoại
                         </Text>
                         <Text style={styles.secondText}>
-                            {userState?.phone ? maskPhoneNumber(userState?.phone) : "Chưa cập nhật số điện thoại"}
+                            {userData?.phone ? maskPhoneNumber(userData?.phone) : "Chưa cập nhật số điện thoại"}
                         </Text>
                     </View>
                 </View>
@@ -79,7 +82,7 @@ const AccountSection = () => {
                         Ngày sinh
                     </Text>
                     <Text style={styles.secondText}>
-                        {userState?.dob ? dobValidate(userState?.dob) : "Chưa cập nhật"}
+                        {userData?.dob ? dobValidate(userData?.dob) : "Chưa cập nhật"}
                     </Text>
                 </View>
             </View>

@@ -21,6 +21,7 @@ const InputV2: React.FC<InputV2Props> = ({ label, iconName, error, iconPlace, pa
             <View style={[styles.inputContainer, { borderColor: error ? COLORS.errorColor : isFocused ? COLORS.black : COLORS.gray }]}>
                 {iconPlace}
                 <TextInput
+                    maxLength={50}
                     secureTextEntry={hidePassword}
                     onFocus={() => {
                         onFocus();

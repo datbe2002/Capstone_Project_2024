@@ -61,7 +61,6 @@ const AddAddressComponent = () => {
     }, []);
 
     const handleDistrict = (province: string) => {
-        console.log(province)
         var config = {
             method: 'get',
             url: `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${province}`,
@@ -108,9 +107,9 @@ const AddAddressComponent = () => {
     }
 
     const handleCheck = () => {
-        console.log(selectedPostAddress)
         setLoading(true)
         setTimeout(() => {
+            setProvinceData([])
             setLoading(false)
             router.back()
 
@@ -185,7 +184,7 @@ const AddAddressComponent = () => {
                     labelField="label"
                     valueField="value"
                     placeholder={!isFocusWard ? 'Chọn phường' : '...'}
-                    searchPlaceholder="Search..."
+                    searchPlaceholder="Tìm kiếm..."
                     value={selectedPostAddress.wardCode}
                     onFocus={() => setIsFocusWard(true)}
                     onBlur={() => setIsFocusWard(false)}

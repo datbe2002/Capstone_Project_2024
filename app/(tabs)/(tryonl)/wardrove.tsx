@@ -484,6 +484,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "transparent",
+    position: "relative",
   },
   tryon: {
     height: height * 0.6,
@@ -525,11 +526,12 @@ const styles = StyleSheet.create({
   },
   products: {
     height: 150,
+    position: 'absolute',
+    bottom: 30,
     width: width - 20,
     borderWidth: 0.5,
     borderRadius: 5,
     backgroundColor: COLORS.inputBackgroundColor,
-    marginBottom: 20,
   },
 
   itemsList: {

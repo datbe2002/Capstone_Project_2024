@@ -12,7 +12,7 @@ const NoteForShop = ({ note, setNote }: any) => {
                 <Text style={styles.label}>Ghi chú: </Text>
             </View>
             <TextInput
-                style={{ textAlign: 'right', fontFamily: 'mon-sb', fontSize: 16, width: 300 }}
+                style={{ textAlign: 'right', fontFamily: 'mon-sb', fontSize: 16, width: 300, paddingRight: 15 }}
                 placeholder="Lưu ý cho chúng tôi..."
 
             />
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         width: width
     },
     lableContainer: {
+
     },
     label: {
         fontSize: 18,

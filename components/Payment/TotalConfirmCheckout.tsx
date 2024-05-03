@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { COLORS } from '../../assets'
+import { COLORS, SIZES } from '../../assets'
 import { transNumberFormatter } from './ShippingFee'
 import { ActivityIndicator } from 'react-native'
 
@@ -15,6 +15,7 @@ const TotalConfirmCheckout = ({ handleCheckout, totalPay, isPending }: TotalConf
         <View style={styles.footerPay}>
             <View style={styles.mainTotalPrice}>
                 <Text style={styles.labelMain}>Tổng thanh toán</Text>
+                <Text style={[styles.labelMain, { fontSize: 13, color: COLORS.darkGray }]}>(Đã bao gồm VAT và shipping)</Text>
                 <Text style={styles.mainPrice}>{transNumberFormatter(totalPay)}đ</Text>
             </View>
 
@@ -39,11 +40,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         borderTopColor: COLORS.gray,
         borderTopWidth: 2,
-        backgroundColor: COLORS.white
+        backgroundColor: COLORS.white,
     },
     mainTotalPrice: {
         padding: 10,
-
+        alignItems: 'flex-end'
     },
     mainPrice: {
         textAlign: 'right',

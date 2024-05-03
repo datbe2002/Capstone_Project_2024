@@ -29,11 +29,11 @@ const PaymentMethod = () => {
         const { dataEach } = props
         return <Pressable style={styles.accountId} onPress={() => setIsChosen(!isChosen)}>
             <Text style={styles.mainText}>
-                {dataEach.id}. {dataEach.name}
+                {dataEach.name}
             </Text>
-            <View>
+            {/* <View>
                 {isChosen && <Feather name="check" size={24} color={COLORS.primary} />}
-            </View>
+            </View> */}
         </Pressable>
     }
     return (
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     mainText: {
         color: COLORS.primary,
         fontSize: 20,
+        paddingLeft: 10,
         fontFamily: 'mon-sb',
     },
 })

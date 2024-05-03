@@ -2,12 +2,13 @@ import { AntDesign } from '@expo/vector-icons'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import React, { useRef, useState } from 'react'
-import { ActivityIndicator, Alert, Keyboard, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, Keyboard, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
 import PhoneInput from 'react-native-phone-number-input'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { COLORS } from '../assets'
 import { addAddressApi } from './context/addressApi'
 import { usePostAddress, useUserStore } from './store/store'
+const { height, width } = Dimensions.get('window')
 interface ErrorState {
     recipientName?: string,
     recipientPhone?: string,
@@ -144,7 +145,7 @@ const AddressModal = () => {
 
     return (
         <SafeAreaView style={styles.modalComponent}>
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ flex: 1 }}>
                 <View style={styles.componentText}>
                     <Text style={styles.syntaxText}>Liên hệ</Text>
                 </View>
@@ -208,17 +209,23 @@ const AddressModal = () => {
                     />
                 </View>
                 <View style={{
+                    position: 'absolute',
+                    bottom: 10,
+                    left: 0,
+                    right: 0,
                     width: '100%',
                     display: 'flex',
                     flexDirection: 'row',
                     marginHorizontal: 10,
                     gap: 10
                 }}>
-                    <Pressable onPress={() => router.push('/(tabs)/(cart)/cart')} style={[styles.confirmBtn, { backgroundColor: COLORS.darkGray, width: '23%' }]}>
-                        <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{'Hủy'}</Text>
+                    <Pressable onPress={() => router.push('/(tabs)/(cart)/cart')} style={[styles.confirmBtn, { backgroundColor: COLORS.darkGray, width: '13%', borderRadius: 100 }]}>
+                        <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>
+                            <AntDesign name="arrowleft" size={25} color={COLORS.white} />
+                        </Text>
                     </Pressable>
                     <Pressable onPress={validate} style={styles.confirmBtn}>
-                        <Text style={{ fontFamily: 'mon-b', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{isPending ? <ActivityIndicator size={25} color={COLORS.white} /> : 'Hoàn tất'}</Text>
+                        <Text style={{ fontFamily: 'mon-sb', fontSize: 20, padding: 15, textAlign: 'center', color: COLORS.white }}>{isPending ? <ActivityIndicator size={25} color={COLORS.white} /> : 'Hoàn tất'}</Text>
                     </Pressable>
                 </View>
             </ScrollView>
@@ -245,6 +252,7 @@ const styles = StyleSheet.create({
     },
     modalComponent: {
         flex: 1,
+        position: 'relative'
     },
     componentText: {
         height: 50,
@@ -304,7 +312,7 @@ const styles = StyleSheet.create({
         color: COLORS.errorColor
     },
     confirmBtn: {
-        width: '70%',
+        width: '80%',
         backgroundColor: COLORS.primary,
         marginTop: 30,
         borderRadius: 16

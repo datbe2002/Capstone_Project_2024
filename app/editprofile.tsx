@@ -8,12 +8,9 @@ const EditProfile = () => {
 
     const { userState } = useUserStore()
     const [userChanged, setUserChanged] = useState<any | null>(userState)
-
-
     return (
         <View style={styles.container}>
             <EditProfileContainer userChanged={userChanged} setUserChanged={setUserChanged} />
-
         </View>
     )
 }

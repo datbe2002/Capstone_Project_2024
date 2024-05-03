@@ -51,7 +51,6 @@ const EditAddress = () => {
         Alert.alert("Thông báo", "Bạn có muốn xóa địa chỉ này ?", [
             {
                 text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
                 style: "cancel",
             },
             { text: "OK", onPress: handleDeleteAdd },

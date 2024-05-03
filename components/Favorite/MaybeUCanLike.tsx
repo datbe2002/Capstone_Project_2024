@@ -1,19 +1,27 @@
 import MasonryList from '@react-native-seoul/masonry-list';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { getProducts } from '../../app/context/productsApi';
 import { COLORS } from '../../assets';
 import { FavoriteListCard } from './FavoriteListCard';
 import SpaceBet from '../SpaceBet';
 import { Skeleton } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
+import { BottomModal } from '../BottomModal';
+import FavoriteLogic from '../Home/FavoriteLogic';
 const { height, width } = Dimensions.get("window");
 
 const MaybeUCanLike = () => {
-    const handleOpenBottom = () => {
-        console.log('open')
+    const [modalVisible, setModalVisible] = useState<boolean>(false)
+    const [isFavourite, setIsFavourite] = useState<boolean>(false)
+    const [dataLoved, setDataLoved] = useState<any>(null)
+    const handleOpenBottom = (item: any) => {
+        setDataLoved(item)
+        setModalVisible(true)
     }
+
+
     const [data, setData] = useState<any>([])
     const [loading, setLoading] = useState<boolean>(false)
     const { data: queryData, isSuccess } = useQuery({
@@ -69,29 +77,42 @@ const MaybeUCanLike = () => {
                     />
                 </View>
             </View> :
-                <MasonryList
-                    nestedScrollEnabled
-                    style={{
-                        alignSelf: "stretch",
-                    }}
-                    data={
-                        data
-                    }
-                    keyExtractor={(item) => item.id}
-                    numColumns={2}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{
-                        alignSelf: "stretch",
-                    }}
-                    renderItem={({ item, i }) => (
-                        <FavoriteListCard item={item} index={i}
-                            handleOpenBottom={handleOpenBottom}
+                <>
+                    <MasonryList
+                        nestedScrollEnabled
+                        style={{
+                            alignSelf: "stretch",
+                        }}
+                        data={
+                            data
+                        }
+                        keyExtractor={(item) => item.id}
+                        numColumns={2}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{
+                            alignSelf: "stretch",
+                        }}
+                        renderItem={({ item, i }) => (
+                            <FavoriteListCard item={item} index={i}
+                                handleOpenBottom={handleOpenBottom}
 
-                        />
-                    )}
-                    onEndReachedThreshold={0.1}
+                            />
+                        )}
+                        onEndReachedThreshold={0.1}
 
-                />
+                    />
+                    <BottomModal
+                        isOpen={modalVisible}
+                        setIsOpen={setModalVisible}
+                        snapHeight={"15%"}>
+                        {dataLoved && <View style={{ backgroundColor: COLORS.white, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                            <FavoriteLogic isFavourite={isFavourite} setIsFavourite={setIsFavourite} item={dataLoved} />
+                            <Pressable style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ fontFamily: 'mon-sb', fontSize: 20, color: COLORS.darkGray }}>Thêm vào sản phẩm yêu thích</Text>
+                            </Pressable>
+                        </View>}
+                    </BottomModal>
+                </>
             }
         </View>
     )

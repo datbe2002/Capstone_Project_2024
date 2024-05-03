@@ -55,10 +55,10 @@ const ProductDetail = () => {
   const mutation = useMutation({
     mutationFn: (data: CartData) => addToCart(data),
     onSuccess: () => {
-      setAlert({ title: "Xong", msg: "Đã thêm vào giỏ hàng của bạn!" });
+      setAlert({ title: "Thông báo", msg: "Đã thêm vào giỏ hàng của bạn!" });
     },
     onError: (error) => {
-      setAlert({ title: "Lỗi", msg: "Thêm thất bại! Vui lòng thử lại sau!" });
+      setAlert({ title: "Thông báo", msg: "Sản phẩm đã có trong giỏ hàng của bạn" });
     },
   });
 
@@ -358,7 +358,7 @@ const ProductDetail = () => {
                       size: mySelectedItem.size.value,
                       sku: mySelectedItem.sku,
                     };
-
+                    setModalVisible(false)
                     setOrderItems({
                       items: [obj],
                       total: obj.price * obj.quantity,

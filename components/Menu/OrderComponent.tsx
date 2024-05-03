@@ -16,7 +16,7 @@ const RenderStatusOrder = ({ name, text, id, index }: any) => {
             <Feather name={name} size={25} color={COLORS.black} />
         </View>
         <View>
-            <Text style={{ fontFamily: 'mon-sb', fontSize: 14 }}>{text}</Text>
+            <Text style={{ fontFamily: 'mon-sb', fontSize: 13 }}>{text}</Text>
         </View>
     </Pressable>
 }

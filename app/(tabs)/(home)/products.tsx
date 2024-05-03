@@ -71,8 +71,6 @@ const ProductsScreen = () => {
       setFilterParams((prevParams) => ({ ...prevParams, name: paramSearch }));
     }
     if (cateParam) {
-      // console.log("cateParam", cateParam);
-
       setFilterParams((prevParams) => ({ ...prevParams, category: cateParam }));
     }
   }, [searchValue, paramSearch, cateParam]);
@@ -80,7 +78,6 @@ const ProductsScreen = () => {
   const productsQuery = useQuery({
     queryKey: ["products"],
     queryFn: () => getProductsFiltered(filterParams),
-    // refetchOnWindowFocus: true,
   });
 
   useFocusEffect(
@@ -358,7 +355,6 @@ const ProductsScreen = () => {
                 // { opacity: mySelectedItem ? 1 : 0.7 },
               ]}
               onPress={() => {
-                // console.log("temp ===", tempFilter);
                 setFilterParams((prevState) => ({
                   ...prevState,
                   category: tempFilter.category?.name || null,
@@ -389,7 +385,6 @@ const ProductsScreen = () => {
                 // { opacity: mySelectedItem ? 1 : 0.7 },
               ]}
               onPress={() => {
-                // console.log("temp ===", tempFilter);
                 setFilterParams({
                   name: null,
                   category: null,

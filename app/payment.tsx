@@ -23,6 +23,7 @@ import {
   useTotalPaymentAmount,
   useUserIDStore,
 } from "./store/store";
+import CustomAlert from "../components/Arlert";
 
 const Payment = () => {
 
@@ -82,19 +83,30 @@ const Payment = () => {
     };
   });
 
+  const [alert, setAlert] = useState<any>(null);
+
   const { mutate, isPending } = useMutation({
     mutationFn: (data: any) => checkoutCart(data),
     onSuccess: (response: any) => {
       if (paymentMethod === 1) {
         const { paymentUrl, orderId } = response.data;
         setOrderIdSucc(orderId);
-        Alert.alert("Thông báo", "Bạn hãy chọn OK để thanh toán", [
-          { text: "OK", onPress: () => Linking.openURL(paymentUrl) },
-        ]);
+        setAlert({
+          title: "Thông báo",
+          msg: "Bạn hãy chọn OK để thanh toán",
+          paymentUrl: paymentUrl,
+        })
+        // Alert.alert("Thông báo", "Bạn hãy chọn OK để thanh toán", [
+        //   { text: "OK", onPress: () => Linking.openURL(paymentUrl) },
+        // ]);
       } else {
-        Alert.alert("Thông báo", "Bạn đã đặt hàng thành công", [
-          { text: "OK", onPress: () => router.push("/homepage") },
-        ]);
+        setAlert({
+          title: "Thông báo",
+          msg: "Bạn đã đặt hàng thành công",
+        })
+        // Alert.alert("Thông báo", "Bạn đã đặt hàng thành công", [
+        //   { text: "OK", onPress: () => router.push("/homepage") },
+        // ]);
       }
     },
     onError: (err) => {
@@ -119,6 +131,17 @@ const Payment = () => {
   };
   return (
     <View style={styles.mainContainer}>
+      <CustomAlert
+        title={alert?.title}
+        message={alert?.msg}
+        show={alert !== null}
+        onDismiss={() => {
+          setAlert(null)
+          if (paymentMethod === 1) {
+            Linking.openURL(alert.paymentUrl)
+          } else { router.push("/homepage") }
+        }}
+      />
       <ScrollView>
         <AddressChosen addressData={selectedAddress} />
         <ItemCardPayment order={order} />

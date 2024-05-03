@@ -69,10 +69,9 @@ const Cart: React.FC<Props> = ({ }) => {
             selectedItem.size === cartItem.size
         )
     );
-    if (updatedCartItems.length < 1) {
-      setIsAdjust(!isAdjust)
-    }
-    setSelectedItems(updatedCartItems);
+    setIsAdjust(!isAdjust)
+
+    setSelectedItems([]);
     mutation.mutate({ userId: userState?.id, cartItems: updatedCartItems });
     setTimeout(() => {
       setAlert(null);
@@ -179,7 +178,6 @@ const Cart: React.FC<Props> = ({ }) => {
   // total
   useEffect(() => {
     let newTotal = 0;
-    console.log('inUseEffect', selectedItems)
     if (selectedItems.length != 0) {
       selectedItems.forEach((element) => {
         newTotal += element.price * element.quantity;
@@ -205,7 +203,10 @@ const Cart: React.FC<Props> = ({ }) => {
           title={alert?.title}
           message={alert?.msg}
           show={alert !== null}
-          onDismiss={() => setAlert(null)}
+          onDismiss={() => {
+            setIsAdjust(false)
+            setAlert(null)
+          }}
           onConfirm={() => handleDeleteItems()}
         />
         <View style={[styles.horizWrapper, styles.heading]}>

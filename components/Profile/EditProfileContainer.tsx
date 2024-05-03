@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Alert, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-import { COLORS } from '../../assets'
+import { COLORS, SIZES } from '../../assets'
 import { MaterialIcons } from '@expo/vector-icons';
 import { convertToISO8601WithTime, formatDate } from '../../app/(auth)/register';
-import { CheckBox } from 'react-native-elements';
+import { Button, CheckBox } from 'react-native-elements';
 import { postUserData } from '../../app/context/feedbackApi';
 import { router } from 'expo-router';
 import { useMutation } from '@tanstack/react-query';
@@ -27,9 +27,8 @@ const EditProfileContainer = ({ userChanged, setUserChanged }: any) => {
     const [valid, setValid] = useState(false)
     const [showPicker, setShowPicker] = useState(false)
     const [date, setDate] = useState(new Date())
-    const [dateOfbirth, setDateOfBirth] = useState("")
+    const [dateOfbirth, setDateOfBirth] = useState(formatDate(userChanged.dob))
     const [gender, setGender] = useState<number>(userChanged.gender || 0);
-
     const toggleDatePicker = () => {
         setShowPicker(!showPicker)
     }
@@ -39,6 +38,27 @@ const EditProfileContainer = ({ userChanged, setUserChanged }: any) => {
     const handleError = (error: string | null, input: string) => {
         setErrors(prevState => ({ ...prevState, [input]: error }));
     };
+
+    const [initialState, setInitialState] = useState<any>(null);
+
+    useEffect(() => {
+        setInitialState({
+            fullName: userChanged.fullName,
+            phone: phoneNumber,
+            dob: dateOfbirth,
+            gender: userChanged.gender,
+        });
+    }, []);
+    const isDirty =
+        JSON.stringify({
+            fullName: userChanged.fullName,
+            phone: phoneNumber,
+            dob: dateOfbirth,
+            gender: gender,
+        }) !== JSON.stringify(initialState);
+
+
+
     const onChange = ({ type }: any, selectedDate: any) => {
         if (type == 'set') {
             const currDate = selectedDate;
@@ -51,10 +71,10 @@ const EditProfileContainer = ({ userChanged, setUserChanged }: any) => {
             toggleDatePicker()
         }
     }
-
     const { mutate, isPending } = useMutation({
         mutationFn: (data: any) => postUserData(data),
         onSuccess: (response: any) => {
+            Alert.alert("Thông báo", "Đã cập nhật thông tin thành công. Vui lòng đăng nhập lại để cập nhật");
             router.back()
         },
         onError: (err) => {
@@ -67,10 +87,10 @@ const EditProfileContainer = ({ userChanged, setUserChanged }: any) => {
         let isValid = true;
 
         if (!userChanged.fullName) {
-            handleError('Không được để trống ô này', 'recipientName');
+            handleError('Không được để trống ô này', 'fullName');
             isValid = false;
         } else if (!/\s/.test(userChanged.fullName)) {
-            handleError('Giữa họ và tên phải có khoảng trống', 'recipientName');
+            handleError('Giữa họ và tên phải có khoảng trống', 'fullName');
             isValid = false;
         }
         if (!phoneNumber) {
@@ -154,7 +174,7 @@ const EditProfileContainer = ({ userChanged, setUserChanged }: any) => {
                 {showPicker && <DateTimePicker
                     onChange={onChange}
                     mode="date"
-                    display="spinner"
+                    display="calendar"
                     value={date}
                     maximumDate={new Date()}
                     minimumDate={new Date(1980, 1, 1)}
@@ -173,7 +193,12 @@ const EditProfileContainer = ({ userChanged, setUserChanged }: any) => {
                 )}
 
             </View>
-            <CustomButton style={styles.confirmButton} buttonText={isPending ? <ActivityIndicator size={20} color={COLORS.white} /> : 'Xác nhận'} onPress={validate} />
+            {isDirty ? <Pressable disabled={isPending} onPress={validate} style={[styles.confirmButton, isPending && { backgroundColor: COLORS.darkGray, opacity: 0.6 }]}>
+                <Text style={styles.buttonText}>{isPending ? <ActivityIndicator size={25} color={COLORS.white} /> : 'Xác nhận'}</Text>
+            </Pressable> :
+                null
+            }
+
         </View>
     )
 }
@@ -221,10 +246,23 @@ const styles = StyleSheet.create({
         fontFamily: 'mon-sb',
     },
     confirmButton: {
+        backgroundColor: COLORS.primary,
+        borderRadius: 16,
+        minHeight: 60,
+        minWidth: 120,
+        paddingHorizontal: 10,
+        alignItems: "center",
+        justifyContent: "center",
         position: 'absolute',
         left: 10,
         right: 10,
         bottom: 10,
+    },
+    buttonText: {
+        fontSize: SIZES.large,
+        fontFamily: "mon-sb",
+        color: "white",
+        textAlign: "center",
     },
     genderChoose: {
         display: 'flex',

@@ -43,7 +43,7 @@ const SuccessPayment = () => {
 
                     <View style={styles.mention}>
                         <Ionicons name="information-circle-outline" size={24} color={COLORS.primary} />
-                        <Text style={{ fontFamily: 'mon-sb' }}>Chúng mình đã nhận được tiền từ bạn</Text>
+                        <Text style={{ fontFamily: 'mon-sb', fontSize: 13 }}>Chúng mình đã nhận được tiền từ bạn</Text>
                     </View>
                     <View style={[styles.line1, { marginTop: 20 }]}>
                         <Text style={styles.leftText}>Thanh toán bằng: </Text>
