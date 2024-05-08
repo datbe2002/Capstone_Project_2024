@@ -1,9 +1,10 @@
 // First we need to import axios.js
 import axios from 'axios';
+import { BASE_API_URL } from '../../constants/fakeInf';
 // Next we make an 'instance' of it
 const instance = axios.create({
     // .. where we make our configurations
-    baseURL: 'https://ftai-api.monoinfinity.net',
+    baseURL: BASE_API_URL,
 
 });
 

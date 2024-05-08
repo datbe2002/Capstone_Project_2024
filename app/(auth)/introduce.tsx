@@ -2,9 +2,9 @@ import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
-import { COLORS } from "../assets";
-import CustomButton from "../components/Button";
-import Background from "../components/BackGround";
+import { COLORS } from "../../assets";
+import CustomButton from "../../components/Button";
+import Background from "../../components/BackGround";
 
 const { height, width } = Dimensions.get("window");
 const IntroducePage = () => {

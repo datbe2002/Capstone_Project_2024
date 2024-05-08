@@ -9,6 +9,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AddressData, UserData } from "../../constants/types/normal";
 import { useAddressChange, useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import * as SecureStore from 'expo-secure-store';
+import { TOKEN_KEY } from "../../constants/fakeInf";
 interface SignInResponse {
   data: UserData | undefined;
   error: Error | undefined;
@@ -100,11 +102,21 @@ export function Provider(props: ProviderProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/get-user");
-        const userData = response.data;
-
-        setAuthInitialized(true);
-        console.log("initialize ", userData);
+        let result = await SecureStore.getItemAsync(TOKEN_KEY);
+        if (result) {
+          const decoded = decodeJWT(result);
+          const userID = decoded.UserId;
+          const secondRes = await instance.get(
+            `/api/user/profile/${userID}`
+          );
+          const userData = secondRes.data.data;
+          setUserId(userID);
+          setUserState(userData);
+          setUserAuthToken(result);
+          setAuthInitialized(true);
+        } else {
+          throw new Error('No token found')
+        }
       } catch (error) {
         console.log("error fetchData", error);
         setAuthInitialized(true);
@@ -114,6 +126,8 @@ export function Provider(props: ProviderProps) {
     fetchData();
   }, []);
 
+
+
   const logout = async (): Promise<SignOutResponse> => {
     try {
       await GoogleSignin.signOut();
@@ -121,6 +135,7 @@ export function Provider(props: ProviderProps) {
     } catch (error) {
       return { error, data: undefined };
     } finally {
+      await SecureStore.deleteItemAsync(TOKEN_KEY)
       setUserAuthToken();
       setUserState(null);
       setSelectedAddress({
@@ -161,21 +176,13 @@ export function Provider(props: ProviderProps) {
       let userData: UserData;
 
       const token = response.data.data.accessToken;
+      //Set token to secure store *important
+      await SecureStore.setItemAsync(TOKEN_KEY, token);
       const decoded = decodeJWT(token);
       const userID = decoded.UserId;
       const secondRes = await instance.get(`/api/user/profile/${userID}`);
       setUserId(userID);
-      // const userCart = await instance.get("/api/cart/" + userID);
-      // console.log(userCart)
-      // if (userCart) {
-      //   userData = {
-      //     ...secondRes.data.data,
-      //     userCartId: userCart.data.data.id,
-      //   };
-      // } else {
       userData = secondRes.data.data;
-      // }
-
       setLoadingState(false);
       setUserState(userData);
       setUserAuthToken(token);

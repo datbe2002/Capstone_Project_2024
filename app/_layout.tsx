@@ -1,11 +1,12 @@
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen as Spl, Stack } from "expo-router";
 import { useEffect } from "react";
 import { Provider, useAuth } from "./context/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import BackButton from "../components/BackButton";
 import { COLORS } from "../assets";
 import { Linking, View } from "react-native";
+import SplashScreen from 'react-native-splash-screen'
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -18,7 +19,7 @@ export const unstable_settings = {
 };
 const queryClient = new QueryClient();
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+Spl.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -32,9 +33,13 @@ export default function RootLayout() {
     if (error) throw error;
   }, [error]);
 
+
+
   useEffect(() => {
+
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hide()
+      Spl.hideAsync();
     }
   }, [loaded]);
 
@@ -61,7 +66,7 @@ function RootLayoutNav() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="introduce" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)/introduce" options={{ headerShown: false }} />
       <Stack.Screen name="success_payment" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)/register" options={{ headerShown: false }} />

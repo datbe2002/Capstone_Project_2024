@@ -34,7 +34,8 @@ import Background from "../../components/BackGround";
 import { setUserAuthToken } from "../context/authService";
 import instance from "../context/axiosConfig";
 import { useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
-
+import * as SecureStore from 'expo-secure-store';
+import { TOKEN_KEY } from "../../constants/fakeInf";
 GoogleSignin.configure({
   webClientId:
     "130210382454-7l7nfrqaeciu2dmf49k4u426vig2c99s.apps.googleusercontent.com",
@@ -184,6 +185,8 @@ const LoginPage = () => {
                         })
                         .then(async (response) => {
                           const token = response.data.data.accessToken;
+                          //Set token to secure store *important
+                          await SecureStore.setItemAsync(TOKEN_KEY, token);
                           const decoded = decodeJWT(token);
                           const userID = decoded.UserId;
 
