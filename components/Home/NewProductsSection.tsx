@@ -24,7 +24,7 @@ const NewProductSection: React.FC<NewProductProps> = ({
   newProduct,
 }) => {
   const router = useRouter();
-  console.log('new product 1')
+  // console.log('new product 1')
   return (
     <View style={styles.newItems}>
       <View style={[styles.horizWrapper, styles.cateTitleWrapper]}>

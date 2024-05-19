@@ -4,7 +4,7 @@ import { CartData, FilterParams } from "../../constants/Type";
 
 export const getProductsFiltered = async (params: FilterParams) => {
   // Construct the query string
-  console.log("api ==== ", params);
+  // console.log("api ==== ", params);
 
   let queryString = Object.keys(params)
     .filter(
