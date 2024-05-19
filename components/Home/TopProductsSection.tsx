@@ -24,7 +24,7 @@ const TopProductsSection: React.FC<TopProductsProps> = ({
   topProducts,
 }) => {
   const router = useRouter();
-  console.log('topProducts 1')
+  // console.log('topProducts 1')
   return (
     <View style={styles.topProducts}>
       <Text style={styles.title}>Bán chạy nhất</Text>

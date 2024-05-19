@@ -8,7 +8,6 @@ import {
   View,
   Text,
   TextInput,
-  Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -24,13 +23,16 @@ import {
 import { CartItem, Product } from "../../../constants/Type";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getModels, tryOn } from "../../context/wardroveApi";
+import {
+  getModels,
+  getModelsWithInput,
+  tryOn,
+} from "../../context/wardroveApi";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import Share from "react-native-share";
 import { router, useFocusEffect } from "expo-router";
 import { BottomModal } from "../../../components/BottomModal";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button } from "react-native-elements";
 import CustomButton from "../../../components/Button";
 
 const { height, width } = Dimensions.get("window");
@@ -40,6 +42,7 @@ const wardrove = () => {
     queryKey: ["models"],
     queryFn: getModels,
   });
+
   const { urlAI } = useAIURL();
 
   const mutation = useMutation({
@@ -48,7 +51,7 @@ const wardrove = () => {
       setImageSrc(data.result);
     },
   });
-  const { selectedMesurement, setSelectedMesurement } = useMeasurement()
+  const { selectedMesurement, setSelectedMesurement } = useMeasurement();
   const { wardroveItems, setWardroveItems } = useWardove();
   const [selectedModel, setSelectedModel] = React.useState<any>(null);
   const [selectedProduct, setSelectedProduct] = React.useState<Product>();
@@ -58,32 +61,45 @@ const wardrove = () => {
   const [shareLoading, setShareLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
-  const [weight, setWeight] = useState<string>(selectedMesurement?.weight || "");
-  const [height, setHeight] = useState<string>(selectedMesurement?.height || "");
+  const [weight, setWeight] = useState<string>(
+    selectedMesurement?.weight || ""
+  );
+  const [height, setHeight] = useState<string>(
+    selectedMesurement?.height || ""
+  );
   const [errors, setErrors] = useState<string[]>([]);
 
+  const filteredModelsQuery = useQuery({
+    queryKey: ["filteredModel"],
+    queryFn: () => getModelsWithInput(selectedMesurement),
+    enabled: false,
+  });
 
   const handleSubmit = () => {
     const weightNumber = parseFloat(weight);
     const heightNumber = parseFloat(height);
 
     if (isNaN(weightNumber) || isNaN(heightNumber)) {
-      setErrors(['Vui lòng nhập giá trị hợp lệ cho cân nặng và chiều cao.']);
+      setErrors(["Vui lòng nhập giá trị hợp lệ cho cân nặng và chiều cao."]);
       return;
     }
 
     if (weightNumber <= 0 || heightNumber <= 0) {
-      setErrors(['Vui lòng nhập giá trị dương cho cân nặng và chiều cao.']);
+      setErrors(["Vui lòng nhập giá trị dương cho cân nặng và chiều cao."]);
       return;
     }
-    if (heightNumber <= 100) {
-      setErrors(['Vui lòng nhập giá trị lớn hơn 100 cho chiều cao.']);
-      return;
-    }
-    console.log('lastest result:', weightNumber, heightNumber);
+    // if (heightNumber <= 100) {
+    //   setErrors(["Vui lòng nhập giá trị lớn hơn 100 cho chiều cao."]);
+    //   return;
+    // }
+    // console.log("lastest result:", weightNumber, heightNumber);
     setSelectedMesurement({ weight: weightNumber, height: heightNumber });
-    setModalVisible2(false)
+    setModalVisible2(false);
   };
+
+  useEffect(() => {
+    if (selectedMesurement) filteredModelsQuery.refetch();
+  }, [selectedMesurement]);
 
   const handleRemoveItem = (itemToRemove: Product) => {
     setWardroveItems((prevItems: Product[]) =>
@@ -95,11 +111,11 @@ const wardrove = () => {
     if (height) {
       const meters = Math.floor(height / 100);
       const centimeters = height % 100;
-      const formattedCentimeters = centimeters.toString().padStart(2, '0');
+      const formattedCentimeters = centimeters.toString().padStart(2, "0");
       return `${meters}m${formattedCentimeters}`;
     }
-    return null
-  }
+    return null;
+  };
 
   const wardroveRenderItem = ({ item }: { item: Product }) => (
     <Pressable
@@ -217,8 +233,8 @@ const wardrove = () => {
   };
 
   useEffect(() => {
-    setSelectedModel(modelsQuery?.data?.data[0]);
-  }, [modelsQuery.isSuccess]);
+    setSelectedModel(filteredModelsQuery?.data?.data[0]);
+  }, [filteredModelsQuery.isSuccess]);
 
   useEffect(() => {
     setImageSrc(selectedModel?.imageUrl);
@@ -227,12 +243,15 @@ const wardrove = () => {
   //chay lan dau de xem account da co measurements hay chua
   useFocusEffect(
     useCallback(() => {
-      if (selectedMesurement.height == null || selectedMesurement.weight == null) {
-        setModalVisible2(true)
+      if (
+        selectedMesurement.height == null ||
+        selectedMesurement.weight == null
+      ) {
+        setModalVisible2(true);
       }
     }, [])
-  )
-  console.log(selectedMesurement)
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <Background imageKey={"i5"}>
@@ -285,7 +304,7 @@ const wardrove = () => {
               )}
             </View>
 
-            {modelsQuery.isSuccess && (
+            {filteredModelsQuery.isSuccess && (
               <View style={styles.rightContainer}>
                 <Pressable
                   style={[styles.modelSelector, SHADOWS.medium]}
@@ -300,21 +319,60 @@ const wardrove = () => {
                     }
                   />
                 </Pressable>
-                {selectedMesurement.height && selectedMesurement.weight ? <>
-                  <View style={{ marginTop: 10, borderRadius: 10, borderWidth: 1, borderColor: COLORS.inputBackgroundColor }}>
-                    <View>
-                      <Text style={{ fontFamily: 'mon-sb', fontSize: 13 }}>Chiều cao</Text>
-                      <Text style={{ fontFamily: 'mon-sb', fontSize: 16 }}>{handleConvertHeight(selectedMesurement.height)}</Text>
+                {selectedMesurement.height && selectedMesurement.weight ? (
+                  <>
+                    <View
+                      style={{
+                        marginTop: 10,
+                        borderRadius: 10,
+                        borderWidth: 1,
+                        borderColor: COLORS.inputBackgroundColor,
+                      }}
+                    >
+                      <View>
+                        <Text style={{ fontFamily: "mon-sb", fontSize: 13 }}>
+                          Chiều cao
+                        </Text>
+                        <Text style={{ fontFamily: "mon-sb", fontSize: 16 }}>
+                          {handleConvertHeight(selectedMesurement.height)}
+                        </Text>
+                      </View>
+                      <View>
+                        <Text style={{ fontFamily: "mon-sb", fontSize: 13 }}>
+                          Cân nặng
+                        </Text>
+                        <Text style={{ fontFamily: "mon-sb", fontSize: 16 }}>
+                          {selectedMesurement.weight} kg
+                        </Text>
+                      </View>
                     </View>
-                    <View>
-                      <Text style={{ fontFamily: 'mon-sb', fontSize: 13 }}>Cân nặng</Text>
-                      <Text style={{ fontFamily: 'mon-sb', fontSize: 16 }}>{selectedMesurement.weight} kg</Text>
-                    </View>
+
+                    <Pressable onPress={() => setModalVisible2(true)}>
+                      <Text
+                        style={{
+                          backgroundColor: COLORS.primary,
+                          textAlign: "center",
+                          textAlignVertical: "center",
+                          height: 40,
+                          width: "100%",
+                          alignContent: "center",
+                          fontFamily: "mon-sb",
+                          color: COLORS.white,
+                          marginTop: 10,
+                          borderRadius: 7,
+                          borderWidth: 1,
+                          borderColor: COLORS.inputBackgroundColor,
+                        }}
+                      >
+                        Thay đổi
+                      </Text>
+                    </Pressable>
+                  </>
+                ) : (
+                  <View>
+                    <ActivityIndicator size={20} color={COLORS.primary} />
                   </View>
-                  <View style={{ marginTop: 10, borderRadius: 10, borderWidth: 1, borderColor: COLORS.inputBackgroundColor }}>
-                    <Button onPress={() => setModalVisible2(true)} title={'Thay đổi'} titleStyle={{ fontFamily: 'mon-sb' }} style={{ backgroundColor: COLORS.primary }}></Button>
-                  </View>
-                </> : <View><ActivityIndicator size={20} color={COLORS.primary} /></View>}
+                )}
                 {/* <View>
                   {selectedProduct && (
                     <Pressable
@@ -441,7 +499,6 @@ const wardrove = () => {
                   style={{
                     width: width * 0.9,
                     height: 120,
-
                     justifyContent: "center",
                     alignItems: "center",
                   }}
@@ -459,7 +516,7 @@ const wardrove = () => {
                     style={{
                       backgroundColor: COLORS.primary,
                       padding: 10,
-                      borderRadius: 2,
+                      borderRadius: 7,
                     }}
                     onPress={() => router.push("/(tabs)/(home)/homepage")}
                   >
@@ -481,12 +538,12 @@ const wardrove = () => {
           <BottomModal
             isOpen={modalVisible}
             setIsOpen={setModalVisible}
-            snapHeight={"40%"}
+            snapHeight={"35%"}
           >
             <View
               style={{
                 width: width,
-                height: 160,
+                height: 180,
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -494,17 +551,25 @@ const wardrove = () => {
               <Text
                 style={[
                   styles.itemDes,
-                  { textAlign: "center", textAlignVertical: "center" },
+                  {
+                    textAlign: "center",
+                    textAlignVertical: "center",
+                    fontSize: SIZES.large,
+                  },
                 ]}
               >
                 Chọn model
               </Text>
               <ScrollView
-                style={{ height: 130, width: width - 20 }}
+                style={{
+                  height: "100%",
+                  width: width - 20,
+                  marginTop: 10,
+                }}
                 horizontal={true}
               >
-                {modelsQuery.isSuccess &&
-                  modelsQuery.data?.data?.map((item: any) => (
+                {filteredModelsQuery.isSuccess &&
+                  filteredModelsQuery.data?.data?.map((item: any) => (
                     <Pressable
                       key={item.id.toString()}
                       onPress={() => {
@@ -533,7 +598,7 @@ const wardrove = () => {
           <BottomModal
             isOpen={modalVisible2}
             setIsOpen={setModalVisible2}
-            snapHeight={"65%"}
+            snapHeight={"60%"}
           >
             <View
               style={{
@@ -546,21 +611,23 @@ const wardrove = () => {
               <Text
                 style={[
                   styles.itemDes,
-                  { textAlign: "center", textAlignVertical: "center", fontSize: SIZES.large },
+                  {
+                    textAlign: "center",
+                    textAlignVertical: "center",
+                    fontSize: SIZES.large,
+                  },
                 ]}
               >
                 Chọn chiều cao và cân nặng của bạn
               </Text>
-              <ScrollView
-                style={{ flex: 1, width: width - 20, marginTop: 20 }}
-              >
+              <ScrollView style={{ flex: 1, width: width - 20, marginTop: 20 }}>
                 <Text style={styles.label}>Cân nặng (kg)</Text>
                 <TextInput
                   style={styles.input}
                   value={weight}
                   onChangeText={setWeight}
                   keyboardType="numeric"
-                  placeholder="Vd: 0 - 200kg"
+                  placeholder="Vd: 0 - 100kg"
                   onFocus={() => setErrors([])}
                 />
                 <Text style={styles.label}>Chiều cao (cm)</Text>
@@ -572,12 +639,31 @@ const wardrove = () => {
                   placeholder="Vd: 100cm = 1m - 170 = 1m7"
                   onFocus={() => setErrors([])}
                 />
-                {errors.length > 0 && errors.map((err) => (
-                  <View>
-                    <Text style={{ fontFamily: 'mon-sb', fontSize: 16, paddingLeft: 8, color: COLORS.errorColor }}>Có lỗi xảy ra: </Text>
-                    <Text style={{ fontFamily: 'mon-sb', fontSize: 16, padding: 8, color: COLORS.errorColor }}>{err}</Text>
-                  </View>
-                ))}
+                {errors.length > 0 &&
+                  errors.map((err) => (
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: "mon-sb",
+                          fontSize: 16,
+                          paddingLeft: 8,
+                          color: COLORS.errorColor,
+                        }}
+                      >
+                        Có lỗi xảy ra:
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: "mon-sb",
+                          fontSize: 16,
+                          padding: 8,
+                          color: COLORS.errorColor,
+                        }}
+                      >
+                        {err}
+                      </Text>
+                    </View>
+                  ))}
                 <CustomButton buttonText="Xác nhận" onPress={handleSubmit} />
               </ScrollView>
             </View>
@@ -643,7 +729,7 @@ const styles = StyleSheet.create({
   },
   products: {
     height: 150,
-    position: 'absolute',
+    position: "absolute",
     bottom: 30,
     width: width - 20,
     borderWidth: 0.5,
@@ -726,14 +812,14 @@ const styles = StyleSheet.create({
   },
   label: {
     marginBottom: 8,
-    fontFamily: 'mon-sb',
+    fontFamily: "mon-sb",
     fontSize: SIZES.medium,
   },
   input: {
-    fontFamily: 'mon-sb',
+    fontFamily: "mon-sb",
     fontSize: SIZES.medium,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     padding: 8,
     marginBottom: 16,
     borderRadius: 16,

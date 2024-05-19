@@ -40,11 +40,11 @@ const CategoriesSection: React.FC<CategoriesProps> = ({
       params: { cateParam: item.name },
     });
   };
-  console.log('categories 1')
+  // console.log('categories 1')
   function addImageToCategories(categories: any, images: any) {
     // Make sure there are enough images for each category
     if (categories.length > images.length) {
-      console.log("Not enough images for all categories");
+      // console.log("Not enough images for all categories");
       return;
     }
 

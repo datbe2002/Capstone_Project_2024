@@ -102,7 +102,12 @@ export const BottomModal: React.FC<Props> = ({
                 paddingTop: 20,
               }}
             >
-              <EvilIcons onPress={() => setIsOpen(!isOpen)} name="close" size={24} color="black" />
+              <EvilIcons
+                onPress={() => setIsOpen(!isOpen)}
+                name="close"
+                size={24}
+                color="black"
+              />
             </View>
             {children}
           </View>

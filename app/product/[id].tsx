@@ -58,7 +58,10 @@ const ProductDetail = () => {
       setAlert({ title: "Thông báo", msg: "Đã thêm vào giỏ hàng của bạn!" });
     },
     onError: (error) => {
-      setAlert({ title: "Thông báo", msg: "Sản phẩm đã có trong giỏ hàng của bạn" });
+      setAlert({
+        title: "Thông báo",
+        msg: "Sản phẩm đã có trong giỏ hàng của bạn",
+      });
     },
   });
 
@@ -121,9 +124,9 @@ const ProductDetail = () => {
         };
         setUserState(userData);
       } catch (error: any) {
-        console.log(error.response.data.Message);
+        // console.log(error.response.data.Message);
         if (error.response.data.Message === "Cart not found") {
-          console.log(error.response.data.Message);
+          // console.log(error.response.data.Message);
         } else {
           throw error;
         }
@@ -358,7 +361,7 @@ const ProductDetail = () => {
                       size: mySelectedItem.size.value,
                       sku: mySelectedItem.sku,
                     };
-                    setModalVisible(false)
+                    setModalVisible(false);
                     setOrderItems({
                       items: [obj],
                       total: obj.price * obj.quantity,
