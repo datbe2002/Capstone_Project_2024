@@ -83,26 +83,6 @@ export const useAfterVoucher = create((set: any) => ({
     })),
 }));
 
-interface RegisterData {
-  selectedValues: {
-    province: string | null;
-    provinceId: string | null;
-    district: string | null;
-    districtId: string | null;
-    ward: string | null;
-    wardCode: string | null;
-    gender: string | null;
-  };
-  setSelectedValues: (values: {
-    province: string | null;
-    provinceId: string | null;
-    district: string | null;
-    districtId: string | null;
-    ward: string | null;
-    wardCode: string | null;
-    gender: string | null;
-  }) => void;
-}
 
 export const useRegisterStore = create((set: any) => ({
   selectedValues: {
@@ -119,6 +99,17 @@ export const useRegisterStore = create((set: any) => ({
       selectedValues: { ...state.selectedValues, ...values },
     })),
 }));
+export const useMeasurement = create((set: any) => ({
+  selectedMesurement: {
+    height: null,
+    weight: null,
+  },
+  setSelectedMesurement: (values: any) =>
+    set((state: any) => ({
+      selectedMesurement: { ...state.selectedMesurement, ...values },
+    })),
+}));
+
 export const usePutAddress = create((set: any) => ({
   selectedPutAddress: {
     province: null,
@@ -133,6 +124,7 @@ export const usePutAddress = create((set: any) => ({
       selectedPutAddress: { ...state.selectedPutAddress, ...values },
     })),
 }));
+
 export const usePostAddress = create((set: any) => ({
   selectedPostAddress: {
     province: null,
