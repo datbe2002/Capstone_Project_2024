@@ -7,7 +7,7 @@ import { setUserAuthToken } from "./authService";
 import { Buffer } from "buffer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AddressData, UserData } from "../../constants/types/normal";
-import { useAddressChange, useLoadingStore, useUserIDStore, useUserStore } from "../store/store";
+import { useAddressChange, useLoadingStore, useMeasurement, useUserIDStore, useUserStore } from "../store/store";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import * as SecureStore from 'expo-secure-store';
 import { TOKEN_KEY } from "../../constants/fakeInf";
@@ -62,6 +62,7 @@ export function Provider(props: ProviderProps) {
   const { setUserState, userState } = useUserStore();
   const { setUserId } = useUserIDStore()
   const { setLoadingState } = useLoadingStore();
+  const { setSelectedMesurement } = useMeasurement();
   const { setSelectedAddress } = useAddressChange()
   const [authInitialized, setAuthInitialized] = React.useState<boolean>(false);
   const [isNavigationReady, setNavigationReady] = useState(false);
@@ -138,6 +139,10 @@ export function Provider(props: ProviderProps) {
       await SecureStore.deleteItemAsync(TOKEN_KEY)
       setUserAuthToken();
       setUserState(null);
+      setSelectedMesurement({
+        height: null,
+        weight: null
+      })
       setSelectedAddress({
         userId: null,
         recipientName: null,
