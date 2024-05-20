@@ -34,8 +34,11 @@ import { router, useFocusEffect } from "expo-router";
 import { BottomModal } from "../../../components/BottomModal";
 import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "../../../components/Button";
+import { addItemsToAsyncStorage, getItemsFromAsyncStorage, removeItemsFromAsyncStorage } from "../../../shared/helper";
 
 const { height, width } = Dimensions.get("window");
+
+type TStatus = 'Thêm vào ưa thích' | 'Đã thêm'
 
 const wardrove = () => {
   const modelsQuery = useQuery({
@@ -61,6 +64,7 @@ const wardrove = () => {
   const [shareLoading, setShareLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
+  const [addStatus, setAddStatus] = useState<TStatus>('Thêm vào ưa thích')
   const [weight, setWeight] = useState<string>(
     selectedMesurement?.weight || ""
   );
@@ -190,7 +194,7 @@ const wardrove = () => {
     );
 
     const obj = {
-      link_image: selectedModel.imageUrl,
+      link_image: selectedModel?.imageUrl,
       link_cloth: item.tryOnImage,
       link_edge: item.edgeImage,
       url: urlAI,
@@ -235,7 +239,23 @@ const wardrove = () => {
         setShareLoading(false);
       });
   };
-
+  const handleAddToFav = async (item: Product) => {
+    let key = "favorites";
+    const fav = await getItemsFromAsyncStorage("favorites");
+    const isAlreadyFavorited = fav.some((i: any) => i.id === item.id);
+    if (isAlreadyFavorited) {
+      //remove
+      // dd
+      // console.log('yet')
+      setAddStatus('Thêm vào ưa thích')
+      await removeItemsFromAsyncStorage(item.id, key);
+    } else {
+      // not yet
+      // console.log('not yet')
+      setAddStatus('Đã thêm')
+      await addItemsToAsyncStorage(item, key);
+    }
+  };
   const recommendSize = ({ mesurement, gender }: any) => {
     const { height, weight } = mesurement;
 
@@ -322,10 +342,12 @@ const wardrove = () => {
   useFocusEffect(
     useCallback(() => {
       if (
-        selectedMesurement.height == null ||
-        selectedMesurement.weight == null
+        selectedMesurement.height === null ||
+        selectedMesurement.weight === null
       ) {
         setModalVisible2(true);
+      } else {
+        setModalVisible2(false);
       }
     }, [])
   );
@@ -600,12 +622,12 @@ const wardrove = () => {
                             },
                           ]}
                         >
-                          Chưa có size đề xuất
+                          Không có size được đề xuất
                         </Text>
                         <Text
                           style={[
                             {
-                              backgroundColor: COLORS.primary,
+                              backgroundColor: addStatus === 'Thêm vào ưa thích' ? COLORS.primary : COLORS.secondary,
                               color: COLORS.white,
                               height: "auto",
                               width: 100,
@@ -615,11 +637,12 @@ const wardrove = () => {
                               fontSize: SIZES.medium,
                               paddingHorizontal: 5,
                               borderRadius: 10,
+                              padding: 5,
                             },
                           ]}
-                          onPress={() => {}}
+                          onPress={() => handleAddToFav(selectedProduct)}
                         >
-                          Thêm vào ưa thích
+                          {addStatus}
                         </Text>
                       </>
                     ))}
