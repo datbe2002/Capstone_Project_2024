@@ -67,6 +67,7 @@ const wardrove = () => {
   const [height, setHeight] = useState<string>(
     selectedMesurement?.height || ""
   );
+  const [recommendSizeValue, setRecommendSizeValue] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
 
   const filteredModelsQuery = useQuery({
@@ -184,6 +185,9 @@ const wardrove = () => {
 
   const handleChangeImg = (item: any) => {
     setSelectedProduct(item);
+    setRecommendSizeValue(
+      recommendSize({ mesurement: selectedMesurement, gender: 1 })
+    );
 
     const obj = {
       link_image: selectedModel.imageUrl,
@@ -231,6 +235,80 @@ const wardrove = () => {
         setShareLoading(false);
       });
   };
+
+  const recommendSize = ({ mesurement, gender }: any) => {
+    const { height, weight } = mesurement;
+
+    //Gender 0 is male, 1 is female
+    if (gender == 0) {
+      if (height < 160 && weight < 50) {
+        return "S";
+      }
+      if (height < 160 && weight >= 50 && weight < 70) {
+        return "M";
+      }
+      if (height < 160 && weight >= 70) {
+        return "L";
+      }
+      if (height >= 160 && height < 175 && weight < 50) {
+        return "M";
+      }
+      if (height >= 160 && height < 175 && weight >= 50 && weight < 70) {
+        return "L";
+      }
+      if (height >= 160 && height < 175 && weight >= 70) {
+        return "XL";
+      }
+      if (height >= 175 && weight < 50) {
+        return "L";
+      }
+      if (height >= 175 && weight >= 50 && weight < 70) {
+        return "XL";
+      }
+      if (height >= 175 && weight >= 70) {
+        return "XXL";
+      }
+    } else {
+      if (height < 150 && weight < 40) {
+        return "S";
+      }
+      if (height < 150 && weight >= 40 && weight < 60) {
+        return "M";
+      }
+      if (height < 150 && weight >= 60) {
+        return "L";
+      }
+      if (height >= 150 && height < 165 && weight < 40) {
+        return "M";
+      }
+      if (height >= 150 && height < 165 && weight >= 40 && weight < 60) {
+        return "L";
+      }
+      if (height >= 150 && height < 165 && weight >= 60) {
+        return "XL";
+      }
+      if (height >= 165 && weight < 40) {
+        return "L";
+      }
+      if (height >= 165 && weight >= 40 && weight < 60) {
+        return "XL";
+      }
+      if (height >= 165 && weight >= 60) {
+        return "XXL";
+      }
+    }
+    return "";
+  };
+  // if (selectedProduct) {
+  //   // console.log(recommendSizeValue);
+  //   console.log(selectedProduct.id);
+
+  //   console.log(
+  //     selectedProduct.productVariants.find(
+  //       (item) => item.size.value === recommendSizeValue
+  //     )
+  //   );
+  // }
 
   useEffect(() => {
     setSelectedModel(filteredModelsQuery?.data?.data[0]);
@@ -300,6 +378,53 @@ const wardrove = () => {
                   }}
                 >
                   <ActivityIndicator size={"large"} />
+                </View>
+              )}
+              {!mutation.isSuccess && (
+                <View
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: 10,
+                    height: 35,
+                  }}
+                >
+                  <Text
+                    onPress={() => shareImage()}
+                    style={[
+                      {
+                        backgroundColor: COLORS.white,
+                        color: COLORS.primary,
+                        borderWidth: 1,
+                        borderColor: COLORS.gray,
+                        height: 32,
+                        width: 120,
+                        textAlign: "center",
+                        textAlignVertical: "center",
+                        fontFamily: "mon-sb",
+                        fontSize: SIZES.medium,
+                        paddingHorizontal: 5,
+                        borderRadius: 10,
+                      },
+                    ]}
+                  >
+                    Chia sẻ
+                  </Text>
+                  {recommendSizeValue && (
+                    <Text
+                      style={{
+                        fontFamily: "mon-sb",
+                        fontSize: 16,
+                        textAlign: "center",
+                        textAlignVertical: "center",
+                      }}
+                    >
+                      Size đề xuất:{recommendSizeValue}
+                    </Text>
+                  )}
                 </View>
               )}
             </View>
@@ -373,7 +498,8 @@ const wardrove = () => {
                     <ActivityIndicator size={20} color={COLORS.primary} />
                   </View>
                 )}
-                {/* <View>
+
+                <View>
                   {selectedProduct && (
                     <Pressable
                       style={styles.itemCard}
@@ -397,96 +523,111 @@ const wardrove = () => {
                       <Text style={styles.itemDes} numberOfLines={2}>
                         {selectedProduct.name}
                       </Text>
-                      <Text style={styles.itemPrice}>
-                        {(selectedProduct.productVariants[0]?.price)
-                          .toLocaleString("en-US", { minimumFractionDigits: 0 })
-                          .replace(/,/g, " ")}
-                        đ
-                      </Text>
                     </Pressable>
                   )}
-                  {selectedProduct && (
-                    <Text
-                      style={[
-                        {
-                          backgroundColor: COLORS.primary,
-                          color: COLORS.white,
-                          height: 35,
-                          width: 100,
-                          textAlign: "center",
-                          textAlignVertical: "center",
-                          fontFamily: "mon-sb",
-                          fontSize: SIZES.medium,
-                          paddingHorizontal: 5,
-                          borderRadius: 10,
-                        },
-                      ]}
-                      onPress={() => {
-                        const obj: CartItem = {
-                          cartId: userState?.userCartId,
-                          color:
-                            selectedProduct.productVariants[0].color.colorCode,
-                          price: selectedProduct.productVariants[0].price,
-                          product: selectedProduct,
-                          productId: selectedProduct.id,
-                          quantity: 1,
-                          size: selectedProduct.productVariants[0].size.value,
-                          sku: selectedProduct.productVariants[0].sku,
-                        };
-                        // console.log(obj);
-                        setOrderItems({
-                          items: [obj],
-                          total: obj.price,
-                          totalQuantityProd: 1,
-                        });
-                        router.push("/payment");
-                      }}
-                    >
-                      Mua ngay
-                    </Text>
-                  )}
-                </View> */}
+                  {selectedProduct &&
+                    (selectedProduct.productVariants.find(
+                      (item) => item.size.value === recommendSizeValue
+                    ) ? (
+                      <>
+                        <Text style={[styles.itemPrice, { paddingBottom: 10 }]}>
+                          {selectedProduct.productVariants
+                            .find(
+                              (item) => item.size.value === recommendSizeValue
+                            )
+                            .price.toLocaleString("en-US", {
+                              minimumFractionDigits: 0,
+                            })
+                            .replace(/,/g, " ")}
+                          đ
+                        </Text>
+                        <Text
+                          style={[
+                            {
+                              backgroundColor: COLORS.primary,
+                              color: COLORS.white,
+                              height: 35,
+                              width: 100,
+                              textAlign: "center",
+                              textAlignVertical: "center",
+                              fontFamily: "mon-sb",
+                              fontSize: SIZES.medium,
+                              paddingHorizontal: 5,
+                              borderRadius: 10,
+                            },
+                          ]}
+                          onPress={() => {
+                            const recommendVariant =
+                              selectedProduct.productVariants.find(
+                                (item) => item.size.value === recommendSizeValue
+                              );
+                            const obj: CartItem = {
+                              cartId: userState?.userCartId,
+                              color: recommendVariant.color.colorCode,
+                              price: recommendVariant.price,
+                              product: selectedProduct,
+                              productId: selectedProduct.id,
+                              quantity: 1,
+                              size: recommendVariant.size.value,
+                              sku: recommendVariant.sku,
+                            };
+                            // console.log(obj);
+                            setOrderItems({
+                              items: [obj],
+                              total: obj.price,
+                              totalQuantityProd: 1,
+                            });
+                            router.push("/payment");
+                          }}
+                        >
+                          Mua ngay
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <Text
+                          style={[
+                            {
+                              color: COLORS.errorColor,
+                              height: "auto",
+                              width: 100,
+                              textAlign: "center",
+                              textAlignVertical: "center",
+                              fontFamily: "mon-sb",
+                              fontSize: SIZES.medium,
+                              // backgroundColor: "aqua",
+                              paddingBottom: 10,
+                            },
+                          ]}
+                        >
+                          Chưa có size đề xuất
+                        </Text>
+                        <Text
+                          style={[
+                            {
+                              backgroundColor: COLORS.primary,
+                              color: COLORS.white,
+                              height: "auto",
+                              width: 100,
+                              textAlign: "center",
+                              textAlignVertical: "center",
+                              fontFamily: "mon-sb",
+                              fontSize: SIZES.medium,
+                              paddingHorizontal: 5,
+                              borderRadius: 10,
+                            },
+                          ]}
+                          onPress={() => {}}
+                        >
+                          Thêm vào ưa thích
+                        </Text>
+                      </>
+                    ))}
+                </View>
               </View>
             )}
           </View>
-          {mutation.isSuccess && (
-            <View
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                paddingHorizontal: 10,
-              }}
-            >
-              <Text
-                onPress={() => shareImage()}
-                style={[
-                  {
-                    backgroundColor: COLORS.white,
-                    color: COLORS.primary,
-                    borderWidth: 1,
-                    borderColor: COLORS.gray,
-                    height: 35,
-                    width: 180,
-                    textAlign: "center",
-                    textAlignVertical: "center",
-                    fontFamily: "mon-sb",
-                    fontSize: SIZES.medium,
-                    paddingHorizontal: 5,
-                    borderRadius: 10,
-                  },
-                ]}
-              >
-                Chia sẻ hình ảnh
-              </Text>
-              {/* <Text
-                style={{ textAlign: "center", textAlignVertical: "center" }}
-              >
-                Hoặc
-              </Text> */}
-            </View>
-          )}
+
           <View style={styles.products}>
             <FlatList
               data={wardroveItems}
@@ -688,10 +829,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "transparent",
+    gap: 5,
     position: "relative",
   },
   tryon: {
-    height: height * 0.6,
+    height: height * 0.65,
     width: "100%",
     alignItems: "center",
     display: "flex",
@@ -728,9 +870,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.gray1,
   },
   products: {
-    height: 150,
+    height: 120,
     position: "absolute",
-    bottom: 30,
+    bottom: 25,
     width: width - 20,
     borderWidth: 0.5,
     borderRadius: 5,
@@ -746,16 +888,16 @@ const styles = StyleSheet.create({
   },
   itemCard: {
     width: width / 4,
-    height: 200,
+    height: 170,
     alignItems: "center",
     gap: 5,
-    padding: 5,
+    padding: 2,
     backgroundColor: "transparent",
     position: "relative",
   },
   itemImgContainer: {
     width: width * 0.25,
-    height: 120,
+    height: 110,
     padding: 2,
     borderRadius: 9,
     alignItems: "center",
@@ -785,7 +927,7 @@ const styles = StyleSheet.create({
   },
   itemDes: {
     paddingVertical: 2,
-    minHeight: 25,
+    minHeight: 20,
     width: "100%",
     textAlign: "left",
     fontSize: SIZES.medium,
@@ -800,6 +942,7 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     height: "auto",
     width: "100%",
+    // backgroundColor: "aqua",
   },
   buyProd: {
     backgroundColor: COLORS.primary,
