@@ -22,7 +22,7 @@ import {
 } from "../../store/store";
 import { CartItem, Product } from "../../../constants/Type";
 import { Ionicons } from "@expo/vector-icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getModels,
   getModelsWithInput,
@@ -34,17 +34,18 @@ import { router, useFocusEffect } from "expo-router";
 import { BottomModal } from "../../../components/BottomModal";
 import { ScrollView } from "react-native-gesture-handler";
 import CustomButton from "../../../components/Button";
-import { addItemsToAsyncStorage, getItemsFromAsyncStorage, removeItemsFromAsyncStorage } from "../../../shared/helper";
+import {
+  addItemsToAsyncStorage,
+  getItemsFromAsyncStorage,
+  removeItemsFromAsyncStorage,
+} from "../../../shared/helper";
 
 const { height, width } = Dimensions.get("window");
 
-type TStatus = 'Thêm vào ưa thích' | 'Đã thêm'
+type TStatus = "Thêm vào ưa thích" | "Đã thêm";
 
 const wardrove = () => {
-  const modelsQuery = useQuery({
-    queryKey: ["models"],
-    queryFn: getModels,
-  });
+  const queryClient = useQueryClient();
 
   const { urlAI } = useAIURL();
 
@@ -64,7 +65,7 @@ const wardrove = () => {
   const [shareLoading, setShareLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
-  const [addStatus, setAddStatus] = useState<TStatus>('Thêm vào ưa thích')
+  const [addStatus, setAddStatus] = useState<TStatus>("Thêm vào ưa thích");
   const [weight, setWeight] = useState<string>(
     selectedMesurement?.weight || ""
   );
@@ -100,11 +101,10 @@ const wardrove = () => {
     // console.log("lastest result:", weightNumber, heightNumber);
     setSelectedMesurement({ weight: weightNumber, height: heightNumber });
     setModalVisible2(false);
+    queryClient.invalidateQueries({
+      queryKey: ["filteredModel"],
+    });
   };
-
-  useEffect(() => {
-    if (selectedMesurement) filteredModelsQuery.refetch();
-  }, [selectedMesurement]);
 
   const handleRemoveItem = (itemToRemove: Product) => {
     setWardroveItems((prevItems: Product[]) =>
@@ -247,12 +247,12 @@ const wardrove = () => {
       //remove
       // dd
       // console.log('yet')
-      setAddStatus('Thêm vào ưa thích')
+      setAddStatus("Thêm vào ưa thích");
       await removeItemsFromAsyncStorage(item.id, key);
     } else {
       // not yet
       // console.log('not yet')
-      setAddStatus('Đã thêm')
+      setAddStatus("Đã thêm");
       await addItemsToAsyncStorage(item, key);
     }
   };
@@ -329,10 +329,13 @@ const wardrove = () => {
   //     )
   //   );
   // }
+  useEffect(() => {
+    if (selectedMesurement) filteredModelsQuery.refetch();
+  }, [selectedMesurement]);
 
   useEffect(() => {
     setSelectedModel(filteredModelsQuery?.data?.data[0]);
-  }, [filteredModelsQuery.isSuccess]);
+  }, [filteredModelsQuery.data]);
 
   useEffect(() => {
     setImageSrc(selectedModel?.imageUrl);
@@ -375,7 +378,7 @@ const wardrove = () => {
         <View style={styles.wrapper}>
           <View style={styles.tryon}>
             <View style={[styles.imageWrapper, SHADOWS.medium]}>
-              {selectedModel && (
+              {selectedModel ? (
                 <Image
                   style={[styles.img]}
                   source={
@@ -384,6 +387,23 @@ const wardrove = () => {
                       : require("../../../assets/images/default.png")
                   }
                 />
+              ) : (
+                <Text
+                  style={[
+                    {
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: 10,
+                      backgroundColor: COLORS.white,
+                      textAlign: "center",
+                      textAlignVertical: "center",
+                      paddingHorizontal: 35,
+                    },
+                    SHADOWS.medium,
+                  ]}
+                >
+                  Chưa có model phù hợp với số đo của bạn!
+                </Text>
               )}
 
               {mutation.isPending && (
@@ -402,7 +422,7 @@ const wardrove = () => {
                   <ActivityIndicator size={"large"} />
                 </View>
               )}
-              {!mutation.isSuccess && (
+              {mutation.isSuccess && (
                 <View
                   style={{
                     width: "100%",
@@ -509,6 +529,7 @@ const wardrove = () => {
                           borderRadius: 7,
                           borderWidth: 1,
                           borderColor: COLORS.inputBackgroundColor,
+                          marginBottom: 10,
                         }}
                       >
                         Thay đổi
@@ -542,12 +563,13 @@ const wardrove = () => {
                           }
                         />
                       </View>
-                      <Text style={styles.itemDes} numberOfLines={2}>
+                      <Text style={[styles.itemDes]}>
                         {selectedProduct.name}
                       </Text>
                     </Pressable>
                   )}
                   {selectedProduct &&
+                    !mutation.isSuccess &&
                     (selectedProduct.productVariants.find(
                       (item) => item.size.value === recommendSizeValue
                     ) ? (
@@ -613,21 +635,24 @@ const wardrove = () => {
                               color: COLORS.errorColor,
                               height: "auto",
                               width: 100,
-                              textAlign: "center",
+                              textAlign: "left",
                               textAlignVertical: "center",
                               fontFamily: "mon-sb",
-                              fontSize: SIZES.medium,
+                              fontSize: 13,
                               // backgroundColor: "aqua",
                               paddingBottom: 10,
                             },
                           ]}
                         >
-                          Không có size được đề xuất
+                          Sản phẩm không có size đề xuất
                         </Text>
                         <Text
                           style={[
                             {
-                              backgroundColor: addStatus === 'Thêm vào ưa thích' ? COLORS.primary : COLORS.secondary,
+                              backgroundColor:
+                                addStatus === "Thêm vào ưa thích"
+                                  ? COLORS.primary
+                                  : COLORS.secondary,
                               color: COLORS.white,
                               height: "auto",
                               width: 100,
@@ -662,7 +687,7 @@ const wardrove = () => {
                 <View
                   style={{
                     width: width * 0.9,
-                    height: 120,
+                    height: 100,
                     justifyContent: "center",
                     alignItems: "center",
                   }}
@@ -671,7 +696,7 @@ const wardrove = () => {
                     style={{
                       fontFamily: "mon-sb",
                       fontSize: 15,
-                      marginVertical: 20,
+                      marginVertical: 10,
                     }}
                   >
                     Tủ đồ rỗng
@@ -911,7 +936,8 @@ const styles = StyleSheet.create({
   },
   itemCard: {
     width: width / 4,
-    height: 170,
+    minHeight: 100,
+    // height: "100%",
     alignItems: "center",
     gap: 5,
     padding: 2,
