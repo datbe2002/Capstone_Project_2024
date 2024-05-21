@@ -104,6 +104,7 @@ const wardrove = () => {
     queryClient.invalidateQueries({
       queryKey: ["filteredModel"],
     });
+    setSelectedProduct(undefined);
   };
 
   const handleRemoveItem = (itemToRemove: Product) => {
